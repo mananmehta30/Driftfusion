@@ -31,4 +31,4 @@ dfplot.acx(sol_CV, 1/k_scan*[0, 0.5, 1.0, 2.5, 3.0]);
 % xlim([-0.2, 1.2])
 
 %% Plot Vapp vs time
-dfplot.Vappt(sol_CV)
+%dfplot.Vappt(sol_CV)
