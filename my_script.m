@@ -3,15 +3,15 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Windows
- par_sio2 = pc('C:\Users\Manan Mehta\Documents\GitHub\Driftfusion\Input_files\pog2');
+ par_alox = pc('C:\Users\Manan Mehta\Documents\GitHub\Driftfusion\Input_files\alox');
 % Filepath Mac
 %par_alox = pc('Input_files/alox.csv');
 %% Equilibrium solutions
 build_device=pc;
-soleq_sio2 = equilibrate(par_sio2);c
+soleq_alox = equilibrate(par_alox);
 
 %% Plot equilibrium energy level diagram
-dfplot.ELnpx(soleq_sio2.ion)
+dfplot.ELnpx(soleq_alo.ion)
 
 %% Current-voltage scan
 % JVsol = doJV(sol_ini, JVscan_rate, JVscan_pnts, Intensity, mobseti, Vstart, Vend, option)
