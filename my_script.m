@@ -1,3 +1,4 @@
+%% testing
 %% Initialize driftfusion
 initialise_df
 
