@@ -28,13 +28,13 @@ Vmin=-15;
 Vmax=15;
 sol_CV = doCV(soleq_alox.ion, 0, 0, Vmax, Vmin, k_scan, 1, 201);
 
-%% Plot Vapp vs time
-dfplot.Vappt(sol_CV)
-
-
-%% Plot JV scan
-dfplot.JtotVapp(sol_CV, 0);
-%set(gca,'YScale','log')
+% Plot Vapp vs time
+% dfplot.Vappt(sol_CV)
+% 
+% 
+% Plot JV scan
+% dfplot.JtotVapp(sol_CV, 0);
+% set(gca,'YScale','log')
 
 %% Plot anion and cation densities
 %dfplot.acx(sol_CV, 1/k_scan*[0, 0.5, 1.0, 2.5, 3.0]);
@@ -97,45 +97,46 @@ sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 %%
 %% Plot average conductivity
 figure
-semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
+hold on
+semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar) 
 xlabel('Voltage [V]')
 ylabel('Average channel conductivity [Semilog]')
 legend('Electron', 'Hole')
 
-%% Plot average conductivity
-figure
-plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-xlabel('Voltage [V]')
-ylabel('Average channel conductivity [Linear]')
-legend('Electron', 'Hole')
-
-%%
-%% Plot average conductivity
-figure
-semilogy(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-xlabel('Voltage [V]')
-ylabel('Average bulk conductivity [Semilog]')
-legend('Electron', 'Hole')
-
-%% Plot average conductivity
-figure
-plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-xlabel('Voltage [V]')
-ylabel('Average bulk conductivity [Linear]')
-legend('Electron', 'Hole')
-%% Plot average conductivity
-figure
-semilogy(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-xlabel('Voltage [V]')
-ylabel('Average entire conductivity [Semilog]')
-legend('Electron', 'Hole')
-
-%% Plot average conductivity
-figure
-plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-xlabel('Voltage [V]')
-ylabel('Average entire conductivity [Linear]')
-legend('Electron', 'Hole')
+% Plot average conductivity
+% figure
+% plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
+% xlabel('Voltage [V]')
+% ylabel('Average channel conductivity [Linear]')
+% legend('Electron', 'Hole')
+% 
+% 
+% Plot average conductivity
+% figure
+% semilogy(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
+% xlabel('Voltage [V]')
+% ylabel('Average bulk conductivity [Semilog]')
+% legend('Electron', 'Hole')
+% 
+% Plot average conductivity
+% figure
+% plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
+% xlabel('Voltage [V]')
+% ylabel('Average bulk conductivity [Linear]')
+% legend('Electron', 'Hole')
+% Plot average conductivity
+% figure
+% semilogy(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
+% xlabel('Voltage [V]')
+% ylabel('Average entire conductivity [Semilog]')
+% legend('Electron', 'Hole')
+% 
+% Plot average conductivity
+% figure
+% plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
+% xlabel('Voltage [V]')
+% ylabel('Average entire conductivity [Linear]')
+% legend('Electron', 'Hole')
 end
 
 %% Plot Peak conductivity
