@@ -10,7 +10,6 @@ par_alox = pc('Input_files/alox.csv');
 
 while par_alox.Ncat(1,3)>10e10
     par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
-end
 
 
 %% Equilibrium solutions
@@ -137,6 +136,8 @@ plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
 xlabel('Voltage [V]')
 ylabel('Average entire conductivity [Linear]')
 legend('Electron', 'Hole')
+end
+
 %% Plot Peak conductivity
 % PC - how do you intend to plot this? The peak voltage only occurs
 % once per voltage cycle so you cannot plot as a function of voltage as you
