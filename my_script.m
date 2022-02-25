@@ -1,15 +1,13 @@
 %% Conductivity profiles
 
-%% while loop
 %% Initialize driftfusion
 initialise_df
-
+counter=0;
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('Input_files/alox.csv');
-number_simulations=0;
-while par_alox.Ncat(1,3)>10e15
 
+while par_alox.Ncat(1,3)>10e10
 %% Equilibrium solutions
 soleq_alox = equilibrate(par_alox);
 
@@ -59,6 +57,7 @@ L_D = sqrt((epp_pvsk*V_T)/(e*N0));      % Deby width [cm]
 L_D_courtier = sqrt((epp_pvsk*V_T)/(e*N0_courtier));
 
 N_Debye = 3;                            % Number of Debye lengths to average electron density over
+
 %%
 x_perov_left = 202e-7;
 
@@ -66,45 +65,40 @@ x = sol_CV.x;
 t = sol_CV.t;
 Vappt = dfana.calcVapp(sol_CV);
 % Get point at which perovskite starts 
+
 sigma_n_bar = mean(sigma_n(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D), 2);
 sigma_p_bar = mean(sigma_p(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D), 2);
-
-sigma_n_bar_entire = mean(sigma_n(:, x > x_perov_left & x < x_perov_left + 4.00E-05), 2);
-sigma_p_bar_entire = mean(sigma_p(:, x > x_perov_left & x < x_perov_left + 4.00E-05), 2);
-
-sigma_n_bar_bulk = mean(sigma_n(:, x > x_perov_left + N_Debye*L_D & x < x_perov_left + 4.00E-05), 2);
-sigma_p_bar_bulk = mean(sigma_p(:, x > x_perov_left + N_Debye*L_D & x < x_perov_left + 4.00E-05), 2);
+   
+% sigma_n_bar_entire = mean(sigma_n(:, x > x_perov_left & x < x_perov_left + 4.00E-05), 2);
+% sigma_p_bar_entire = mean(sigma_p(:, x > x_perov_left & x < x_perov_left + 4.00E-05), 2);
+% 
+% sigma_n_bar_bulk = mean(sigma_n(:, x > x_perov_left + N_Debye*L_D & x < x_perov_left + 4.00E-05), 2);
+% sigma_p_bar_bulk = mean(sigma_p(:, x > x_perov_left + N_Debye*L_D & x < x_perov_left + 4.00E-05), 2);
 
 
 
 %% Find peak conductivity for applied bias
-pp_Vmax = find(Vappt == max(Vappt));      %% pp = point position
-pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
+% pp_Vmax = find(Vappt == max(Vappt));      %% pp = point position
+% pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
+% 
+% sigma_n_bar_Vpeak = sigma_n_bar(pp_Vmax);
+% sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 
-sigma_n_bar_Vpeak = sigma_n_bar(pp_Vmax);
-sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 
-par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
-number_simulations=number_simulations+1;
-end
-% %% Plot average conductivity
-% figure
-% plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-% axis([-1 1 0 inf])
-% xlabel('Voltage [V]')
-% ylabel('Average conductivity [Siemens]')
-% legend('Electron', 'Hole')
-% end
+
 
 %% Plot average conductivity
-% figure
-% hold on
-% for i=1:value(number_simulations)
-% semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar) 
-% xlabel('Voltage [V]')
-% ylabel('Average channel conductivity')
-% legend('Electron[i]', 'Hole[i]')
-% end
+figure
+semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar) 
+xlabel('Voltage [V]')
+ylabel('Average channel conductivity')
+legend('Electron', 'Hole')
+
+%%
+par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
+counter=counter+1;
+end
+
 % Plot average conductivity
 % figure
 % plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
@@ -119,7 +113,7 @@ end
 % xlabel('Voltage [V]')
 % ylabel('Average bulk conductivity [Semilog]')
 % legend('Electron', 'Hole')
-% 
+%%
 % Plot average conductivity
 % figure
 % plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
@@ -132,7 +126,7 @@ end
 % xlabel('Voltage [V]')
 % ylabel('Average entire conductivity [Semilog]')
 % legend('Electron', 'Hole')
-% 
+%%
 % Plot average conductivity
 % figure
 % plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
@@ -140,11 +134,6 @@ end
 % ylabel('Average entire conductivity [Linear]')
 % legend('Electron', 'Hole')
 
-
-%% Plot Peak conductivity
-% PC - how do you intend to plot this? The peak voltage only occurs
-% once per voltage cycle so you cannot plot as a function of voltage as you
-% have tried below. 
 
 
 % plot(Vappt, sigma_n_peak_positive_voltage, Vappt, sigma_p_peak_positive_voltage)
