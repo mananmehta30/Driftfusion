@@ -7,16 +7,14 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('Input_files/alox.csv');
-
-while par_alox.Ncat(1,3)>10e10
-    par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
-
+number_simulations=0;
+while par_alox.Ncat(1,3)>10e15
 
 %% Equilibrium solutions
 soleq_alox = equilibrate(par_alox);
 
 %% Plot equilibrium energy level diagram
-dfplot.ELnpx(soleq_alox.ion)
+% dfplot.ELnpx(soleq_alox.ion)
 
 %% Current-voltage scan
 % JVsol = doJV(sol_ini, JVscan_rate, JVscan_pnts, Intensity, mobseti, Vstart, Vend, option)
@@ -43,7 +41,7 @@ sol_CV = doCV(soleq_alox.ion, 0, 0, Vmax, Vmin, k_scan, 1, 201);
 %dfplot.npx(sol_CV, 1/k_scan*[0, 0.5, 1.0, 2.5, 3.0]);
 
 %% Plot space charge density
-dfplot.rhox(sol_CV, 1/k_scan*[0, 0.5, 1.0, 2.5, 3.0]);
+% dfplot.rhox(sol_CV, 1/k_scan*[0, 0.5, 1.0, 2.5, 3.0]);
 
 %% Calculate conductivity
 [sigma_n, sigma_p] = dfana.calc_conductivity(sol_CV);
@@ -86,6 +84,9 @@ pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
 sigma_n_bar_Vpeak = sigma_n_bar(pp_Vmax);
 sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 
+par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
+number_simulations=number_simulations+1;
+end
 % %% Plot average conductivity
 % figure
 % plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
@@ -93,16 +94,17 @@ sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 % xlabel('Voltage [V]')
 % ylabel('Average conductivity [Siemens]')
 % legend('Electron', 'Hole')
+% end
 
-%%
 %% Plot average conductivity
-figure
-hold on
-semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar) 
-xlabel('Voltage [V]')
-ylabel('Average channel conductivity [Semilog]')
-legend('Electron', 'Hole')
-
+% figure
+% hold on
+% for i=1:value(number_simulations)
+% semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar) 
+% xlabel('Voltage [V]')
+% ylabel('Average channel conductivity')
+% legend('Electron[i]', 'Hole[i]')
+% end
 % Plot average conductivity
 % figure
 % plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
@@ -137,7 +139,7 @@ legend('Electron', 'Hole')
 % xlabel('Voltage [V]')
 % ylabel('Average entire conductivity [Linear]')
 % legend('Electron', 'Hole')
-end
+
 
 %% Plot Peak conductivity
 % PC - how do you intend to plot this? The peak voltage only occurs
