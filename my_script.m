@@ -4,7 +4,7 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('Input_files/alox.csv');
+par_alox = pc('Input_files/alox_2_gates.csv');
 
 while par_alox.Ncat(1,3)>10e10
 %% Equilibrium solutions
