@@ -2,12 +2,10 @@
 
 %% Initialize driftfusion
 initialise_df
-counter=0;
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('Input_files/alox.csv');
 
-while par_alox.Ncat(1,3)>10e10
 %% Equilibrium solutions
 soleq_alox = equilibrate(par_alox);
 
@@ -95,9 +93,6 @@ ylabel('Average channel conductivity')
 legend('Electron', 'Hole')
 
 %%
-par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
-counter=counter+1;
-end
 
 % Plot average conductivity
 % figure
