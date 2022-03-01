@@ -4,7 +4,7 @@
 initialise_df
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('Input_files/alox.csv');
+par_alox = pc('Input_files/alox_2_gates.csv');
 
 %% Equilibrium solutions
 soleq_alox = equilibrate(par_alox);
@@ -18,8 +18,8 @@ soleq_alox = equilibrate(par_alox);
 
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 k_scan = 0.001;
-Vmin=-15;
-Vmax=15;
+Vmin = -15;
+Vmax = 15;
 sol_CV = doCV(soleq_alox.ion, 0, 0, Vmax, Vmin, k_scan, 1, 201);
 
 % Plot Vapp vs time
