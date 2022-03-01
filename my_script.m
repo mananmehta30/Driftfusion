@@ -62,6 +62,7 @@ x_perov_left = 202e-7;
 x = sol_CV.x;
 t = sol_CV.t;
 Vappt = dfana.calcVapp(sol_CV);
+rho = dfana.calcrho(sol_CV, "whole");
 % Get point at which perovskite starts 
 
 sigma_n_bar = mean(sigma_n(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D), 2);
