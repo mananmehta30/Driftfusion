@@ -1,14 +1,4 @@
-%% Conductivity profiles
-% So systematically you could look at the following.
-
-% 1)Electrode workfunctions
-% 2)Ion density 
-% 3)1 ion, opposite charge (i.e. mobile anions)
-% 4)2 ions
-% 5)Different ion densities
-
-% Ideally you would set some of these parameter explorations up as loops and extract peak conductivity then plot 
-% on a contour plot with x = Ion density, y = Electrode workfunctions, z = peak conductivity for example.
+%Changing only electrode workfunction for different
 
 %% Initialize driftfusion
 initialise_df
@@ -16,15 +6,14 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('Input_files/alox.csv');
-no_of_diff_ion_conc=abs(log10((par_alox.Ncat(1,3)/1e11)));
 epoints=round((par_alox.Phi_left-par_alox.Phi_right)/-(0.1));%number of different electrode values
-valuestore_n=zeros(epoints,no_of_diff_ion_conc);%create the matrix for storing n values
-valuestore_p=zeros(epoints,no_of_diff_ion_conc);%create the matrix for storing p values
+valuestore_n=zeros(epoints);%create the matrix for storing n values
+valuestore_p=zeros(epoints);%create the matrix for storing p values
 phi_left_electrode = par_alox.Phi_left;
 row=1; %intialize 
 column=1;
 %% while
-while par_alox.Ncat(1,3)>1e10
+
 %% Equilibrium solutions 
  
  for electrode_change= par_alox.Phi_left:0.1:par_alox.Phi_right %loop to run for different electrode workfunction
@@ -104,14 +93,10 @@ pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
 sigma_n_bar_Vpeak = sigma_n_bar(pp_Vmax);
 sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 %% Put value inside matrix
-valuestore_n(row,column)= sigma_n_bar_Vpeak;  
-valuestore_p(row,column)= sigma_p_bar_Vpeak;
+valuestore_n(row)= sigma_n_bar_Vpeak;  
+valuestore_p(row)= sigma_p_bar_Vpeak;
 row=row+1;
-par_alox.Phi_left=par_alox.Phi_left-0.1;
- end
-row=1; %reset back to row 1
-par_alox.Phi_left=phi_left_electrode; %reset back to original eletrode value
-column=column+1; %move to the next doping value
+ end %move to the next doping value
 % %% Plot the outputs
 % % figure(101)
 % % Ntr = 6;            % Number of voltage transients
@@ -175,11 +160,9 @@ column=column+1; %move to the next doping value
 % % % xlabel('Voltage [V]')
 % % % ylabel('Average entire conductivity [Linear]')
 % % % legend('Electron', 'Hole')
-% % 
-% % 
 
- par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
- end
+
+
 
  %%
 figure
