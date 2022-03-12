@@ -6,17 +6,12 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('Input_files/alox.csv');
-epoints=round((par_alox.Phi_left-par_alox.Phi_right)/-(0.1));%number of different electrode values
-valuestore_n=zeros(epoints);%create the matrix for storing n values
-valuestore_p=zeros(epoints);%create the matrix for storing p values
-phi_left_electrode = par_alox.Phi_left;
-row=1; %intialize 
-column=1;
+
 %% while
 
 %% Equilibrium solutions 
  
- for electrode_change= par_alox.Phi_left:0.1:par_alox.Phi_right %loop to run for different electrode workfunction
+  %loop to run for different electrode workfunction
 
  soleq_alox = equilibrate(par_alox);
  
@@ -93,10 +88,9 @@ pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
 sigma_n_bar_Vpeak = sigma_n_bar(pp_Vmax);
 sigma_p_bar_Vpeak = sigma_p_bar(pp_Vmax);
 %% Put value inside matrix
-valuestore_n(row)= sigma_n_bar_Vpeak;  
-valuestore_p(row)= sigma_p_bar_Vpeak;
-row=row+1;
- end %move to the next doping value
+valuestore_n(1)= sigma_n_bar_Vpeak;  
+valuestore_p(1)= sigma_p_bar_Vpeak;
+
 % %% Plot the outputs
 % % figure(101)
 % % Ntr = 6;            % Number of voltage transients
@@ -164,10 +158,7 @@ row=row+1;
 
 
 
- %%
-figure
-contour(valuestore_n)
-contour(valuestore_p)
+
 %%
 % %% Make movie for anions and cations
 % %makemovie(sol_CV, @dfplot.acx, 0, [0, 1.5e18], 'acx', true, true);
