@@ -25,7 +25,7 @@ par_alox = pc('Input_files/alox.csv');
 %% Current-voltage scan
 % JVsol = doJV(sol_ini, JVscan_rate, JVscan_pnts, Intensity, mobseti, Vstart, Vend, option)
 % JVsol = doJV(soleq_sio2.ion, 100e-3, 201, 1, 0, 0, 1, 1);
-k_scan = 0.1;
+k_scan = 0.001;
 Vmax = 1.2;
 Vmin = -1.2;
 
