@@ -35,10 +35,9 @@ for i = 1:Ntr
     time_point = find(sol_OC.t <= tarr(i));
     time_point = time_point(end);
     
-    %% Write solution into final position of temporary solution (this is
-    % what will be read in
-    sol_temp.u = sol_OC.u(time_point,:,:);
-    
+    %% Extract initial conditions at requested timepoint.
+    sol_temp = extract_IC(sol_OC, time_point);
+
     %% Reduce the time step for greater accuracy
     sol_temp.par.MaxStepFactor = 0.1;
     
