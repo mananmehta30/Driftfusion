@@ -5,7 +5,7 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('Input_files/alox.csv');
+par_alox = pc('Input_files/alox2.csv');
 
 %% while
 
@@ -14,6 +14,7 @@ par_alox = pc('Input_files/alox.csv');
   %loop to run for different electrode workfunction
 
  soleq_alox = equilibrate(par_alox);
+ dfplot.npx(soleq_alox);
  
 %% Plot equilibrium energy level diagram
 
