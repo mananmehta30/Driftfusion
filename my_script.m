@@ -14,7 +14,7 @@ par_alox = pc('Input_files/alox3.csv');
   %loop to run for different electrode workfunction
 
  soleq_alox = equilibrate(par_alox);
- dfplot.npx(soleq_alox);
+ dfplot.ELnpx(soleq_alox.ion)
  
 %% Plot equilibrium energy level diagram
 
