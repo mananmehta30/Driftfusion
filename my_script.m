@@ -33,17 +33,17 @@ Vmin = -1.2;
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 sol_CV = doCV(soleq_alox.ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
 %% Plot Vapp vs time
-% dfplot.Vappt(sol_CV)
+ %dfplot.Vappt(sol_CV)
 
 %% Plot JV scan
 %dfplot.JtotVapp(sol_CV, 0);
 %set(gca,'YScale','log')
 
 %% Plot anion and cation densities
-%dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
 
 %% Plot electron and hole profiles
-%dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
 
 %% Plot space charge density
 %dfplot.rhox(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
