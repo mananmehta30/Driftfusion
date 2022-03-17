@@ -24,7 +24,7 @@ par_alox = pc('Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
-Ncat_array = logspace(14, 18, 5);
+Ncat_array = logspace(16, 18, 3);
 workfunction_LHS = par.Phi_left:0.05:-5.2;%par.Phi_right;
 
 %% while
@@ -127,14 +127,14 @@ hold off
 %% Plot average conductivity
 for j = 1:length(workfunction_LHS)
     figure(201)
-    semilogy(Vappt, squeeze(sigma_n_barM(5, j, :)))
+    semilogy(Vappt, squeeze(sigma_n_barM(1, j, :)))
     legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
     hold on
 end
 
 for j = 1:length(workfunction_LHS)
     figure(202)
-    semilogy(Vappt, squeeze(sigma_p_barM(5, j, :)))
+    semilogy(Vappt, squeeze(sigma_p_barM(1, j, :)))
     legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
     hold on
 end
@@ -152,7 +152,11 @@ legend(legstr_p2)
 hold off
 %% Plot individual values
 %dfplot.npx(sol_CV(Ncat_index, Workfunction_index), time_array)
-dfplot.npx(sol_CV(1,4), 1);
+    dfplot.npx(sol_CV(2,5), 1);
+ 
+
+
+
 % makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
 %% Plot average conductivity
 % figure(200)
@@ -198,7 +202,6 @@ dfplot.npx(sol_CV(1,4), 1);
 % 
 % 
 %%
-
 % %% Make movie for anions and cations
 % %makemovie(sol_CV, @dfplot.acx, 0, [0, 1.5e18], 'acx', true, true);
 %% Conductivity profiles
