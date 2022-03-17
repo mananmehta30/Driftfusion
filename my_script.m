@@ -5,7 +5,7 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('Input_files/alox2.csv');
+par_alox = pc('Input_files/alox3.csv');
 
 %% while
 
