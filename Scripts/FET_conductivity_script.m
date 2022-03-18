@@ -40,8 +40,8 @@ for i = 1:length(Ncat_array)
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
         %% Find equilibrium
-        soleq_alox(i, j) = equilibrate(par);
-        dfplot.acx(soleq_alox(i, j).ion)
+        soleq(i, j) = equilibrate(par);
+        dfplot.acx(soleq(i, j).ion)
         
         %% Current-voltage scan
         k_scan = 0.001;
@@ -49,7 +49,7 @@ for i = 1:length(Ncat_array)
         Vmin = -1.2;
         
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-        sol_CV(i, j) = doCV(soleq_alox(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
+        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
         %% Plot Vapp vs time
         % dfplot.Vappt(sol_CV)
         
