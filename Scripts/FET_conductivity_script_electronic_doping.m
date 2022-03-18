@@ -1,5 +1,5 @@
 %% Code pupose
-% To compare the values of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
+% To compare the value of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
 
 %% Initialize driftfusion
 initialise_df
