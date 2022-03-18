@@ -1,6 +1,6 @@
 %% Code pupose
-% Code is supposed to take different values of doping in different columns and different left 
-% electrode workfunction values in the rows and give max conductivity achieved
+% To compare the values of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
+
 %% Initialize driftfusion
 initialise_df
 
