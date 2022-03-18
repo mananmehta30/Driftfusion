@@ -23,7 +23,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
-workfunction_LHS = -4.5:0.1:-4.2;
+workfunction_LHS = -5.5:0.1:-4.2;
 
 %% while
 for i = 1:length(Ncat_array)
@@ -191,8 +191,8 @@ hold off
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
     dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
-    legstr_npx{2*i-1 + 3} = ['Ncat =', num2str(Ncat_array(i))];
-    legstr_npx{2*i + 3} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
+    legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
 end
 legend(legstr_npx)
@@ -202,8 +202,8 @@ ylim([1e-1, 1e12])
 legstr_acx = {'', '', ''};
 for i = 1:length(Ncat_array)
     dfplot.acx(sol_CV(i, workfunction_index), Vmax/k_scan)
-    legstr_acx{2*i-1 + 3} = ['Ncat =', num2str(Ncat_array(i))];
-    legstr_acx{2*i + 3} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_acx{2*i-1 + 3} = ['a, Ncat =', num2str(Ncat_array(i))];
+    legstr_acx{2*i + 3} = ['c, Ncat =', num2str(Ncat_array(i))];
     hold on
 end
 legend(legstr_acx)
