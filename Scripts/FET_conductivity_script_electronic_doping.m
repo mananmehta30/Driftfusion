@@ -24,7 +24,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 workfunction_LHS = -5.5:0.1:-4.2;
-% par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
+par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% while
 for i = 1:length(Ncat_array)
     
@@ -160,7 +160,7 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-workfunction_index =1;
+workfunction_index =14;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -193,10 +193,10 @@ legend(legstr_p3)
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-workfunction_index =11;
+workfunction_index =7;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -216,7 +216,7 @@ legend(legstr_acx)
 %ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
-workfunction_index =1;
+workfunction_index =14;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
