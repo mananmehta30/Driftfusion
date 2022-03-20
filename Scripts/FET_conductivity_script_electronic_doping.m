@@ -24,12 +24,13 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 workfunction_LHS = -5.5:0.1:-4.2;
-
+% par.N_ionic_species=0; %uncomment this to simulate without ionic species
 %% while
 for i = 1:length(Ncat_array)
     
     par.Ncat(:) = Ncat_array(i);
     par.Nani(:) = Ncat_array(i);
+   
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
@@ -91,6 +92,7 @@ for i = 1:length(Ncat_array)
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
+    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
 end  
 
 for i = 1:length(Ncat_array)
@@ -100,6 +102,7 @@ for i = 1:length(Ncat_array)
     xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
     legstr_p{i} = ['Ncat =', num2str(Ncat_array(i))];
+    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
 end  
 figure(100)
 legend(legstr_n)
@@ -131,6 +134,7 @@ for j = 1:length(workfunction_LHS)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
     legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    xlim([Vmin Vmax]);
     hold on
 end
 
@@ -138,6 +142,7 @@ for j = 1:length(workfunction_LHS)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
     legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    xlim([Vmin Vmax]);
     hold on
 end
 
@@ -154,8 +159,8 @@ legend(legstr_p2)
 hold off
 
 
-%% Plot carrier concentration at interface as function Vapp fro different ion densities
-workfunction_index = 3;
+%% Plot carrier concentration at interface as function Vapp for different ion densities
+workfunction_index =1;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -188,6 +193,7 @@ legend(legstr_p3)
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
+workfunction_index =11;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
     dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
@@ -210,6 +216,7 @@ legend(legstr_acx)
 %ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
+workfunction_index =1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
@@ -221,7 +228,8 @@ legend(legstr_Vx)
 
 %% Plot individual values
 
-% makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
+%  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
+
 %% Plot average conductivity
 % figure(200)
 % semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
