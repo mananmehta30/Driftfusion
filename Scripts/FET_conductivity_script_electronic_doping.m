@@ -24,7 +24,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 workfunction_LHS = -5.5:0.1:-4.2;
-% par.N_ionic_species=0; %uncomment this to simulate without ionic species
+% par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% while
 for i = 1:length(Ncat_array)
     
