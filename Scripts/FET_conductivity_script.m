@@ -154,7 +154,7 @@ legend(legstr_p2)
 hold off
 
 
-%% Plot carrier concentration at interface as function Vapp fro different ion densities
+%% Plot carrier concentration at interface as function Vapp for different ion densities
 workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
