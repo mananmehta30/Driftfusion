@@ -7,31 +7,23 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('./Input_files/alox.csv');
-% no_of_diff_ion_conc=abs(log10((par_alox.Ncat(1,3)/1e17)))+1;%number of different ionic values
-% epoints=round((par_alox.Phi_left-par_alox.Phi_right)/-(0.1))+1;%number of different electrode values
-% valuestore_n=zeros(epoints,no_of_diff_ion_conc);%create the matrix for storing n values
-% valuestore_p=zeros(epoints,no_of_diff_ion_conc);%create the matrix for storing p values
-% phi_left_electrode = par_alox.Phi_left; %store value in a variable that will change in the loop
-% row=1; %intialize 
-% column=1;%intialize 
-% electrodeval=zeros(epoints); %store electrode values
-% electrodeval_counter=0;
-% ionsval=zeros(no_of_diff_ion_conc);%store ion values
-% ionsval_counter=0;
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 workfunction_LHS = -5.5:0.1:-4.2;
-par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
+%% Number of species
+% par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
+%% Set ionic mobility to be zero to simulate without affect of ions
+par.mu_c(:) = 0;
+par.mu_a(:) = 0;
 %% while
 for i = 1:length(Ncat_array)
     
     par.Ncat(:) = Ncat_array(i);
     par.Nani(:) = Ncat_array(i);
    
-    
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
         
@@ -111,24 +103,7 @@ figure(101)
 legend(legstr_p)
 hold off
 
-%%
-% figure
-% contour(valuestore_n)
-% contour(valuestore_p)
-% % Plot the outputs
-% figure(101)
-% Ntr = 6;            % Number of voltage transients
-% 
-% for i = 1:Ntr
-%     plot(sol_VTROTTR(i).t, DeltaVoc(i,:));
-%     hold on
-% end
-% 
-% xlabel('Time [s]')
-% ylabel('DeltaV [V]')
-% xlim([0, 1e-5])
-% hold off
-% %
+
 %% Plot average conductivity
 for j = 1:length(workfunction_LHS)
     figure(201)
@@ -230,53 +205,7 @@ legend(legstr_Vx)
 
 %  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
 
-%% Plot average conductivity
-% figure(200)
-% semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-% xlabel('Voltage [V]')
-% ylabel('Average channel conductivity [Semilog]')
-% legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(201)
-% % plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-% % xlabel('Voltage [V]')
-% % ylabel('Average channel conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% figure(202)
-% semilogy(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-% xlabel('Voltage [V]')
-% ylabel('Average bulk conductivity [Semilog]')
-% legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(203)
-% % plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-% % xlabel('Voltage [V]')
-% % ylabel('Average bulk conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% figure(204)
-% semilogy(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-% xlabel('Voltage [V]')
-% ylabel('Average entire conductivity [Semilog]')
-% legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(205)
-% % plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-% % xlabel('Voltage [V]')
-% % ylabel('Average entire conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% 
-%%
 
-% %% Make movie for anions and cations
-% %makemovie(sol_CV, @dfplot.acx, 0, [0, 1.5e18], 'acx', true, true);
 %% Conductivity profiles
 % So systematically you could look at the following.
 
