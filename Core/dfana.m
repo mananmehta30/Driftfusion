@@ -450,11 +450,11 @@ classdef dfana
         function [sigma_n, sigma_p] = calc_conductivity(sol)
             [u, t, x, par, dev, n, p, a, c, V] = dfana.splitsol(sol);
             
-            mu_n_M = repmat(dev.mu_n, length(t), 1);
+            mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an array of the mobility values across x of the device)
             mu_p_M = repmat(dev.mu_p, length(t), 1);
-            % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates a large matrix mu_n_M consisting of an length(t)-by-1 tiling 
-            %of copies of A. 
-            sigma_n = par.e.*mu_n_M.*n;
+            % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates matrix mu_n_M consisting of an length(t)-by-1 tiling 
+            %of copies of dev.mu_n 
+            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created
             sigma_p = par.e.*mu_p_M.*p;
         end
         

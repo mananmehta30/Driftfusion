@@ -37,7 +37,7 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion)
         
         %% Current-voltage scan
-        k_scan = 0.002;%Can check dependence of results on k_scan
+        k_scan = 0.001;%Can check dependence of results on k_scan
         Vmax = 1.2;
         Vmin = -1.2;
         
@@ -69,10 +69,11 @@ sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS));
 
 for i = 1:length(Ncat_array)
     for j = 1:length(workfunction_LHS)
-        [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
-        sigma_n_barM(i,j,:) = sigma_n_bar;
-        sigma_p_barM(i,j,:) = sigma_p_bar;
-        sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak;
+        [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));%call this function
+        sigma_n_barM(i,j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
+        sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created that
+        % has the mean conductivity
+        sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak; %This is calculated in sigma_ana
         sigma_p_bar_VpeakM(i,j) = sigma_p_bar_Vpeak;
     end
 end
@@ -147,9 +148,18 @@ for i = 1:length(Ncat_array)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
-
+%n_int takes the electron density at the interface for all times, at space
+%par.pcum0(3) that corresponds to MAPI for variable number 2 that is the hole density. 
 for i = 1:length(Ncat_array)
-    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);%[time,space, variable]. 
+%1. Electron density 2. Hole density 3. Cation density (where 1 or 2 mobile ionic
+%carriers are stipulated)
+%4. Anion density (where 2 mobile ionic carriers are stipulated)
+%The spatial mesh x.
+%The time mesh t.
+%The parameters object par.
+
+
     figure(204)
     semilogy(Vappt, p_int)
     legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
