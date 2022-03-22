@@ -11,8 +11,8 @@ par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
-Ncat_array = logspace(18, 19, 2); %16, 19, 4
-workfunction_LHS = -5.5:0.1:-5.3; %-5.5:0.1:-4.2;
+Ncat_array = logspace(16, 19, 4); %16, 19, 4
+workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
@@ -110,7 +110,7 @@ hold off
 %% Plot average conductivity
 for j = 1:length(workfunction_LHS)
     figure(201)
-    semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
+    semilogy(Vappt, squeeze(sigma_n_barM(3, j, :))) %remove singleton dimensions (reason?)
     legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
     xlim([Vmin Vmax]);
     hold on
