@@ -16,15 +16,15 @@ workfunction_LHS = -5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
-par.mu_c(:) = 0;
-par.mu_a(:) = 0;
-%% while
+% par.mu_c(:) = 0;
+% par.mu_a(:) = 0;
+%% For loop
 for i = 1:length(Ncat_array)
     
-    par.Ncat(:) = Ncat_array(i);
-    par.Nani(:) = Ncat_array(i);
+    par.Ncat(:) = Ncat_array(i); %All layers get same ionic density. 
+    par.Nani(:) = Ncat_array(i); %This is done for code purpose. 
    
-    disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
+    disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);%num2str=Convert numbers to character representation
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
         
         par.Phi_left = workfunction_LHS(j);
@@ -37,11 +37,12 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion)
         
         %% Current-voltage scan
-        k_scan = 0.001;
+        k_scan = 0.002;%Can check dependence of results on k_scan
         Vmax = 1.2;
         Vmin = -1.2;
         
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+        %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
         %% Plot Vapp vs time
         % dfplot.Vappt(sol_CV)
@@ -55,11 +56,11 @@ for i = 1:length(Ncat_array)
         
         %% Plot electron and hole profiles
         %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
-    end %loop runs till -5.5 to 4.9   
+    end 
 end
 
 %% Analysis
-Vappt = dfana.calcVapp(sol_CV(1,1));
+Vappt = dfana.calcVapp(sol_CV(1,1)); %not sure
 % Preallocation
 sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
 sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
@@ -135,7 +136,7 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-workfunction_index =14;
+workfunction_index =1;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -168,10 +169,10 @@ legend(legstr_p3)
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-workfunction_index =7;
+workfunction_index =1;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -217,3 +218,8 @@ legend(legstr_Vx)
 
 % Ideally you would set some of these parameter explorations up as loops and extract peak conductivity then plot 
 % on a contour plot with x = Ion density, y = Electrode workfunctions, z = peak conductivity for example.
+%% Questions
+
+%Why is dfana used for generating the voltage steps? Can it be done
+%directly instead?
+%How is tpoints determined?

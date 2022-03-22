@@ -452,7 +452,8 @@ classdef dfana
             
             mu_n_M = repmat(dev.mu_n, length(t), 1);
             mu_p_M = repmat(dev.mu_p, length(t), 1);
-            
+            % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates a large matrix mu_n_M consisting of an length(t)-by-1 tiling 
+            %of copies of A. 
             sigma_n = par.e.*mu_n_M.*n;
             sigma_p = par.e.*mu_p_M.*p;
         end
