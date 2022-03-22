@@ -11,8 +11,8 @@ par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
-Ncat_array = logspace(16, 19, 4);
-workfunction_LHS = -5.5:0.1:-4.2;
+Ncat_array = logspace(18, 19, 2); %16, 19, 4
+workfunction_LHS = -5.5:0.1:-5.3; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
@@ -62,6 +62,7 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1)); %not sure
 % Preallocation
+
 sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
 sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
 sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
@@ -142,7 +143,7 @@ legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2); %shouldn't this be 1? Confirm once
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];

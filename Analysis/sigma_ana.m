@@ -3,7 +3,7 @@ function [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigm
 par = sol_CV.par;
 
 %% Calculate conductivity
-[sigma_n, sigma_p] = dfana.calc_conductivity(sol_CV);
+[sigma_n, sigma_p] = dfana.calc_conductivity(sol_CV); %function in dfana is called to solve for n and p conductivity
 
 %% Debye length Calculation
 e = par.e;
