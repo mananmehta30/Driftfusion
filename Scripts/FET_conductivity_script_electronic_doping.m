@@ -33,8 +33,8 @@ for i = 1:length(Ncat_array)
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
         %% Find equilibrium
-        soleq(i, j) = equilibrate(par);
-        dfplot.acx(soleq(i, j).ion)
+        soleq(i, j) = equilibrate(par);% Find and 
+        dfplot.acx(soleq(i, j).ion) %plot the equilibirum solutions
         
         %% Current-voltage scan
         k_scan = 0.001;%Can check dependence of results on k_scan
@@ -43,7 +43,7 @@ for i = 1:length(Ncat_array)
         
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
-        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
+        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);%How is the number of time points determined?
         %% Plot Vapp vs time
         % dfplot.Vappt(sol_CV)
         
@@ -60,25 +60,25 @@ for i = 1:length(Ncat_array)
 end
 
 %% Analysis
-Vappt = dfana.calcVapp(sol_CV(1,1)); %not sure
+Vappt = dfana.calcVapp(sol_CV(1,1)); % Voltage applied on the device as a function of time
+%If scan rate is 0.001 then why Vappt is not the same?
 % Preallocation
 
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %Conductivity profiles for different Ncat 
+sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %and Workfunctions for each different time steps
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); %Mean conducitvity acreoss all the times
 sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
 
 for i = 1:length(Ncat_array)
     for j = 1:length(workfunction_LHS)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));%call this function
         sigma_n_barM(i,j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
-        sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created that
-        % has the mean conductivity
+        sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created that has the mean conductivity
         sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak; %This is calculated in sigma_ana
         sigma_p_bar_VpeakM(i,j) = sigma_p_bar_Vpeak;
     end
 end
-
+%What is the value in sigma_n_barM
 %% Plots
 for i = 1:length(Ncat_array)
     figure(100)

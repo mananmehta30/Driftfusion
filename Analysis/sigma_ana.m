@@ -1,6 +1,6 @@
 function [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV)
 
-par = sol_CV.par;
+par = sol_CV.par; %the parameters of the solved equations are used
 
 %% Calculate conductivity
 [sigma_n, sigma_p] = dfana.calc_conductivity(sol_CV); %function in dfana is called to solve for n and p conductivity
@@ -20,7 +20,7 @@ Vappt = dfana.calcVapp(sol_CV);
 %% Find mean conductivity
 sigma_n_bar = sigma_n(:, sol_CV.par.pcum0(3) +1); % for all values that begin with the left side of the perovskite
 sigma_p_bar = sigma_p(:, sol_CV.par.pcum0(3) +1); %pcum0 is the set of indexes from which the different layers begins
-
+%How is the mean conductivity solved here using sigma_n(:, sol_CV.par.pcum0(3) +1)
 %% Find peak conductivity for applied bias
 pp_Vmax = find(Vappt == max(Vappt));      %% find will give the index of the highest Vappt
 pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
