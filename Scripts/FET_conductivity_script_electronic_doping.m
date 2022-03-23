@@ -1,5 +1,5 @@
 %% Code pupose
-% To compare the value of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
+% To check how doping affects things
 
 %% Initialize driftfusion
 initialise_df
@@ -12,7 +12,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4); %16, 19, 4
-workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
+MAPI_Ef0 = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
@@ -25,10 +25,12 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i); %This is done for code purpose. 
    
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);%num2str=Convert numbers to character representation
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+    for j = 1:length(MAPI_Ef0) %loop to run for different electrode workfunction
         
-        par.Phi_left = workfunction_LHS(j);
-        disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
+       % par.Phi_left = MAPI_Ef0(j);%Change workfunction of left electrode with MAPI
+        par.EF0(3)= MAPI_Ef0(j);%Change workfunction of MAPI
+         disp(['LHS electrode workfunction = ', num2str(MAPI_Ef0(j)), ' eV']);
+         disp(['MAPI Ef0 = ', num2str(MAPI_Ef0(j)), ' eV']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -64,13 +66,13 @@ Vappt = dfana.calcVapp(sol_CV(1,1)); % Voltage applied on the device as a functi
 %If scan rate is 0.001 then why Vappt is not the same?
 % Preallocation
 
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %Conductivity profiles for different Ncat 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %and Workfunctions for each different time steps
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); %Mean conducitvity acreoss all the times
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(Ncat_array), length(MAPI_Ef0), length(sol_CV(1,1).t)); %Conductivity profiles for different Ncat 
+sigma_p_barM = zeros(length(Ncat_array), length(MAPI_Ef0), length(sol_CV(1,1).t)); %and Workfunctions for each different time steps
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(MAPI_Ef0)); %Mean conducitvity acreoss all the times
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(MAPI_Ef0)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(workfunction_LHS)
+    for j = 1:length(MAPI_Ef0)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));%call this function
         sigma_n_barM(i,j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
         sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created that has the mean conductivity
@@ -82,22 +84,22 @@ end
 %% Plots
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
+    semilogy(MAPI_Ef0, sigma_n_bar_VpeakM(i, :))
     hold on
-    xlabel('LHS workfunction [eV]')
+    xlabel('MAPI workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
-    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+    xlim([MAPI_Ef0(1) MAPI_Ef0(length(MAPI_Ef0))])
 end  
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(i, :))
+    semilogy(MAPI_Ef0, sigma_p_bar_VpeakM(i, :))
     hold on
-    xlabel('LHS workfunction [eV]')
+    xlabel('MAPI workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
     legstr_p{i} = ['Ncat =', num2str(Ncat_array(i))];
-    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+    xlim([MAPI_Ef0(1) MAPI_Ef0(length(MAPI_Ef0))])
 end  
 figure(100)
 legend(legstr_n)
@@ -108,18 +110,18 @@ hold off
 
 
 %% Plot average conductivity
-for j = 1:length(workfunction_LHS)
+for j = 1:length(MAPI_Ef0)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :))) %remove singleton dimensions (reason?)
-    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_n2{j} = ['\Phi_l =', num2str(MAPI_Ef0(j))];
     xlim([Vmin Vmax]);
     hold on
 end
 
-for j = 1:length(workfunction_LHS)
+for j = 1:length(MAPI_Ef0)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_p2{j} = ['\Phi_l =', num2str(MAPI_Ef0(j))];
     xlim([Vmin Vmax]);
     hold on
 end
@@ -138,12 +140,12 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-workfunction_index =1;
+MAPI_index =7;
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2); %shouldn't this be 1? Confirm once
+    n_int = sol_CV(i, MAPI_index).u(:, par.pcum0(3), 2); %shouldn't this be 1? Confirm once
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -152,7 +154,7 @@ end
 %n_int takes the electron density at the interface for all times, at space
 %par.pcum0(3) that corresponds to MAPI for variable number 2 that is the hole density. 
 for i = 1:length(Ncat_array)
-    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);%[time,space, variable]. 
+    p_int = sol_CV(i, MAPI_index).u(:, par.pcum0(3), 3);%[time,space, variable]. 
 %1. Electron density 2. Hole density 3. Cation density (where 1 or 2 mobile ionic
 %carriers are stipulated)
 %4. Anion density (where 2 mobile ionic carriers are stipulated)
@@ -180,10 +182,10 @@ legend(legstr_p3)
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-workfunction_index =1;
+MAPI_index =7;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, MAPI_index), 0);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -194,7 +196,7 @@ ylim([1e-1, 1e12])
 %% Plot cation and anion densities at Vmax as a function of position
 legstr_acx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.acx(sol_CV(i, workfunction_index), Vmax/k_scan)
+    dfplot.acx(sol_CV(i, MAPI_index), Vmax/k_scan)
     legstr_acx{2*i-1 + 3} = ['a, Ncat =', num2str(Ncat_array(i))];
     legstr_acx{2*i + 3} = ['c, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -203,10 +205,10 @@ legend(legstr_acx)
 %ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
-workfunction_index =14;
+MAPI_index =7;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
-    dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
+    dfplot.Vx(sol_CV(i, MAPI_index), 0);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
