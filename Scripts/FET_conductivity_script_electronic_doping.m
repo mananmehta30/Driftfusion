@@ -228,12 +228,22 @@ xlabel('Voltage [V]')
 ylabel('Cation density interface (cm-3)')
 legend(legstr_n3)
 hold off
+%% Trying some dfplots
+%   
+for i = 1:length(Ncat_array)
+    dfplot.Vxacx(sol_CV(i,1), 0)
+    hold on
+end
+hold off
+%Why does the graph disappear?
+%% Potential due to ionic effect
 
-
+    dfplot.Vionxacx(sol_CV(1,7), 0)
+   
 
 %% Plot individual values
 %Ask how makemovie works
-%  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
+  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
 
 
 %% Conductivity profiles
@@ -251,4 +261,3 @@ hold off
 
 %Why is dfana used for generating the voltage steps? Can it be done
 %directly instead?
-%How is tpoints determined?
