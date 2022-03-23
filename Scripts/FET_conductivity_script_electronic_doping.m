@@ -212,9 +212,27 @@ for i = 1:length(Ncat_array)
 end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
+%% Plot cation density as a function of voltage at the interface
+cation_index=3;
+legstr_n3 =[];
+for i = 1:length(workfunction_LHS)
+    cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
+    figure(205)
+    plot(Vappt, cation_density_interface)
+    legstr_n3{i} = ['Phi =', num2str(workfunction_LHS(i))];
+    hold on
+end
+
+figure(205)
+xlabel('Voltage [V]')
+ylabel('Cation density interface (cm-3)')
+legend(legstr_n3)
+hold off
+
+
 
 %% Plot individual values
-
+%Ask how makemovie works
 %  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
 
 
