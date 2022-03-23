@@ -58,6 +58,10 @@ for i = 1:length(Ncat_array)
         %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
     end 
 end
+%% Check repmat stuff
+gg = repmat(par.dev.mu_n, 5, 1);
+sigma_gg = par.e.*gg.*5;
+f=mean(sigma_gg,2);
 
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1)); % Voltage applied on the device as a function of time

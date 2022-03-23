@@ -452,6 +452,8 @@ classdef dfana
             
             mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an row array of 
             %the mobility values across the length which is given in x of the device)
+%Looks like par.dev.mu_n and par.xx are aligned differently by one
+%position. Need to ask
             mu_p_M = repmat(dev.mu_p, length(t), 1);
             % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates matrix mu_n_M consisting of an length(t)-by-1 tiling 
             %of copies of dev.mu_n( the mobility values at each different x)
