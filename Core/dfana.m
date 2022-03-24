@@ -451,15 +451,15 @@ classdef dfana
             [u, t, x, par, dev, n, p, a, c, V] = dfana.splitsol(sol);
             
             mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an row array of 
-            %the mobility values across the length which is given in x of the device)
-%Looks like par.dev.mu_n and par.xx are aligned differently by one
-%position. Need to ask
+            %the mobility values across the length which is given in par.xx of the device)
             mu_p_M = repmat(dev.mu_p, length(t), 1);
             % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates matrix mu_n_M consisting of an length(t)-by-1 tiling 
             %of copies of dev.mu_n( the mobility values at each different x)
-            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created? Is this correct? 
-            %Does the n in the formula come from splitsol? How to access it? How does the n value change 
-            sigma_p = par.e.*mu_p_M.*p;     
+            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created
+            %The n in the formula come from splitsol and changes row wise with each time period
+            sigma_p = par.e.*mu_p_M.*p;
+            %Therefore sigma_n and sigma_p store values of the conductivity across the device (column wise) and
+            % the different time periods (row wise)
         end
         
         function Vapp = calcVapp(sol)

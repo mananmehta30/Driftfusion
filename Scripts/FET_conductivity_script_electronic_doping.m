@@ -64,16 +64,9 @@ for i = 1:length(Ncat_array)
         %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
     end 
 end
-%% Check repmat stuff
-gg = repmat(par.dev.mu_n, 5, 1);
-sigma_gg = par.e.*gg.*5;
-f=mean(sigma_gg,2);
 
 %% Analysis
-Vappt = dfana.calcVapp(sol_CV(1,1)); % Voltage applied on the device as a function of time
-%If scan rate is 0.001 then why Vappt is not the same?
-%Answer: Here t doesnt matter. The array of time matters. 
-% Preallocation
+Vappt = dfana.calcVapp(sol_CV(1,1)); 
 
 sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %Conductivity profiles for different Ncat 
 sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %and Workfunctions for each different time steps
@@ -85,13 +78,14 @@ for i = 1:length(Ncat_array)
        
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));%call this function
         sigma_n_barM(i,j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
-        sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created that has the mean conductivity
+        sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created 
+        %that has the mean conductivity
         sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak; %This is calculated in sigma_ana
         sigma_p_bar_VpeakM(i,j) = sigma_p_bar_Vpeak;
         
     end
 end
-%What is the value in sigma_n_barM
+
 %% Plots
 for i = 1:length(Ncat_array)
     figure(100)
@@ -166,12 +160,8 @@ end
 %par.pcum0(3) that corresponds to MAPI for variable number 2 that is the hole density. 
 for i = 1:length(Ncat_array)
     p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);%[time,space, variable]. 
-%1. Electron density 2. Hole density 3. Cation density (where 1 or 2 mobile ionic
-%carriers are stipulated)
+%1 Cation density 2. Electron density 3. Hole density 
 %4. Anion density (where 2 mobile ionic carriers are stipulated)
-%The spatial mesh x.
-%The time mesh t.
-%The parameters object par.
 
 
     figure(204)
