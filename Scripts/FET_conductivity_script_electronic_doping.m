@@ -40,10 +40,12 @@ for i = 1:length(Ncat_array)
         k_scan = 0.001;%Can check dependence of results on k_scan
         Vmax = 1.2;
         Vmin = -1.2;
+%(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
         
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);%How is the number of time points determined?
+       
         %% Plot Vapp vs time
         % dfplot.Vappt(sol_CV)
         
@@ -186,8 +188,10 @@ hold off
 %% Plot electron and hole profiles at Vmax as a function of position
 workfunction_index =1;
 legstr_npx = {'', '', ''};
+Vmax_t_index = find(sol_CV(1, 1).t == 80);
+V_INDEX=Vmax/k_scan; %Better way to use the index?
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan) %this is the time index if I am correct
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
