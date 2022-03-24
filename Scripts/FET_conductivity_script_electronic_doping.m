@@ -114,7 +114,7 @@ for j = 1:length(MAPI_Ef0)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :))) %remove singleton dimensions (reason?)
     legstr_n2{j} = ['\Phi_l =', num2str(MAPI_Ef0(j))];
-    xlim([Vmin Vmax]);
+    %xlim([Vmin Vmax]);
     hold on
 end
 
@@ -122,7 +122,7 @@ for j = 1:length(MAPI_Ef0)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
     legstr_p2{j} = ['\Phi_l =', num2str(MAPI_Ef0(j))];
-    xlim([Vmin Vmax]);
+    %xlim([Vmin Vmax]);
     hold on
 end
 
