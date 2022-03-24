@@ -1,4 +1,5 @@
 %% Figure out the reason for the isobestic point
+%Try for higher scan rate
 
 %% Code pupose
 % To compare the value of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
