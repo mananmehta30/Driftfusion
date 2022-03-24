@@ -1,3 +1,5 @@
+%% Figure out the reason for the isobestic point
+
 %% Code pupose
 % To compare the value of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
 
@@ -242,12 +244,19 @@ legend(legstr_n3)
 hold off
 %% Trying some dfplots
 %   
-for i = 1:length(Ncat_array)
+for i = 4:-1:1
     dfplot.Vxacx(sol_CV(i,1), 0)
+    subplot(2,1,1);
+    hold on
+    subplot(2,1,2)
     hold on
 end
-hold off
+ subplot(2,1,1);
+    hold off
+    subplot(2,1,2)
+    hold off
 %Why does the graph disappear?
+
 %% Potential due to ionic effect
 
    % dfplot.Vionxacx(sol_CV(1,7), 0)
