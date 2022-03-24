@@ -45,7 +45,8 @@ for i = 1:length(Ncat_array)
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);%How is the number of time points determined?
-       
+       %Picked because it is a sensible divisor. Check for your voltage
+       %range and then get it.
         %% Plot Vapp vs time
         % dfplot.Vappt(sol_CV)
         
@@ -68,20 +69,23 @@ f=mean(sigma_gg,2);
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1)); % Voltage applied on the device as a function of time
 %If scan rate is 0.001 then why Vappt is not the same?
+%Answer: Here t doesnt matter. The array of time matters. 
 % Preallocation
 
 sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %Conductivity profiles for different Ncat 
 sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %and Workfunctions for each different time steps
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); %Mean conducitvity acreoss all the times
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); %Mean conducitvity across all the times
 sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
 
 for i = 1:length(Ncat_array)
     for j = 1:length(workfunction_LHS)
+       
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));%call this function
         sigma_n_barM(i,j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
         sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created that has the mean conductivity
         sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak; %This is calculated in sigma_ana
         sigma_p_bar_VpeakM(i,j) = sigma_p_bar_Vpeak;
+        
     end
 end
 %What is the value in sigma_n_barM
@@ -223,7 +227,7 @@ legend(legstr_Vx)
 %% Plot cation density as a function of voltage at the interface
 cation_index=3;
 legstr_n3 =[];
-for i = 1:length(workfunction_LHS)
+for i = 1:5
     cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
     figure(205)
     plot(Vappt, cation_density_interface)
@@ -246,12 +250,12 @@ hold off
 %Why does the graph disappear?
 %% Potential due to ionic effect
 
-    dfplot.Vionxacx(sol_CV(1,7), 0)
+   % dfplot.Vionxacx(sol_CV(1,7), 0)
    
 
 %% Plot individual values
 %Ask how makemovie works
-  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
+%  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
 
 
 %% Conductivity profiles
