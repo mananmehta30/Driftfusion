@@ -255,8 +255,8 @@ end
    %% DFPLOT
   
    
-dfplot.acx(sol_CV(3, 1).t(1));
-
+dfplot.acx(sol_CV(3, 1),180);
+%this is not time. check again
 %% Plot individual values
 %Ask how makemovie works
 %  makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
