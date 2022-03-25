@@ -19,8 +19,8 @@ workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
-par.mu_c(:) = 0;
-par.mu_a(:) = 0;
+% par.mu_c(:) = 0;
+% par.mu_a(:) = 0;
 %% For loop
 for i = 1:length(Ncat_array)
     
@@ -40,14 +40,14 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion) %plot the equilibirum solutions
         
         %% Current-voltage scan
-        k_scan = 0.001;%Can check dependence of results on k_scan
-        Vmax = 1.2;
-        Vmin = -1.2;
+        k_scan = 1;%Can check dependence of results on k_scan
+        Vmax = 30;
+        Vmin = -30;
 %(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
-        
+        tpoints=(Vmax-Vmin)/k_scan;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
-        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);%How is the number of time points determined?
+        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);%How is the number of time points determined?
        %Picked because it is a sensible divisor. Check for your voltage
        %range and then get it.
         %% Plot Vapp vs time
