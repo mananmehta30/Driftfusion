@@ -95,6 +95,7 @@ for i = 1:length(Ncat_array)
     ylabel('Peak electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
     xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+    
 end  
 
 for i = 1:length(Ncat_array)
@@ -105,6 +106,7 @@ for i = 1:length(Ncat_array)
     ylabel('Peak hole conductivity [S cm-1]')
     legstr_p{i} = ['Ncat =', num2str(Ncat_array(i))];
     xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+    
 end  
 figure(100)
 legend(legstr_n)
@@ -208,7 +210,7 @@ legend(legstr_acx)
 %ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
-workfunction_index =14;
+workfunction_index =1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
