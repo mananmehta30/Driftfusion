@@ -1,3 +1,5 @@
+%% Line258
+%try to see if yoou can plot for the time
 %% Figure out the reason for the isobestic point
 %Try for higher scan rate
 
@@ -40,11 +42,11 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion) %plot the equilibirum solutions
         
         %% Current-voltage scan
-        k_scan = 1;%Can check dependence of results on k_scan
-        Vmax = 30;
-        Vmin = -30;
+        k_scan = 0.1;%Can check dependence of results on k_scan
+        Vmax = 1.2;
+        Vmin = -1.2;
 %(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
-        tpoints=(Vmax-Vmin)/k_scan;
+        tpoints=(20*(Vmax-Vmin)/k_scan)+1;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);%How is the number of time points determined?
@@ -250,6 +252,10 @@ end
 
    % dfplot.Vionxacx(sol_CV(1,7), 0)
    
+   %% DFPLOT
+  
+   
+dfplot.acx(sol_CV(3, 1).t(1));
 
 %% Plot individual values
 %Ask how makemovie works
