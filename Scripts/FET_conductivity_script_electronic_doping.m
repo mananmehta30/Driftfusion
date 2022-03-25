@@ -208,7 +208,7 @@ legend(legstr_acx)
 %ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
-workfunction_index =14;
+workfunction_index =1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
@@ -218,10 +218,10 @@ end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 %% Plot cation density as a function of voltage at the interface
-cation_index=3;
+cation_index=3; %For 1e18
 legstr_n3 =[];
-for i = 1:5
-    cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
+for i = 1:length(workfunction_LHS)
+    cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %par.pcum0(3) is the index of the oxide/pvk interface
     figure(205)
     plot(Vappt, cation_density_interface)
     legstr_n3{i} = ['Phi =', num2str(workfunction_LHS(i))];
@@ -234,19 +234,19 @@ ylabel('Cation density interface (cm-3)')
 legend(legstr_n3)
 hold off
 %% Trying some dfplots
-%   
-for i = 4:-1:1
-    dfplot.Vxacx(sol_CV(i,1), 0)
-    subplot(2,1,1);
-    hold on
-    subplot(2,1,2)
-    hold on
-end
- subplot(2,1,1);
-    hold off
-    subplot(2,1,2)
-    hold off
-%Why does the graph disappear?
+ 
+% for i = 4:-1:1
+%     dfplot.Vxacx(sol_CV(i,1), 0)
+%     subplot(2,1,1);
+%     hold on
+%     subplot(2,1,2)
+%     hold on
+% end
+%  subplot(2,1,1);
+%     hold off
+%     subplot(2,1,2)
+%     hold off
+
 
 %% Potential due to ionic effect
 
