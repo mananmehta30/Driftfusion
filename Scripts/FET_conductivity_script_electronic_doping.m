@@ -19,8 +19,8 @@ workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
-% par.mu_c(:) = 0;
-% par.mu_a(:) = 0;
+par.mu_c(:) = 0;
+par.mu_a(:) = 0;
 %% For loop
 for i = 1:length(Ncat_array)
     
@@ -152,19 +152,15 @@ legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2); %shouldn't this be 1? Confirm once
+    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2); %n_int takes the electron density at the interface for all times, at space
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
-%n_int takes the electron density at the interface for all times, at space
-%par.pcum0(3) that corresponds to MAPI for variable number 2 that is the hole density. 
-for i = 1:length(Ncat_array)
-    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);%[time,space, variable]. 
-%1 Cation density 2. Electron density 3. Hole density 
-%4. Anion density (where 2 mobile ionic carriers are stipulated)
 
+for i = 1:length(Ncat_array)
+    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);%par.pcum0(3) that corresponds to MAPI for variable number 2 that is the hole density. 
 
     figure(204)
     semilogy(Vappt, p_int)
