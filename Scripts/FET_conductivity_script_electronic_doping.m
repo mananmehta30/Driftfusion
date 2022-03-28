@@ -51,13 +51,13 @@ sigma_p_bar_VpeakM = sigma_p_bar_Vpeak;
 
 
     cation_density_interface = sol_CV.u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
-    figure(205)
+    figure(2088)
     semilogy(Vappt, cation_density_interface)
-    figure(205)
+    figure(2088)
     xlabel('Voltage [V]')
     ylabel('Cation density interface (cm-3)')
     legend('Ncat=1e18')
-   
+   %%
 workfunction_LHS=5.5;
     figure(100)
     semilogy(workfunction_LHS, sigma_n_bar_VpeakM)
