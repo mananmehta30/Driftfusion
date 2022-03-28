@@ -46,6 +46,18 @@ sigma_p_bar_VpeakM = sigma_p_bar_Vpeak;
         
 
 %% Plots
+
+%% Plot cation density as a function of voltage at the interface
+
+
+    cation_density_interface = sol_CV.u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
+    figure(205)
+    semilogy(Vappt, cation_density_interface)
+    figure(205)
+    xlabel('Voltage [V]')
+    ylabel('Cation density interface (cm-3)')
+    legend('Ncat=1e18')
+   
 workfunction_LHS=5.5;
     figure(100)
     semilogy(workfunction_LHS, sigma_n_bar_VpeakM)
@@ -53,7 +65,7 @@ workfunction_LHS=5.5;
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
     legend = ('Ncat =1e18');
-    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+   
     
 
 
@@ -170,17 +182,7 @@ for i = 1:length(Ncat_array)
 end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
-%% Plot cation density as a function of voltage at the interface
 
-
-    cation_density_interface = sol_CV.u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
-    figure(205)
-    plot(Vappt, cation_density_interface)
-    figure(205)
-    xlabel('Voltage [V]')
-    ylabel('Cation density interface (cm-3)')
-    legend('Ncat=1e18')
-   
 
 
 
