@@ -1,5 +1,5 @@
 %% Line258
-%try to see if yoou can plot for the time
+%try to see if you can plot for the time
 %% Figure out the reason for the isobestic point
 %Try for higher scan rate
 
@@ -42,11 +42,11 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion) %plot the equilibirum solutions
         
         %% Current-voltage scan
-        k_scan = 0.1;%Can check dependence of results on k_scan
-        Vmax = 1.2;
-        Vmin = -1.2;
+        k_scan = 0.001;%Can check dependence of results on k_scan
+        Vmax = 2;
+        Vmin = -2;
 %(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
-        tpoints=(20*(Vmax-Vmin)/k_scan)+1;
+        tpoints=(2*(Vmax-Vmin)/k_scan)+1;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);%How is the number of time points determined?
@@ -220,7 +220,7 @@ legend(legstr_Vx)
 %% Plot cation density as a function of voltage at the interface
 cation_index=3;
 legstr_n3 =[];
-for i = 1:5
+for i = 1:length(workfunction_LHS)
     cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
     figure(205)
     plot(Vappt, cation_density_interface)
