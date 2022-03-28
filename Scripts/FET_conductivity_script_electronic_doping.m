@@ -43,8 +43,8 @@ for i = 1:length(Ncat_array)
         
         %% Current-voltage scan
         k_scan = 0.001;%Can check dependence of results on k_scan
-        Vmax = 2;
-        Vmin = -2;
+        Vmax = 1.2;
+        Vmin = -1.2;
 %(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
         tpoints=(2*(Vmax-Vmin)/k_scan)+1;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
@@ -117,7 +117,22 @@ figure(101)
 legend(legstr_p)
 hold off
 
+%% Plot cation density as a function of voltage at the interface
+cation_index=3;
+legstr_n3 =[];
+for i = 1:length(workfunction_LHS)
+    cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
+    figure(205)
+    semilogy(Vappt, cation_density_interface)
+    legstr_n3{i} = ['Phi =', num2str(workfunction_LHS(i))];
+    hold on
+end
 
+figure(205)
+xlabel('Voltage [V]')
+ylabel('Cation density interface (cm-3)')
+legend(legstr_n3)
+hold off
 %% Plot average conductivity
 for j = 1:length(workfunction_LHS)
     figure(201)
@@ -217,22 +232,7 @@ for i = 1:length(Ncat_array)
 end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
-%% Plot cation density as a function of voltage at the interface
-cation_index=3;
-legstr_n3 =[];
-for i = 1:length(workfunction_LHS)
-    cation_density_interface = sol_CV(cation_index, i).u(:, par.pcum0(3)+1,4); %Whats the value here for cation? Should par.pcum0(3) be different?
-    figure(205)
-    plot(Vappt, cation_density_interface)
-    legstr_n3{i} = ['Phi =', num2str(workfunction_LHS(i))];
-    hold on
-end
 
-figure(205)
-xlabel('Voltage [V]')
-ylabel('Cation density interface (cm-3)')
-legend(legstr_n3)
-hold off
 %% Trying some dfplots
 %   
 for i = 4:-1:1
