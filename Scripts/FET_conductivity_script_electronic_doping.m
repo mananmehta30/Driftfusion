@@ -129,7 +129,7 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-workfunction_index =1;
+workfunction_index=7;
 
     n_int = sol_CV(1, workfunction_index).u(:, par.pcum0(3), 2);
     
