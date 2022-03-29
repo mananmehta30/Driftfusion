@@ -27,7 +27,7 @@ for i = 1:length(Ncat_array)
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);%num2str=Convert numbers to character representation
     for j = 1:length(MAPI_Ef0) %loop to run for different electrode workfunction
         
-        par.Phi_right = MAPI_Ef0(j);%Change workfunction of right electrode with MAPI
+        %par.Phi_right = MAPI_Ef0(j);%Change workfunction of right electrode with MAPI
         par.EF0(3)= MAPI_Ef0(j);%Change workfunction of MAPI
          disp(['RHS electrode workfunction = ', num2str(MAPI_Ef0(j)), ' eV']);
          disp(['MAPI Ef0 = ', num2str(MAPI_Ef0(j)), ' eV']);
