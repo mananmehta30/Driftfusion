@@ -159,12 +159,12 @@ ylabel('hole density interface (cm-3)')
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-workfunction_index =1;
+MAPI_index_and_rhs_wf_index =7;
 legstr_npx = {'', '', ''};
 
 V_INDEX=Vmax/k_scan; %Better way to use the index?
 
-    dfplot.npx(sol_CV(workfunction_index), 0);% Vmax/k_scan) %this is the time index if I am correct
+    dfplot.npx(sol_CV(MAPI_index_and_rhs_wf_index), 0);% Vmax/k_scan) %this is the time index if I am correct
     
 ylim([1e-1, 1e12])
 
@@ -172,10 +172,10 @@ ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
 
-workfunction_index =1;
+MAPI_index_and_rhs_wf_index =7;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 
-    dfplot.Vx(sol_CV( workfunction_index), 0);%Vmax/k_scan)
+    dfplot.Vx(sol_CV(MAPI_index_and_rhs_wf_index),Vmax/k_scan);%Vmax/k_scan)
    
 %ylim([1e-1, 1e12])
 
