@@ -14,7 +14,7 @@ par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
-Ncat_array = logspace(16, 19, 4); %16, 19, 4
+%Ncat_array = logspace(16, 19, 4); %16, 19, 4
 workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
@@ -129,16 +129,16 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-MAPI_index=7;
-
-    n_int = sol_CV(1, MAPI_index).u(:, par.pcum0(3), 2);
+MAPI_index_and_rhs_wf_index=7;
+cat_index=1;
+    n_int = sol_CV(MAPI_index_and_rhs_wf_index).u(:, par.pcum0(3), 2);
     
     
     figure(504)
     semilogy(Vappt, n_int)
     legend('Ncat = 0')
 
-    p_int = sol_CV(1,MAPI_index).u(:, par.pcum0(3), 3);
+    p_int = sol_CV(MAPI_index_and_rhs_wf_index).u(:, par.pcum0(3), 3);
 
 
     figure(505)
