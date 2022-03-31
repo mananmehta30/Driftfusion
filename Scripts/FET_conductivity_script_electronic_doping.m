@@ -42,7 +42,7 @@ for i = 1:length(Ncat_array)
         k_scan = 0.001;
         Vmax = 1.2;
         Vmin = -1.2;
-        
+        tpoints=(2*(Vmax-Vmin)/k_scan)+1;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);%How is the number of time points determined?
