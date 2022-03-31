@@ -38,7 +38,7 @@ workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
         Vmax = 1.2;
         Vmin = -1.2;
 %(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
-        
+        tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(j) = doCV(soleq(j).el, 0, 0, Vmax, Vmin, k_scan, 1, 241);%How is the number of time points determined?
