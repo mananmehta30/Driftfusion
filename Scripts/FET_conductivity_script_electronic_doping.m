@@ -21,7 +21,7 @@ dfplot.acx(soleq.ion) %plot the equilibirum solutions
 k_scan = 0.001;
 Vmax = 1.2;
 Vmin = -1.2;
-tpoints=(2*(Vmax-Vmin)/k_scan)+1;
+tpoints=(2*(Vmax-Vmin)/10*k_scan)+1;
         
         
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
