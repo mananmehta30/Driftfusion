@@ -185,7 +185,10 @@ hold off
 MAPI_index =7;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, MAPI_index), 0);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, MAPI_index),3*Vmax/k_scan+1);% Vmax/k_scan corresponds to time.Vmax=1.2,k_scan=0.001
+    %However for maximum negative voltage that should be at 3*Vmax/k_scan
+% or at 3600 seconds
+%We see there is a slight difference in the values.
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
