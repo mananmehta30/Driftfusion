@@ -13,80 +13,77 @@ par_alox = pc('./Input_files/alox.csv');
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
-%% Initialise the parameter arrays
-Ncat_array = logspace(16, 19, 4); %16, 19, 4
-workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
-%% Number of species
-% par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
-%% Set ionic mobility to be zero to simulate without affect of ions
-% par.mu_c(:) = 0;
-% par.mu_a(:) = 0;
-%% For loop
-for i = 1:length(Ncat_array)
-    
-    par.Ncat(:) = Ncat_array(i); %All layers get same ionic density. 
-    par.Nani(:) = Ncat_array(i); %This is done for code purpose. 
+
+par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
+par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
    
-    disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);%num2str=Convert numbers to character representation
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+disp(['Cation density = ', num2str(par.Ncat(3)), ' cm^-3']);%num2str=Convert numbers to character representation
+   
         
-        par.Phi_left = workfunction_LHS(j);
-        disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
-        
-        par = refresh_device(par);      % This line is required to rebuild various arrays used DF
-        
-        %% Find equilibrium
-        soleq(i, j) = equilibrate(par);% Find and 
-        dfplot.acx(soleq(i, j).ion) %plot the equilibirum solutions
-        
-        %% Current-voltage scan
-        k_scan = 0.001;%Can check dependence of results on k_scan
-        Vmax = 1.2;
-        Vmin = -1.2;
-%(from 0 to 1.2 to -1.2 to 0. Therefore (1.2x4/0.001)=(4800 scan points (checked in sol_CV(1, 1).t))
-        tpoints=(2*(Vmax-Vmin)/10*k_scan)+1;
-        % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-        %tpoints is the No. of points in output time array
-        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);%How is the number of time points determined?
-       %Picked because it is a sensible divisor. Check for your voltage
-       %range and then get it.
+par.Phi_left = -4.9;
+disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
+par.Phi_right = -4.9;
+disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);     
+
+%% Find equilibrium
+soleq= equilibrate(par);% Find and 
+%% Current-voltage scan
+k_scan = 0.001;
+Vmax = 1.2;
+Vmin = -1.2;
+tpoints=(2*(Vmax-Vmin)/k_scan)+1;
+
+% sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+  sol_CV = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+
         %% Plot Vapp vs time
-        % dfplot.Vappt(sol_CV)
+         %dfplot.Vappt(sol_CV)
         
         %% Plot JV scan
-        %dfplot.JtotVapp(sol_CV, 0);
-        %set(gca,'YScale','log')
+        dfplot.JtotVapp(sol_CV, 0);
+        set(gca,'YScale','log')
         
         %% Plot anion and cation densities
-        %dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+        dfplot.acx(sol_CV, 1/k_scan*[0:Vmax:3*Vmax]);
         
         %% Plot electron and hole profiles
-        %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
-    end 
+        dfplot.npx(sol_CV, (1/k_scan)*Vmax);
+
+        %% Plot current as a function of time
+        dfplot.Jt(sol_CV,100);
+%% Capacitance calculation
+% To get value of capacitance per area by integrating the current and using
+% C(V)=J(V)/dV/dT
+[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV);
+J = dfana.calcJ(sol_CV, "sub");%Get current density from dfana
+J_tot=J.tot;
+J_disp=J.disp;
+J_electronic=J.tot-J.disp;
+%% Get delta t
+delta_t=t(:,2)-t(:,1); %change in time interval 
+%% Create loop to calculate change in potential
+for i=1:length(t)-1
+    for j=1:length(x)
+        delta_v_across_points(i,j)= V(i,j)-V(i+1,j);  %this is change in potential at each place for different times
+    end
 end
-
-%% Analysis
-Vappt = dfana.calcVapp(sol_CV(1,1)); 
-
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %Conductivity profiles for different Ncat 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); %and Workfunctions for each different time steps
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); %Mean conducitvity across all the times
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
-
-for i = 1:length(Ncat_array)
-    for j = 1:length(workfunction_LHS)
-       
-        [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));%call this function
-        sigma_n_barM(i,j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
-        sigma_p_barM(i,j,:) = sigma_p_bar; %A length(Ncat) x length(Wf) matrix for all time values will be created 
-        %that has the mean conductivity
-        sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak; %This is calculated in sigma_ana
-        sigma_p_bar_VpeakM(i,j) = sigma_p_bar_Vpeak;
-        
+dV_by_dT_across_points(i,j) = delta_v_across_points(i,j)/delta_t; %dividing it by the time interval to get dV/dt
+%% Remove the first column since it does not contribute
+dV_by_dT_across_points(:,1) = []; 
+%% Remove final row since it does not contribute
+J_disp(481,:)=[]; 
+%% Calculate capacitance at each point
+for i=1:length(t)-1
+    for j=1:length(x)-1
+        C_as_function_V_across_points(i,j) = J_disp(i,j)/dV_by_dT_across_points_12(i,j);%Get C=J(V)/(dV/dt)
     end
 end
 
-%% Plots
+%% Plot capacitance as a function of position
+x(:,1)=[]; %Remove the first point to since it doesnt come inside the calculation
+figure(7464)
+plot(x(100:320),C_as_function_V_across_points(6,(100:320))); 
+%%
 for i = 1:length(Ncat_array)
     figure(100)
     semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
