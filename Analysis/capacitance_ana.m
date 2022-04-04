@@ -17,7 +17,7 @@ end
 %% Remove the first column since it does not contribute
 dV_by_dT_across_points(:,1) = []; 
 %% Remove final row since it does not contribute
-J_disp(481,:)=[]; 
+J_disp(4801,:)=[]; 
 %% Calculate capacitance at each point
 for i=1:length(t)-1
     for j=1:length(x)-1
@@ -27,5 +27,5 @@ end
 %% Plot capacitance as a function of position
 x(:,1)=[]; %Remove the first point to since it doesnt come inside the calculation
 figure(7464)
-plot(x(100:320),C_as_function_V_across_points(6,(100:320))); 
+plot(x(10:320),C_as_function_V_across_points(6,(10:320))); 
 end
