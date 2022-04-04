@@ -1,10 +1,8 @@
-%% Line258
-%try to see if you can plot for the time
-%% Figure out the reason for the isobestic point
-%Try for higher scan rate
+
 
 %% Code pupose
-% To compare the value of electron accumulation with ions and without ions and try to explain conductivity variance and some changes
+% To get value of capacitance per area by integrating the current and using
+% C(V)=J(V)/dV/dT
 
 %% Initialize driftfusion
 initialise_df
