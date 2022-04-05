@@ -13,7 +13,8 @@ for i=1:length(t)-1
        dV_by_dT_across_points(i,j)= (V(i,j)-V(i+1,j))/delta_t;  %this is change in potential at each place for different times
     end
 end
-
+%%
+time_array = [1,(Vmax/k_scan),((3*Vmax)/k_scan)];
 %% Remove the first column since it does not contribute
 dV_by_dT_across_points(:,1) = []; 
 %% Remove final row since it does not contribute
@@ -27,9 +28,13 @@ end
 
 %% Plot capacitance as a function of position
 x(:,1)=[]; %Remove the first point to since it doesnt come inside the calculation
+for i=1:length(time_array)
 figure(122)
-plot(x(par.pcum0(1,1):par.pcum0(1,3)),C_as_function_V_across_points(5,(par.pcum0(1,1):par.pcum0(1,3)))); 
+plot(x(par.pcum0(1,1):par.pcum0(1,3)),C_as_function_V_across_points(time_array(1),(par.pcum0(1,1):par.pcum0(1,3)))); 
+hold on
 figure(122)
 xlabel('Position [cm]')
 ylabel('Capacitance (F/cm^2)')
+hold off
+end
 end
