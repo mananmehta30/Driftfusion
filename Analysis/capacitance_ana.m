@@ -24,8 +24,12 @@ for i=1:length(t)-1
         C_as_function_V_across_points(i,j) = J_disp(i,j)/dV_by_dT_across_points(i,j);%Get C=J(V)/(dV/dt)
     end
 end
+
 %% Plot capacitance as a function of position
 x(:,1)=[]; %Remove the first point to since it doesnt come inside the calculation
-figure(7464)
-plot(x(10:320),C_as_function_V_across_points(6,(10:320))); 
+figure(122)
+plot(x(par.pcum0(1,1):par.pcum0(1,3)),C_as_function_V_across_points(5,(par.pcum0(1,1):par.pcum0(1,3)))); 
+figure(122)
+xlabel('Position [cm]')
+ylabel('Capacitance (F/cm^2)')
 end
