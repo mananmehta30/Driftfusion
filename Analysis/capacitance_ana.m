@@ -14,7 +14,9 @@ for i=1:length(t)-1
     end
 end
 %%
-time_array = [1,(Vmax/k_scan),((3*Vmax)/k_scan)];
+time_array = [1,(Vmax/k_scan),3*(Vmax/k_scan)];
+d=length(time_array);
+
 %% Remove the first column since it does not contribute
 dV_by_dT_across_points(:,1) = []; 
 %% Remove final row since it does not contribute
@@ -28,13 +30,16 @@ end
 
 %% Plot capacitance as a function of position
 x(:,1)=[]; %Remove the first point to since it doesnt come inside the calculation
+legstr_c3 =[];
 for i=1:length(time_array)
 figure(122)
-plot(x(par.pcum0(1,1):par.pcum0(1,3)),C_as_function_V_across_points(time_array(1),(par.pcum0(1,1):par.pcum0(1,3)))); 
+plot(x(par.pcum0(1,1):par.pcum0(1,3)),C_as_function_V_across_points(time_array(i),(par.pcum0(1,1):par.pcum0(1,3)))); 
+legstr_c3{i} = ['Capacitance across insulator at t=', num2str(time_array(i))];
 hold on
+end
 figure(122)
 xlabel('Position [cm]')
 ylabel('Capacitance (F/cm^2)')
+legend(legstr_c3)
 hold off
-end
 end
