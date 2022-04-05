@@ -59,9 +59,15 @@ ylabel('Capacitance (F/cm^2)')
 %legend(legstr_ci3)
 hold off
 end
+%%
+
+%Get electric field
+
+%For MAPI/SiO2 interface
 
 %% Simple capacitance of an oxide
 
+%Qs==e0esEs
 
 %% Alternate way to calculate capacitance
 % 1)Get parameters here %par = sol_CV.par

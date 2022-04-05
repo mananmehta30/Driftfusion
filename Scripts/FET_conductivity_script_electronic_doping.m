@@ -93,6 +93,6 @@ plot(x(100:320),C_as_function_V_across_points(6,(100:320)));
 %Alternate ways to calculate capacitance
 
 %1) https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=923259
-%get surface electric field dfplot.ft
+%get surface electric field [FV, Frho] = dfana.calcF(sol_CV, "whole")(not
+%working?)
 
-dfplot.Ft(sol_CV,3);
