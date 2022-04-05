@@ -42,4 +42,36 @@ xlabel('Position [cm]')
 ylabel('Capacitance (F/cm^2)')
 legend(legstr_c3)
 hold off
+%% Capacitance vs voltage at the interface
+
+V2=V;
+V2(:,1)=[];%remove extra values
+V2(481,:)=[];%remove extra values
+%%
+figure(123)
+plot(V2(:,par.pcum0(3)),C_as_function_V_across_points(:,par.pcum0(3))); 
+%legstr_ci3{i} = ['Capacitance across insulator at t=', num2str(time_array(i))];
+%hold on
+%end
+figure(123)
+xlabel('Voltage [V]')
+ylabel('Capacitance (F/cm^2)')
+%legend(legstr_ci3)
+hold off
 end
+
+%% Simple capacitance of an oxide
+
+
+%% Alternate way to calculate capacitance
+% 1)Get parameters here %par = sol_CV.par
+% 2) extract various profiles[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV);
+
+%% Calculate charge
+
+% 3) Way 1 to do it
+%a) Integrate total charge Q_total=(p-n+Nd-Na) with change in potential
+%across bulk and surface 
+%fun = @(x) Q_total;
+% E_s= sqrt( (-2*par.q)/par.epp*e0))integral(fun,V_bulk,V_surface)
+
