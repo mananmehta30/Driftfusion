@@ -4,9 +4,9 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('Input_files/alox_2_gates.csv');
+par_alox = pc('Input_files/alox_2 _gates');
 
-while par_alox.Ncat(1,3)>10e10
+
 %% Equilibrium solutions
 soleq_alox = equilibrate(par_alox);
 
@@ -17,11 +17,15 @@ dfplot.ELnpx(soleq_alox.ion)
 % JVsol = doJV(sol_ini, JVscan_rate, JVscan_pnts, Intensity, mobseti, Vstart, Vend, option)
 % JVsol = doJV(soleq_sio2.ion, 100e-3, 201, 1, 0, 0, 1, 1);
 
-% sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+%% Scan Rate and Voltage
 k_scan = 0.001;
-Vmin=-15;
-Vmax=15;
-sol_CV = doCV(soleq_alox.ion, 0, 0, Vmax, Vmin, k_scan, 1, 201);
+Vmin=-1.2;
+Vmax=1.2;
+%% t points
+t_points=((Vmax-Vmin)/(10*k_scan));
+
+%% sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+sol_CV = doCV(soleq_alox.ion, 0, 0, Vmax, Vmin, k_scan, 1, t_points);
 
 % Plot Vapp vs time
  dfplot.Vappt(sol_CV)
@@ -95,8 +99,8 @@ legend('Electron', 'Hole')
 
 %%
 par_alox.Ncat(1,3)= par_alox.Ncat(1,3)/10;
-counter=counter+1;
-end
+
+
 
 %% Plot average conductivity
  figure
