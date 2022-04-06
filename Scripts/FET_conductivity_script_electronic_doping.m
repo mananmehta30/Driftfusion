@@ -63,32 +63,8 @@ for i=1:length(t)-1
         [J_electronic, delta_t, dV_by_dT_across_points, C_as_function_V_across_points] = capacitance_ana(sol_CV(i,j));  %this is change in potential at each place for different times
     end
 end
-% dV_by_dT_across_points(i,j) = delta_v_across_points(i,j)/delta_t; %dividing it by the time interval to get dV/dt
-% %% Create loop to calculate change in potential
-% for i=1:length(t)-1
-%     for j=1:length(x)
-%         delta_v_across_points(i,j)= V(i,j)-V(i+1,j);  %this is change in potential at each place for different times
-%     end
-% end
-% dV_by_dT_across_points(i,j) = delta_v_across_points(i,j)/delta_t; %dividing it by the time interval to get dV/dt
-% 
-% %%
 
-%% Remove the first column since it does not contribute
-dV_by_dT_across_points(:,1) = []; 
-%% Remove final row since it does not contribute
-J_disp(4801,:)=[]; 
-%% Calculate capacitance at each point
-for i=1:length(t)-1
-    for j=1:length(x)-1
-        C_as_function_V_across_points(i,j) = J_disp(i,j)/dV_by_dT_across_points(i,j);%Get C=J(V)/(dV/dt)
-    end
-end
 
-%% Plot capacitance as a function of position
-x(:,1)=[]; %Remove the first point to since it doesnt come inside the calculation
-figure(7464)
-plot(x(100:320),C_as_function_V_across_points(6,(100:320))); 
 %%
 %Alternate ways to calculate capacitance
 
