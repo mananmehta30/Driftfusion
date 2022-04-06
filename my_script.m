@@ -1,4 +1,8 @@
+%% Try memristor simulations
+
 %% Conductivity profiles
+
+
 %% Initialize driftfusion
 initialise_df
 
