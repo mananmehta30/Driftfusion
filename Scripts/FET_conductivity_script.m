@@ -160,7 +160,7 @@ legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3) + 1, 2);
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -168,7 +168,7 @@ for i = 1:length(Ncat_array)
 end
 
 for i = 1:length(Ncat_array)
-    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3) + 1, 3);
     figure(204)
     semilogy(Vappt, p_int)
     legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -190,7 +190,7 @@ hold off
 %% Plot electron and hole profiles at Vmax as a function of position
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
