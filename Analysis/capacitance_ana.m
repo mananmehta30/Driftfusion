@@ -1,7 +1,7 @@
-function [J_electronic, delta_t, dV_by_dT_across_points, C_as_function_V_across_points] = capacitance_ana(sol_CV)
-par = sol_CV.par;
-[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV);
-J = dfana.calcJ(sol_CV, "sub");%Get current density from dfana
+function [J_electronic, delta_t, dV_by_dT_across_points, C_as_function_V_across_points] = capacitance_ana(sol_in)
+par = sol_in.par;
+[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_in);
+J = dfana.calcJ(sol_in, "sub");%Get current density from dfana
 J_tot=J.tot;
 J_disp=J.disp;
 J_electronic=J.tot-J.disp;
@@ -14,6 +14,11 @@ for i=1:length(t)-1
     end
 end
 %%
+k_scan = 0.001;
+Vmax = 1.2;
+Vmin = -1.2;
+tpoints=(2*(Vmax-Vmin)/k_scan)+1;
+
 time_array = [1,(Vmax/k_scan),3*(Vmax/k_scan)];
 d=length(time_array);
 
@@ -70,8 +75,8 @@ end
 %Qs==e0esEs
 
 %% Alternate way to calculate capacitance
-% 1)Get parameters here %par = sol_CV.par
-% 2) extract various profiles[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV);
+% 1)Get parameters here %par = sol_in.par
+% 2) extract various profiles[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_in);
 
 %% Calculate charge
 

@@ -2,7 +2,7 @@
 
 %% Code pupose
 % To get value of capacitance per area by integrating the current and using
-% C(V)=J(V)/dV/dT
+% C(V)=J_displacement(V)/dV/dT
 
 %% Initialize driftfusion
 initialise_df
@@ -60,7 +60,7 @@ tpoints=(2*(Vmax-Vmin)/k_scan)+1;
 %% Create loop to calculate change in potential
 for i=1:length(t)-1
     for j=1:length(x)
-        [J_electronic, delta_t, dV_by_dT_across_points, C_as_function_V_across_points] = capacitance_ana(sol_CV(i,j));  %this is change in potential at each place for different times
+        [J_electronic, delta_t, dV_by_dT_across_points, C_as_function_V_across_points] = capacitance_ana(sol_CV);  %this is change in potential at each place for different times
     end
 end
 
