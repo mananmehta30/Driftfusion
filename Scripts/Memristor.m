@@ -10,4 +10,4 @@ k_scan=0.1;
 
  % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 
- sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 10, tpoints);
+ sol_CV = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 10, tpoints);
