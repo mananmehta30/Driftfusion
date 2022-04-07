@@ -42,7 +42,7 @@ for i = 1:length(Ncat_array)
         k_scan = 0.001;
         Vmax = 1.2;
         Vmin = -1.2;
-        tpoints=(2*(Vmax-Vmin)/10*k_scan)+1;
+        tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         %tpoints is the No. of points in output time array
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
@@ -183,9 +183,11 @@ hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
 MAPI_index =7;
+jjj=3*Vmax/k_scan;
+jj2=(3*(Vmax/k_scan));
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, MAPI_index),3*Vmax/k_scan+1);% Vmax/k_scan corresponds to time.Vmax=1.2,k_scan=0.001
+    dfplot.npx(sol_CV(i, MAPI_index),((Vmax/k_scan)));% Vmax/k_scan corresponds to time.Vmax=1.2,k_scan=0.001
     %However for maximum negative voltage that should be at 3*Vmax/k_scan
 % or at 3600 seconds
 %We see there is a slight difference in the values.
