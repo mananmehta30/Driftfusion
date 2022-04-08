@@ -1,6 +1,9 @@
 %% Code pupose
 % To get value of capacitance per area by integrating the current and using C(V)=J_displacement(V)/dV/dT
 
+
+%Instead of using soleq.el better try with separate file
+
 %% Initialize driftfusion
 initialise_df
 %% Add parameter file to path 
@@ -8,28 +11,39 @@ initialise_df
 par_alox = pc('./Input_files/alox.csv');
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
+par2 = par_alox;
 
 par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
 par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
-   
+
+par2.N_ionic_species=0; %keeping no ionic density
+par2.Ncat(:) = 0; %Simulating for 0 ionic density
+par2.Nani(:) = 0; %Simulating for 0 ionic density 
+
 disp(['Cation density = ', num2str(par.Ncat(3)), ' cm^-3']);%num2str=Convert numbers to character representation
       
 par.Phi_left = -4.9;
 disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
 par.Phi_right = -4.9;
-disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);     
+disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);    
+
+par2.Phi_left = -4.9;
+disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
+par2.Phi_right = -4.9;
+disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);
 
 %% Find equilibrium
 soleq= equilibrate(par);
+soleq2= equilibrate(par2);
 %% Current-voltage scan
 k_scan = 0.001;
-Vmax = 5;
+Vmax = 15;
 Vmin = -Vmax;
 tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
 
 %sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
-sol_CV_without_ions = doCV(soleq.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
 %% Vappt and other parameters
 Vappt = dfana.calcVapp(sol_CV_with_ions);
@@ -47,10 +61,10 @@ delta_t=t(:,2)-t(:,1);%change in time dt
 delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
 
 J_with_ions=J_with_ions.disp;
-J_with_ions=abs(J_with_ions);%absolute values taken for clarity
+%J_with_ions=abs(J_with_ions);%absolute values taken for clarity
 
 J_without_ions=J_without_ions.disp;
-J_without_ions=abs(J_without_ions);
+%J_without_ions=abs(J_without_ions);
 
 C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
 C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
