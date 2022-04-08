@@ -1,25 +1,19 @@
-
-
 %% Code pupose
-% To get value of capacitance per area by integrating the current and using
-% C(V)=J_displacement(V)/dV/dT
+% To get value of capacitance per area by integrating the current and using C(V)=J_displacement(V)/dV/dT
 
 %% Initialize driftfusion
 initialise_df
-
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('./Input_files/alox.csv');
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
-
 par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
 par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
    
 disp(['Cation density = ', num2str(par.Ncat(3)), ' cm^-3']);%num2str=Convert numbers to character representation
-   
-        
+      
 par.Phi_left = -4.9;
 disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
 par.Phi_right = -4.9;
@@ -29,43 +23,88 @@ disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);
 soleq= equilibrate(par);
 %% Current-voltage scan
 k_scan = 0.001;
-Vmax = 1.2;
-Vmin = -1.2;
-tpoints=(2*(Vmax-Vmin)/k_scan)+1;
+Vmax = 5;
+Vmin = -Vmax;
+tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
 
-% sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-  sol_CV = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+%sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+sol_CV_without_ions = doCV(soleq.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
-        %% Plot Vapp vs time
-         %dfplot.Vappt(sol_CV)
-        
-        %% Plot JV scan
-        dfplot.JtotVapp(sol_CV, 0);
-        set(gca,'YScale','log')
-        
-        %% Plot anion and cation densities
-        dfplot.acx(sol_CV, 1/k_scan*[0:Vmax:3*Vmax]);
-        
-        %% Plot electron and hole profiles
-        dfplot.npx(sol_CV, (1/k_scan)*Vmax);
+%% Vappt and other parameters
+Vappt = dfana.calcVapp(sol_CV_with_ions);
+Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 
-        %% Plot current as a function of time
-        dfplot.Jt(sol_CV,100);
-%% Capacitance calculation
-% To get value of capacitance per area by integrating the current and using
-% C(V)=J(V)/dV/dT
-[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV);
-%% Get delta t
-% delta_t=t(:,2)-t(:,1); %change in time interval 
-%% Create loop to calculate change in potential
-for i=1:length(t)-1
-    for j=1:length(x)
-        [J_electronic, delta_t, dV_by_dT_across_points, C_as_function_V_across_points] = capacitance_ana(sol_CV);  %this is change in potential at each place for different times
-    end
-end
+[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
+[u2,t2,x2,par2,dev2,n2,p2,a2,c2,V2] = dfana.splitsol(sol_CV_without_ions);
+
+%% Get J disp with and without ions
+J_with_ions = dfana.calcJ(sol_CV_with_ions, "sub");
+J_without_ions = dfana.calcJ(sol_CV_without_ions, "sub");
+
+delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
+delta_t=t(:,2)-t(:,1);%change in time dt
+delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
+
+J_with_ions=J_with_ions.disp;
+J_with_ions=abs(J_with_ions);%absolute values taken for clarity
+
+J_without_ions=J_without_ions.disp;
+J_without_ions=abs(J_without_ions);
+
+C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
+C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
+%% Plot Jdisp and Capacitance with ions across time
+figure(444)
+plot(t,J_with_ions(:,122)); 
+xlabel('Time')
+ylabel('Displacement Current across insulator with ions')
+
+figure(445)
+plot(t,C_with_ions(:,122)); 
+xlabel('Time')
+ylabel('Capacitance with ions')
+%% Plot Jdisp and Capacitance without ions across time
+
+figure(446)
+plot(t,J_without_ions(:,122));
+xlabel('Time')
+ylabel('Displacement Current across insulator without ions')
+
+figure(447)
+plot(t,C_without_ions(:,122));
+xlabel('Time')
+ylabel('Capacitance without ions')
+
+%% Plot Capacitance vs Voltage applied for case with ions
+
+figure(448)
+plot(Vappt,C_with_ions(:,122)); 
+xlabel('V applied')
+ylabel('Capacitance at point in an insulator with ions(F/cm^2)')
 
 
-%%
+%% Plot Capacitance vs Voltage applied for case without ions
+figure(449)
+plot(Vappt,C_without_ions(:,122)); 
+xlabel('V applied')
+ylabel('Capacitance at point in an insulator without ions(F/cm^2)')
+
+%% Plot Capacitance vs Voltage applied for case with ions at interface
+
+figure(450)
+plot(Vappt,C_with_ions(:,par.pcum0(1,3)+1)); 
+xlabel('V applied')
+ylabel('Capacitance at point in an insulator with ions at interface(F/cm^2)')
+
+
+%% Plot Capacitance vs Voltage applied for case without ions at interface
+figure(451)
+plot(Vappt,C_without_ions(:,par.pcum0(1,3)+1)); 
+xlabel('V applied')
+ylabel('Capacitance at point in an insulator without ions at interface(F/cm^2)')
+
+%% Hmm
 %Alternate ways to calculate capacitance
 
 %1) https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=923259
