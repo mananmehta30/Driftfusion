@@ -60,11 +60,11 @@ delta_t=t(:,2)-t(:,1);%change in time dt
 delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
 
 J_with_ions=J_with_ions.disp;
-%J_with_ions=abs(J_with_ions);%absolute values taken for clarity
+J_with_ions=abs(J_with_ions);%absolute values taken for clarity
 C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
 
 J_without_ions=J_without_ions.disp;
-%J_without_ions=abs(J_without_ions);
+J_without_ions=abs(J_without_ions);
 C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
 %% Plot Jdisp and Capacitance with ions across time
 figure(444)
