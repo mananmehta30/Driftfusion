@@ -11,11 +11,10 @@ initialise_df
 par_alox = pc('./Input_files/alox.csv');
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
-par2 = par_alox;
-
 par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
 par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
 
+par2 = par_alox;
 par2.N_ionic_species=0; %keeping no ionic density
 par2.Ncat(:) = 0; %Simulating for 0 ionic density
 par2.Nani(:) = 0; %Simulating for 0 ionic density 
@@ -42,8 +41,8 @@ Vmin = -Vmax;
 tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
 
 %sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
-sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, 1000);
+sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, 1000);
 
 %% Vappt and other parameters
 Vappt = dfana.calcVapp(sol_CV_with_ions);
@@ -62,11 +61,10 @@ delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
 
 J_with_ions=J_with_ions.disp;
 %J_with_ions=abs(J_with_ions);%absolute values taken for clarity
+C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
 
 J_without_ions=J_without_ions.disp;
 %J_without_ions=abs(J_without_ions);
-
-C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
 C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
 %% Plot Jdisp and Capacitance with ions across time
 figure(444)
@@ -118,7 +116,17 @@ plot(Vappt,C_without_ions(:,par.pcum0(1,3)+1));
 xlabel('V applied')
 ylabel('Capacitance at point in an insulator without ions at interface(F/cm^2)')
 
-%% Hmm
+%% df plot loop
+
+for i=1:3
+    dfplot.ELnpx(sol_CV_without_ions,i+419)
+    hold on
+end
+hold off
+
+
+
+%%
 %Alternate ways to calculate capacitance
 
 %1) https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=923259
