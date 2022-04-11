@@ -36,7 +36,7 @@ soleq= equilibrate(par);
 soleq2= equilibrate(par2);
 %% Current-voltage scan
 k_scan = 0.001;
-Vmax = 15;
+Vmax = 10;
 Vmin = -Vmax;
 tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
 
