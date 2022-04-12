@@ -23,10 +23,11 @@ workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 % par.mu_a(:) = 0;
 %% For loop
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
-        
-        par.Phi_left = workfunction_LHS(j);
-        disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
-        
+        %par.Phi_right = MAPI_Ef0(j);%Change workfunction of right electrode with MAPI
+        par.EF0(3)= MAPI_Ef0(j);%Change workfunction of MAPI
+         %disp(['RHS electrode workfunction = ', num2str(MAPI_Ef0(j)), ' eV']);
+         disp(['MAPI Ef0 = ', num2str(MAPI_Ef0(j)), ' eV']);
+
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
         %% Find equilibrium
