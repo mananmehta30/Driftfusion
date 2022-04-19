@@ -16,8 +16,9 @@ x_perov_left = sol_CV_with_ions.par.dcum0(3);     % dcum is the device thickness
 x_perov_right = sol_CV_with_ions.par.dcum0(4);
 electronic_charge_at_insulator_sc_interface = total_electronic_charge(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 ionic_charge_at_insulator_sc_interface = total_ionic_charge(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
-%% Inteergrate to get space charge density from volumetric charge density
-elec_space_charge=trapz( x > x_perov_left & x < x_perov_left + N_Debye*debye_length, electronic_charge_at_insulator_sc_interface, 2);
+%% Intergrate to get space charge density from volumetric charge density
+rho = dfana.calcrho(sol_CV_with_ions, "whole");
+elec_space_charge=trapz(x, rho, 2);
 %% Find change in charge(s)
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 del_q_ec(i)=electronic_charge_at_insulator_sc_interface(i+1)-electronic_charge_at_insulator_sc_interface(i);
