@@ -64,15 +64,21 @@ ylabel('Capacitance (F/cm^2)')
 %legend(legstr_ci3)
 hold off
 end
-%%
+%% Get Debye Length
+[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
+N_Debye=3 %calculate for three debye lengths
+e = par.e;
+V_T = par.kB*par.T;                     % Thermal votlage
+epp_pvsk = e*par.epp0*par.epp(3);       % Perovskite absolute dielectric constant
+N0 = par.Ncat(3);
+debye_length = sqrt((epp_pvsk*V_T)/(e*N0));
+%% Get the charge for the Debye length
 
-%Get electric field
+total_electronic_charge=n+p;
+total_ionic_charge=a+c;
+electronic_charge_at_insulator_sc_interface =total_electronic_charge(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D));
+ionic_charge_at_insulator_sc_interface =total_ionic_charge(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D));
 
-%For MAPI/SiO2 interface
-
-%% Simple capacitance of an oxide
-
-%Qs==e0esEs
 
 %% Alternate way to calculate capacitance
 % 1)Get parameters here %par = sol_in.par
