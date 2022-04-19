@@ -52,77 +52,93 @@ Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 [u2,t2,x2,par2,dev2,n2,p2,a2,c2,V2] = dfana.splitsol(sol_CV_without_ions);
 
 %% Get J disp with and without ions
-J_with_ions = dfana.calcJ(sol_CV_with_ions, "sub");
-J_without_ions = dfana.calcJ(sol_CV_without_ions, "sub");
+% J_with_ions = dfana.calcJ(sol_CV_with_ions, "sub");
+% J_without_ions = dfana.calcJ(sol_CV_without_ions, "sub");
+% 
+% delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
+% delta_t=t(:,2)-t(:,1);%change in time dt
+% delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
+% 
+% J_with_ions=J_with_ions.disp;
+% J_with_ions=abs(J_with_ions);%absolute values taken for clarity
+% C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
+% 
+% J_without_ions=J_without_ions.disp;
+% J_without_ions=abs(J_without_ions);
+% C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
+% %% Plot Jdisp and Capacitance with ions across time
+% figure(444)
+% plot(t,J_with_ions(:,122)); 
+% xlabel('Time')
+% ylabel('Displacement Current across insulator with ions')
+% 
+% figure(445)
+% plot(t,C_with_ions(:,122)); 
+% xlabel('Time')
+% ylabel('Capacitance with ions')
+%% Call capacitance function
 
-delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
-delta_t=t(:,2)-t(:,1);%change in time dt
-delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
+[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
+       
+%%
 
-J_with_ions=J_with_ions.disp;
-J_with_ions=abs(J_with_ions);%absolute values taken for clarity
-C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
-
-J_without_ions=J_without_ions.disp;
-J_without_ions=abs(J_without_ions);
-C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
-%% Plot Jdisp and Capacitance with ions across time
-figure(444)
-plot(t,J_with_ions(:,122)); 
-xlabel('Time')
-ylabel('Displacement Current across insulator with ions')
-
-figure(445)
-plot(t,C_with_ions(:,122)); 
-xlabel('Time')
-ylabel('Capacitance with ions')
-%% Plot Jdisp and Capacitance without ions across time
-
-figure(446)
-plot(t,J_without_ions(:,122));
-xlabel('Time')
-ylabel('Displacement Current across insulator without ions')
-
-figure(447)
-plot(t,C_without_ions(:,122));
-xlabel('Time')
-ylabel('Capacitance without ions')
-
-%% Plot Capacitance vs Voltage applied for case with ions
-
-figure(448)
-plot(Vappt,C_with_ions(:,122)); 
+Vappt2(:,1) = [];
+%%
+plot(Vappt2,capacitance_device_electronic); 
 xlabel('V applied')
-ylabel('Capacitance at point in an insulator with ions(F/cm^2)')
-
-
-%% Plot Capacitance vs Voltage applied for case without ions
-figure(449)
-plot(Vappt,C_without_ions(:,122)); 
+ylabel('ElectronicCapacitance at point in an insulator with ions(F/cm^2)')
+%%
+plot(Vappt2,capacitance_device_ionic); 
 xlabel('V applied')
-ylabel('Capacitance at point in an insulator without ions(F/cm^2)')
-
-%% Plot Capacitance vs Voltage applied for case with ions at interface
-
-figure(450)
-plot(Vappt,C_with_ions(:,par.pcum0(1,3)+1)); 
-xlabel('V applied')
-ylabel('Capacitance at point in an insulator with ions at interface(F/cm^2)')
-
-
-%% Plot Capacitance vs Voltage applied for case without ions at interface
-figure(451)
-plot(Vappt,C_without_ions(:,par.pcum0(1,3)+1)); 
-xlabel('V applied')
-ylabel('Capacitance at point in an insulator without ions at interface(F/cm^2)')
-
-%% df plot loop
-
-for i=1:3
-    dfplot.ELnpx(sol_CV_without_ions,i+419)
-    hold on
-end
-hold off
+ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
+%% Main Plots
+% %% Plot Jdisp and Capacitance without ions across time
+% 
+% figure(446)
+% plot(t,J_without_ions(:,122));
+% xlabel('Time')
+% ylabel('Displacement Current across insulator without ions')
+% 
+% figure(447)
+% plot(t,C_without_ions(:,122));
+% xlabel('Time')
+% ylabel('Capacitance without ions')
+% 
+% %% Plot Capacitance vs Voltage applied for case with ions
+% 
+% figure(448)
+% plot(Vappt,C_with_ions(:,122)); 
+% xlabel('V applied')
+% ylabel('Capacitance at point in an insulator with ions(F/cm^2)')
+% 
+% 
+% %% Plot Capacitance vs Voltage applied for case without ions
+% figure(449)
+% plot(Vappt,C_without_ions(:,122)); 
+% xlabel('V applied')
+% ylabel('Capacitance at point in an insulator without ions(F/cm^2)')
+% 
+% %% Plot Capacitance vs Voltage applied for case with ions at interface
+% 
+% figure(450)
+% plot(Vappt,C_with_ions(:,par.pcum0(1,3)+1)); 
+% xlabel('V applied')
+% ylabel('Capacitance at point in an insulator with ions at interface(F/cm^2)')
+% 
+% 
+% %% Plot Capacitance vs Voltage applied for case without ions at interface
+% figure(451)
+% plot(Vappt,C_without_ions(:,par.pcum0(1,3)+1)); 
+% xlabel('V applied')
+% ylabel('Capacitance at point in an insulator without ions at interface(F/cm^2)')
+% 
+% %% df plot loop
+% 
+% for i=1:3
+%     dfplot.ELnpx(sol_CV_without_ions,i+419)
+%     hold on
+% end
+% hold off
 
 
 
