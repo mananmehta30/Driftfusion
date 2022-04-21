@@ -80,11 +80,11 @@ Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 %%
 
 %%
-plot(Vappt2,capacitance_device_electronic); 
+plot(Vappt(2:end),capacitance_device_electronic); 
 xlabel('V applied')
-ylabel('ElectronicCapacitance at point in an insulator with ions(F/cm^2)')
+ylabel('Electronic Capacitance at point in an insulator with ions(F/cm^2)')
 %%
-plot(Vappt2,capacitance_device_ionic); 
+plot(Vappt(2:end), capacitance_device_ionic); 
 xlabel('V applied')
 ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
 %% Main Plots
