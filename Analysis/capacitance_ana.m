@@ -24,7 +24,7 @@ elec_space_charge=trapz(x, rho, 2);
 % https://uk.mathworks.com/help/matlab/ref/diff.html
 del_q_ec=diff(electronic_charge_at_insulator_sc_interface);
 del_q_ic=diff(ionic_charge_at_insulator_sc_interface);
-del_sc=diff(elec_space_charge);
+del_sc=diff(elec_space_charge)*e;
 %% Find change in voltage applied
 Vappt = dfana.calcVapp(sol_CV_with_ions);
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
@@ -50,7 +50,7 @@ avg_vdrop_ionic=mean(Vdrop2,2);
 %%
 figure(1)
 plot(Vdrop2, capacitance_device_electronic); 
-xlabel('Vdrop')
+xlabel('V drop')
 ylabel('Electronic Capacitance at point across pvk layer with ions(F/cm^2)')
 
 %%
