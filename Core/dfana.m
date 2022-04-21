@@ -588,11 +588,11 @@ classdef dfana
             deltaV = V(:,p1) - V(:,p2);
         end
 
-        function sigma = calcsigma(sol)
+        function sigma = calcsigma(sol, x1, x2)
             % calculates the integrated space charge density
             [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol);
             rho = dfana.calcrho(sol, "whole");
-            sigma = trapz(x, rho, 2);
+            sigma = trapz(x(x >x1 & x< x2), rho(:, (x >x1 & x< x2)), 2);
         end
 
         function sigma_ion = calcsigma_ion(sol)
