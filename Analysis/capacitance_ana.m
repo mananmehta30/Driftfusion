@@ -24,6 +24,7 @@ elec_space_charge=trapz(x, rho, 2);
 % https://uk.mathworks.com/help/matlab/ref/diff.html
 del_q_ec=diff(electronic_charge_at_insulator_sc_interface);
 del_q_ic=diff(ionic_charge_at_insulator_sc_interface);
+del_sc=diff(elec_space_charge);
 %% Find change in voltage applied
 Vappt = dfana.calcVapp(sol_CV_with_ions);
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
@@ -33,15 +34,26 @@ end
 Vdrop=V(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 Vdrop2=diff(Vdrop);
 %% Find C=change in charge by change in voltage
-for i=1:length(electronic_charge_at_insulator_sc_interface)-1
-capacitance_device_electronic(i)=(del_q_ec(i)/del_v(i))*e;
-capacitance_device_ionic(i)=(del_q_ic(i)/del_v(i))*e;
-end
-%Find average capacitance
+% for i=1:length(electronic_charge_at_insulator_sc_interface)-1
+% capacitance_device_electronic(i)=(del_q_ec(i)/del_v(i))*e;
+% capacitance_device_ionic(i)=(del_q_ic(i)/del_v(i))*e;
+% end
+%% Find capacitance across pvk layer
+
+capacitance_device_electronic=(del_q_ec./Vdrop2)*e;
+capacitance_device_ionic=(del_q_ic./Vdrop2)*e;
+
 
 %%
-plot(Vappt(2:end), capacitance_device_ionic); 
-xlabel('V applied')
+figure(1)
+plot(Vdrop2, capacitance_device_electronic); 
+xlabel('Vdrop')
+ylabel('Electronic Capacitance at point in an insulator with ions(F/cm^2)')
+
+%%
+figure(2)
+plot(Vdrop2, capacitance_device_ionic); 
+xlabel('V drop')
 ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
 
 %% Analytical solution Sze and Kwok
