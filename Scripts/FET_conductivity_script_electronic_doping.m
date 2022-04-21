@@ -29,7 +29,7 @@ for i = 1:length(Ncat_array)
         
         %par.Phi_right = MAPI_Ef0(j);%Change workfunction of right electrode with MAPI
         par.EF0(3)= MAPI_Ef0(j);%Change workfunction of MAPI
-         disp(['RHS electrode workfunction = ', num2str(MAPI_Ef0(j)), ' eV']);
+         %disp(['RHS electrode workfunction = ', num2str(MAPI_Ef0(j)), ' eV']);
          disp(['MAPI Ef0 = ', num2str(MAPI_Ef0(j)), ' eV']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
@@ -145,7 +145,7 @@ legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, MAPI_index).u(:, par.pcum0(3), 2); %shouldn't this be 1? Confirm once
+    n_int = sol_CV(i, MAPI_index).u(:, par.pcum0(3)+1, 2); %shouldn't this be 1? Confirm once
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -154,7 +154,7 @@ end
 %n_int takes the electron density at the interface for all times, at space
 %par.pcum0(3) that corresponds to MAPI for variable number 2 that is the hole density. 
 for i = 1:length(Ncat_array)
-    p_int = sol_CV(i, MAPI_index).u(:, par.pcum0(3), 3);%[time,space, variable]. 
+    p_int = sol_CV(i, MAPI_index).u(:, par.pcum0(3)+1, 3);%[time,space, variable]. 
 %1. Electron density 2. Hole density 3. Cation density (where 1 or 2 mobile ionic
 %carriers are stipulated)
 %4. Anion density (where 2 mobile ionic carriers are stipulated)
@@ -183,11 +183,11 @@ hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
 MAPI_index =7;
-jjj=3*Vmax/k_scan;
-jj2=(3*(Vmax/k_scan));
+time_Vmin=round(3*Vmax/k_scan, 0);
+time_Vmax=round(Vmax/k_scan, 0);
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, MAPI_index),((Vmax/k_scan)));% Vmax/k_scan corresponds to time.Vmax=1.2,k_scan=0.001
+    dfplot.npx(sol_CV(i, MAPI_index),time_Vmax);% Vmax/k_scan corresponds to time.Vmax=1.2,k_scan=0.001
     %However for maximum negative voltage that should be at 3*Vmax/k_scan
 % or at 3600 seconds
 %We see there is a slight difference in the values.
@@ -213,7 +213,7 @@ legend(legstr_acx)
 MAPI_index =7;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
-    dfplot.Vx(sol_CV(i, MAPI_index), 0);%Vmax/k_scan)
+    dfplot.Vx(sol_CV(i, MAPI_index), time_Vmax);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
