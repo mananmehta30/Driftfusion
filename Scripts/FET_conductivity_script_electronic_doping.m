@@ -75,7 +75,6 @@ Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 % xlabel('Time')
 % ylabel('Capacitance with ions')
 %% Call capacitance function
-
 [capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
        
 %%

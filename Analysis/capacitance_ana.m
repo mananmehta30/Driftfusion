@@ -20,6 +20,8 @@ ionic_charge_at_insulator_sc_interface = total_ionic_charge(:, x > x_perov_left 
 rho = dfana.calcrho(sol_CV_with_ions, "whole");
 elec_space_charge=trapz(x, rho, 2);
 %% Find change in charge(s)
+% For this you could use the MATLAB diff function
+% https://uk.mathworks.com/help/matlab/ref/diff.html
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 del_q_ec(i)=electronic_charge_at_insulator_sc_interface(i+1)-electronic_charge_at_insulator_sc_interface(i);
 del_q_ic(i)=electronic_charge_at_insulator_sc_interface(i+1)-electronic_charge_at_insulator_sc_interface(i);
@@ -37,17 +39,9 @@ end
 %Find average capacitance
 
 %%
-plot(Vappt2,capacitance_device_ionic); 
+plot(Vappt(2:end), capacitance_device_ionic); 
 xlabel('V applied')
 ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
-
-
-
-
-
-
-
-
 
 %% Alternate way to calculate capacitance
 % 1)Get parameters here %par = sol_in.par
@@ -60,4 +54,4 @@ ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
 %across bulk and surface 
 %fun = @(x) Q_total;
 % E_s= sqrt( (-2*par.q)/par.epp*e0))integral(fun,V_bulk,V_surface)
-
+end
