@@ -1,7 +1,5 @@
 %% Code pupose
 % To get value of capacitance per area by integrating the current and using C(V)=J_displacement(V)/dV/dT
-
-
 %Instead of using soleq.el better try with separate file
 
 %% Initialize driftfusion
@@ -82,7 +80,6 @@ Vappt2 = dfana.calcVapp(sol_CV_without_ions);
        
 %%
 
-Vappt2(:,1) = [];
 %%
 plot(Vappt2,capacitance_device_electronic); 
 xlabel('V applied')
