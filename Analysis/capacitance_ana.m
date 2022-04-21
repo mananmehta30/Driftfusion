@@ -22,9 +22,9 @@ elec_space_charge=trapz(x, rho, 2);
 %% Find change in charge(s)
 % For this you could use the MATLAB diff function
 % https://uk.mathworks.com/help/matlab/ref/diff.html
-del_q_ec=diff(electronic_charge_at_insulator_sc_interface);
-del_q_ic=diff(ionic_charge_at_insulator_sc_interface);
-del_sc=diff(elec_space_charge)*e;
+del_q_ec=diff(electronic_charge_at_insulator_sc_interface.*e);
+del_q_ic=diff(ionic_charge_at_insulator_sc_interface.*e);
+del_sc=diff(elec_space_charge.*e);
 %% Find change in voltage applied
 Vappt = dfana.calcVapp(sol_CV_with_ions);
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
@@ -40,8 +40,9 @@ Vdrop2=diff(Vdrop);
 % end
 %% Find capacitance across pvk layer
 
-capacitance_device_electronic=(del_q_ec./Vdrop2)*e;
-capacitance_device_ionic=(del_q_ic./Vdrop2)*e;
+capacitance_device_electronic=(del_q_ec./Vdrop2);
+capacitance_device_ionic=(del_q_ic./Vdrop2);
+capacitance_del_sc=(del_sc./Vdrop2);
 
 avg_c_electronic=mean(capacitance_device_electronic,2);
 avg_c_ionic=mean(capacitance_device_ionic,2);
@@ -73,9 +74,15 @@ ylabel('Average Ionic Capacitance across pvk layer with ions(F/cm^2)')
 
 %%
 figure(5)
+plot(avg_vdrop_ionic,capacitance_del_sc); 
+xlabel(' Average V drop')
+ylabel('Average space charge capacitance across pvk layer with ions(F/cm^2)')
+
+%%
+figure(6)
 plot(avg_vdrop_ionic,del_sc); 
 xlabel(' Average V drop')
-ylabel('Average space charge Capacitance across pvk layer with ions(F/cm^2)')
+ylabel('Average space charge across pvk layer with ions(F/cm^2)')
 
 %% Analytical solution Sze and Kwok
 
