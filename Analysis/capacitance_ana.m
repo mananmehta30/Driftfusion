@@ -3,7 +3,7 @@ function [capacitance_device_electronic,capacitance_device_ionic] = capacitance_
  [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
 %% Get Debye Length
 % [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(soleq);
-N_Debye=2; %calculate for specified debye lengths
+N_Debye=5; %calculate for specified debye lengths
 e = par_t.e;
 V_T = par_t.kB*par_t.T;                     % Thermal votlage
 epp_pvsk = e*par_t.epp0*par_t.epp(3);       % Perovskite absolute dielectric constant
@@ -43,18 +43,39 @@ Vdrop2=diff(Vdrop);
 capacitance_device_electronic=(del_q_ec./Vdrop2)*e;
 capacitance_device_ionic=(del_q_ic./Vdrop2)*e;
 
-
+avg_c_electronic=mean(capacitance_device_electronic,2);
+avg_c_ionic=mean(capacitance_device_ionic,2);
+avg_vdrop_electronic=mean(Vdrop2,2);
+avg_vdrop_ionic=mean(Vdrop2,2);
 %%
 figure(1)
 plot(Vdrop2, capacitance_device_electronic); 
 xlabel('Vdrop')
-ylabel('Electronic Capacitance at point in an insulator with ions(F/cm^2)')
+ylabel('Electronic Capacitance at point across pvk layer with ions(F/cm^2)')
 
 %%
 figure(2)
 plot(Vdrop2, capacitance_device_ionic); 
 xlabel('V drop')
-ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
+ylabel('Ionic Capacitance at point across pvk layer with ions(F/cm^2)')
+
+%%
+figure(3)
+plot(avg_vdrop_electronic, avg_c_electronic); 
+xlabel('Average Vdrop')
+ylabel(' Average Electronic Capacitance across pvk layer  with ions(F/cm^2)')
+
+%%
+figure(4)
+plot(avg_vdrop_ionic, avg_c_ionic); 
+xlabel(' Average V drop')
+ylabel('Average Ionic Capacitance across pvk layer with ions(F/cm^2)')
+
+%%
+figure(5)
+plot(avg_vdrop_ionic,del_sc); 
+xlabel(' Average V drop')
+ylabel('Average space charge Capacitance across pvk layer with ions(F/cm^2)')
 
 %% Analytical solution Sze and Kwok
 
