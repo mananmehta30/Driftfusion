@@ -37,7 +37,8 @@ k_scan = 0.001;
 Vmax = 10;
 Vmin = -Vmax;
 tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
-
+%Try freezing the ions (keep mobility =0) and then run sol_CV to check
+%later on
 %sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, 1000);
 sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, 1000);
@@ -80,15 +81,15 @@ Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 %%
 
 %%
-figure (499)
-plot(Vappt(2:end),capacitance_device_electronic); 
-xlabel('V applied')
-ylabel('Electronic Capacitance at point in an insulator with ions(F/cm^2)')
-%%
-figure (500)
-plot(Vappt(2:end), capacitance_device_ionic); 
-xlabel('V applied')
-ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
+% figure (499)
+% plot(Vappt(2:end),capacitance_device_electronic); 
+% xlabel('V applied')
+% ylabel('Electronic Capacitance at point in an insulator with ions(F/cm^2)')
+% %%
+% figure (500)
+% plot(Vappt(2:end), capacitance_device_ionic); 
+% xlabel('V applied')
+% ylabel('Ionic Capacitance at point in an insulator with ions(F/cm^2)')
 %% Main Plots
 % %% Plot Jdisp and Capacitance without ions across time
 % 

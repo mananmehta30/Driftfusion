@@ -3,28 +3,28 @@ function [capacitance_device_electronic,capacitance_device_ionic] = capacitance_
  [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
 %% Get Debye Length
 % [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(soleq);
-N_Debye=10; %calculate for specified debye lengths
+N_Debye=30; %calculate for specified debye lengths
 e = par_t.e;
 V_T = par_t.kB*par_t.T;                     % Thermal votlage
 epp_pvsk = e*par_t.epp0*par_t.epp(3);       % Perovskite absolute dielectric constant
 N0 = par_t.Ncat(3);
 debye_length = sqrt((epp_pvsk*V_T)/(e*N0));
 %% Get the charge for the Debye length
-total_electronic_charge=n+p;
-total_ionic_charge=a+c;
+total_electronic_charge_density=(p-n)*e;%not n+p as they have different charges
+total_ionic_charge_density=(c-a)*e;
 x_perov_left = sol_CV_with_ions.par.dcum0(3);     % dcum is the device thickness
 x_perov_right = sol_CV_with_ions.par.dcum0(4);
-electronic_charge_at_insulator_sc_interface = total_electronic_charge(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
-ionic_charge_at_insulator_sc_interface = total_ionic_charge(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
+electronic_charge_at_insulator_sc_interface = total_electronic_charge_density(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
+ionic_charge_at_insulator_sc_interface = total_ionic_charge_density(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 %% Intergrate to get space charge density from volumetric charge density
 rho = dfana.calcrho(sol_CV_with_ions, "whole");
-elec_space_charge=trapz(x, rho, 2);
+total_space_charge_per_unit_area=trapz(x, rho, 2);
 %% Find change in charge(s)
 % For this you could use the MATLAB diff function
 % https://uk.mathworks.com/help/matlab/ref/diff.html
-del_q_ec=diff(electronic_charge_at_insulator_sc_interface.*e);
-del_q_ic=diff(ionic_charge_at_insulator_sc_interface.*e);
-del_sc=diff(elec_space_charge.*e);
+del_q_ec=diff(electronic_charge_at_insulator_sc_interface);
+del_q_ic=diff(ionic_charge_at_insulator_sc_interface);
+del_sc=diff(total_space_charge_per_unit_area);
 %% Find change in voltage applied
 Vappt = dfana.calcVapp(sol_CV_with_ions);
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
@@ -33,6 +33,14 @@ end
 %% Find change in voltage drop across the debye length
 Vdrop=V(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 Vdrop2=diff(Vdrop);
+Vdrop3= V(:, x(sol_CV_with_ions.par.dcum0(3) sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length))
+%potential across one side and then another
+%plot the voltage and check the capacitance
+%check same voltage at forward and reverse scan and compare (should be same as scan speed is slow)
+%use dfplot.Qt to get electonic and ionic charge
+%get the above values for the right hand side
+%check if electronic and ionic capacitances add up to total capacitance
+%freeze ions
 %% Find C=change in charge by change in voltage
 % for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 % capacitance_device_electronic(i)=(del_q_ec(i)/del_v(i))*e;
