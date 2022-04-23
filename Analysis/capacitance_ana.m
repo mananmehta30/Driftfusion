@@ -17,8 +17,8 @@ x_perov_right = sol_CV_with_ions.par.dcum0(4);
 electronic_charge_at_insulator_sc_interface = total_electronic_charge_density(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 ionic_charge_at_insulator_sc_interface = total_ionic_charge_density(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 %% Intergrate to get space charge density from volumetric charge density
-rho = dfana.calcrho(sol_CV_with_ions, "whole");
-total_space_charge_per_unit_area=trapz(x, rho, 2);
+rho = dfana.calcrho(sol_CV_with_ions, "sub"); %Ask how to get the sub here
+total_space_charge_per_unit_area=trapz(x, rho, 2);% Mistake is here, the charge integration gives one row for entire device
 %% Find change in charge(s)
 % For this you could use the MATLAB diff function
 % https://uk.mathworks.com/help/matlab/ref/diff.html
@@ -33,7 +33,13 @@ end
 %% Find change in voltage drop across the debye length
 Vdrop=V(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 Vdrop2=diff(Vdrop);
-Vdrop3= V(:, x(sol_CV_with_ions.par.dcum0(3) sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length))
+% Vdrop3= V(:, x(sol_CV_with_ions.par.dcum0(3) sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length))
+Debye_left_V_index = find(x==sol_CV_with_ions.par.dcum0(3));
+target=sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length;
+temp = abs(target - x);
+closest = x(find(temp == min(abs(target - x))));
+Debye_right_V_index=find(x==(closest));
+Vdrop3=V(:,Debye_left_V_index)-V(:,Debye_right_V_index);
 %potential across one side and then another
 %plot the voltage and check the capacitance
 %check same voltage at forward and reverse scan and compare (should be same as scan speed is slow)
@@ -41,6 +47,10 @@ Vdrop3= V(:, x(sol_CV_with_ions.par.dcum0(3) sol_CV_with_ions.par.dcum0(3)+ N_De
 %get the above values for the right hand side
 %check if electronic and ionic capacitances add up to total capacitance
 %freeze ions
+%% Get total charge
+% charge_debye = sum(total_space_charge_per_unit_area([Debye_left_V_index, Debye_right_V_index]),2);
+charge_debye = sum(total_space_charge_per_unit_area(:,[Debye_left_V_index, Debye_right_V_index]),2)
+
 %% Find C=change in charge by change in voltage
 % for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 % capacitance_device_electronic(i)=(del_q_ec(i)/del_v(i))*e;
