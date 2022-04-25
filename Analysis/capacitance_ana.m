@@ -3,7 +3,7 @@ function [capacitance_device_electronic,capacitance_device_ionic] = capacitance_
  [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
 %% Get Debye Length
 % [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(soleq);
-N_Debye=30; %calculate for specified debye lengths
+N_Debye=2; %calculate for specified debye lengths
 e = par_t.e;
 V_T = par_t.kB*par_t.T;                     % Thermal votlage
 epp_pvsk = e*par_t.epp0*par_t.epp(3);       % Perovskite absolute dielectric constant
@@ -16,9 +16,6 @@ x_perov_left = sol_CV_with_ions.par.dcum0(3);     % dcum is the device thickness
 x_perov_right = sol_CV_with_ions.par.dcum0(4);
 electronic_charge_at_insulator_sc_interface = total_electronic_charge_density(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 ionic_charge_at_insulator_sc_interface = total_ionic_charge_density(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
-%% Intergrate to get space charge density from volumetric charge density
-rho = dfana.calcrho(sol_CV_with_ions, "sub"); %Ask how to get the sub here
-total_space_charge_per_unit_area=trapz(x, rho, 2);% Mistake is here, the charge integration gives one row for entire device
 %% Find change in charge(s)
 % For this you could use the MATLAB diff function
 % https://uk.mathworks.com/help/matlab/ref/diff.html
@@ -30,16 +27,22 @@ Vappt = dfana.calcVapp(sol_CV_with_ions);
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 del_v(i)=Vappt(i+1)-Vappt(i);
 end
-%% Find change in voltage drop across the debye length
+%% Find change in voltage drop across the debye length(two methods
+
 Vdrop=V(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 Vdrop2=diff(Vdrop);
-% Vdrop3= V(:, x(sol_CV_with_ions.par.dcum0(3) sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length))
+
+%%%% Method 1 to get difference in voltage
 Debye_left_V_index = find(x==sol_CV_with_ions.par.dcum0(3));
 target=sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length;
 temp = abs(target - x);
 closest = x(find(temp == min(abs(target - x))));
 Debye_right_V_index=find(x==(closest));
 Vdrop3=V(:,Debye_left_V_index)-V(:,Debye_right_V_index);
+
+%%%% Method 3 to get difference in voltage
+deltaV = dfana.deltaVt(sol_CV_with_ions, Debye_left_V_index, Debye_right_V_index);
+
 %potential across one side and then another
 %plot the voltage and check the capacitance
 %check same voltage at forward and reverse scan and compare (should be same as scan speed is slow)
@@ -47,9 +50,38 @@ Vdrop3=V(:,Debye_left_V_index)-V(:,Debye_right_V_index);
 %get the above values for the right hand side
 %check if electronic and ionic capacitances add up to total capacitance
 %freeze ions
-%% Get total charge
+
+%% Get rho across debye length
+
+n0=n(:,[Debye_left_V_index:Debye_right_V_index]);
+p0=p(:,[Debye_left_V_index:Debye_right_V_index]);
+a0=a(:,[Debye_left_V_index:Debye_right_V_index]);
+c0=c(:,[Debye_left_V_index:Debye_right_V_index]);
+NA0 = repmat(dev.NA(Debye_left_V_index:Debye_right_V_index), length(t), 1);
+ND0 = repmat(dev.ND(Debye_left_V_index:Debye_right_V_index), length(t), 1);
+Nani0 = repmat(dev.Nani(Debye_left_V_index:Debye_right_V_index), length(t), 1);
+Ncat0 = repmat(dev.Ncat(Debye_left_V_index:Debye_right_V_index), length(t), 1);
+
+rho0 = -n0 + p0 - NA0 + ND0 + par.z_a*a0 + par.z_c*c0 - par.z_c*Nani0 - par.z_c*Ncat0;
+
+total_space_charge_per_unit_area0=e.*trapz(x(Debye_left_V_index:Debye_right_V_index), rho0, 2);
+%%
+Q = e*trapz(x(Debye_left_V_index:Debye_right_V_index), rho(:, Debye_left_V_index:Debye_right_V_index), 2);
+%% Get total charge density
 % charge_debye = sum(total_space_charge_per_unit_area([Debye_left_V_index, Debye_right_V_index]),2);
-charge_debye = sum(total_space_charge_per_unit_area(:,[Debye_left_V_index, Debye_right_V_index]),2)
+total_electronic_charge_density_inthedebye = sum(total_electronic_charge_density(:,[Debye_left_V_index, Debye_right_V_index]),2);
+
+%% Get capacitance as total charge (per cm2) divided by dV
+del_space_charge=diff(Q);
+del_V_debye=diff(deltaV);
+C_debye_layers=del_space_charge./del_V_debye;
+deltaV2=deltaV;
+deltaV2(1,:)=[];
+figure(7444)
+plot(C_debye_layers,deltaV2)
+xlabel('V across debye layers')
+ylabel('Space charge Capacitance at point across pvk layer with ions(F/cm^2)')
+
 
 %% Find C=change in charge by change in voltage
 % for i=1:length(electronic_charge_at_insulator_sc_interface)-1
@@ -104,6 +136,11 @@ figure(6)
 plot(avg_vdrop_ionic,del_sc); 
 xlabel(' Average V drop')
 ylabel('Average space charge across pvk layer with ions(Q/cm^2)')
+%%
+figure(7)
+plot(Vdrop3,total_electronic_charge_density_inthedebye); 
+xlabel('V drop across Debye')
+ylabel('Total volumetric charge density across pvk layer with ions(Q/cm^2)')
 
 %% Analytical solution Sze and Kwok
 
