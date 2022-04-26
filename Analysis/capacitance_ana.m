@@ -107,11 +107,11 @@ plot(deltaV2,C_debye_ionic)
 hold off
 legend('Total Capacitance','Total Capacitance2','Electronic Capacitance','Ionic Capacitance')
 xlabel('V across debye layers')
-ylabel('Capacitances F/cm^2)')
+ylabel('Capacitances (F/cm^2)')
 subplot(2,1,2);
 plot(deltaV2,C_debye_electronic)
 xlabel('V across debye layers')
-ylabel('Electronnic Capacitance(F/cm^2_');
+ylabel('Electronnic Capacitance(F/cm^2)');
 %% Find C=change in charge by change in voltage
 % for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 % capacitance_device_electronic(i)=(del_q_ec(i)/del_v(i))*e;
