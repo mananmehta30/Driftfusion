@@ -112,11 +112,19 @@ subplot(2,1,2);
 plot(deltaV2,C_debye_electronic)
 xlabel('V across debye layers')
 ylabel('Electronnic Capacitance(F/cm^2)');
+hold off
+
+
 %% Find C=change in charge by change in voltage
 % for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 % capacitance_device_electronic(i)=(del_q_ec(i)/del_v(i))*e;
 % capacitance_device_ionic(i)=(del_q_ic(i)/del_v(i))*e;
 % end
+figure(45)
+%Vappt2=Vappt;
+%Vappt2(:,1)=[];
+Vappt3=transpose(Vappt2);
+plot(Vappt3,C_debye_layers)
 %% Find capacitance across pvk layer
 
 capacitance_device_electronic=(del_q_ec./Vdrop2);
