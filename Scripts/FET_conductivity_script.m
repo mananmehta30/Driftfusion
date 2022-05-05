@@ -176,16 +176,45 @@ for i = 1:length(Ncat_array)
 end
 
 figure(203)
-xlabel('Voltage [V]')
-ylabel('electron density interface (cm-3)')
+xlabel('Gate voltage [V]')
+ylabel('Electron density interface (cm-3)')
 legend(legstr_n3)
 hold off
 
 figure(204)
-xlabel('Voltage [V]')
-ylabel('hole density interface (cm-3)')
+xlabel('Gate voltage [V]')
+ylabel('Hole density interface (cm-3)')
 legend(legstr_p3)
 hold off
+
+
+%%
+for i = 1:length(Ncat_array)
+    figure(205)
+    semilogy(Vappt, squeeze(sigma_n_barM(i, workfunction_index, :)))
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+for i = 1:length(Ncat_array)
+    figure(206)
+    semilogy(Vappt, squeeze(sigma_p_barM(i, workfunction_index, :)))
+    legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+figure(205)
+xlabel('Gate voltage [V]')
+ylabel('Electron conductivity interface (Scm-1)')
+legend(legstr_n3)
+hold off
+
+figure(206)
+xlabel('Gate voltage [V]')
+ylabel('Hole conductivity interface (Scm-1)')
+legend(legstr_p3)
+hold off
+
 
 %% Plot electron and hole profiles at Vmax as a function of position
 legstr_npx = {'', '', ''};

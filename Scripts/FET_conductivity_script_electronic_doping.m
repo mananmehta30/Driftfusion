@@ -36,7 +36,7 @@ soleq2= equilibrate(par2);
 k_scan = 0.001;
 Vmax = 10;
 Vmin = -Vmax;
-tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
+tpoints=(4*(Vmax-Vmin)/(100*k_scan))+1;
 %Try freezing the ions (keep mobility =0) and then run sol_CV to check
 %later on
 %sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
@@ -76,8 +76,8 @@ Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 % xlabel('Time')
 % ylabel('Capacitance with ions')
 %% Call capacitance function
-[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
-       
+%[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
+[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);      
 %%
 
 %%
