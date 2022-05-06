@@ -36,12 +36,12 @@ soleq2= equilibrate(par2);
 k_scan = 0.001;
 Vmax = 10;
 Vmin = -Vmax;
-tpoints=(4*(Vmax-Vmin)/(100*k_scan))+1;
+tpoints=(2*(Vmax-Vmin)/(100*k_scan))+1;
 %Try freezing the ions (keep mobility =0) and then run sol_CV to check
 %later on
 %sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, 1000);
-sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, 1000);
+sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
 %% Vappt and other parameters
 Vappt = dfana.calcVapp(sol_CV_with_ions);
