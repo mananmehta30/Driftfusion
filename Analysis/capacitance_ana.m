@@ -80,6 +80,7 @@ EQ = e*trapz(x(Debye_left_V_index:Debye_right_V_index), electronic_rho(:, Debye_
 ionic_rho=c-a;
 IQ= e*trapz(x(Debye_left_V_index:Debye_right_V_index), ionic_rho(:, Debye_left_V_index:Debye_right_V_index), 2);
 
+total_electronic_charge_density_inthedebye = sum(total_electronic_charge_density(:,[Debye_left_V_index, Debye_right_V_index]),2);
 
 %% Get capacitance as total charge (per cm2) divided by dV
 
