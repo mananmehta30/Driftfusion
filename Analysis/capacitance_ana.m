@@ -128,6 +128,8 @@ Vappt2=Vappt;
 Vappt2(:,1)=[];
 Vappt3=transpose(Vappt2);
 plot(Vappt3,C_debye_layers)
+xlabel('V applied')
+ylabel('Capacitance pvk layer with ions(F/cm^2)')
 %% Find capacitance across pvk layer
 
 capacitance_device_electronic=(del_q_ec./V_drop_across_pvk_layers);
@@ -157,7 +159,7 @@ ylabel('Ionic Capacitance at point across pvk layer with ions(F/cm^2)')
 figure(3)
 plot(avg_vdrop_electronic, avg_c_electronic); 
 xlabel('Average Vdrop')
-ylabel(' Average Electronic Capacitance across pvk layer  with ions(F/cm^2)')
+ylabel(' Average Electronic Capacitance across pvk layer with ions(F/cm^2)')
 
 %%
 figure(4)
