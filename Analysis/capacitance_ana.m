@@ -23,10 +23,11 @@ ionic_charge_at_insulator_sc_interface = total_ionic_charge_density(:, x > x_per
 
  del_q_ec=diff(electronic_charge_at_insulator_sc_interface);
  del_q_ic=diff(ionic_charge_at_insulator_sc_interface);
- del_sc=diff(total_space_charge_per_unit_area);
+
+ del_sc= del_q_ec+del_q_ic;
 %% Find change in voltage applied across the device
 
-Vappt = dfana.calcVapp(sol_CV_with_ions);
+Vappt = dfana.calcVapp(sol);
 for i=1:length(electronic_charge_at_insulator_sc_interface)-1
 del_v(i)=Vappt(i+1)-Vappt(i);
 end
@@ -36,7 +37,7 @@ end
 Vdrop=V(:, x > x_perov_left & x < x_perov_left + N_Debye*debye_length);
 V_drop_across_pvk_layers=diff(Vdrop);
 Debye_left_V_index = find(x==sol.par.dcum0(3));
-target=sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length;
+target=sol.par.dcum0(3)+ N_Debye*debye_length;
 temp = abs(target - x);
 closest = x(find(temp == min(abs(target - x))));
 Debye_right_V_index=find(x==(closest));
@@ -122,8 +123,8 @@ hold off
  capacitance_device_ionic(i)=(del_q_ic(i)/del_v(i))*e;
  end
 figure(45)
-%Vappt2=Vappt;
-%Vappt2(:,1)=[];
+Vappt2=Vappt;
+Vappt2(:,1)=[];
 Vappt3=transpose(Vappt2);
 plot(Vappt3,C_debye_layers)
 %% Find capacitance across pvk layer
@@ -196,4 +197,4 @@ end
 %use dfplot.Qt to get electonic and ionic charge
 %get the above values for the right hand side
 %check if electronic and ionic capacitances add up to total capacitance
-%freeze ions
+%freeze ions  %%del_sc=diff(total_space_charge_per_unit_area);
