@@ -12,7 +12,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
-workfunction_LHS = -4.5:0.1:-4.2;
+workfunction_RHS = -4.5:0.1:-4.2;
 
 %% while
 for i = 1:length(Ncat_array)
@@ -21,10 +21,13 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+    for j = 1:length(workfunction_RHS) %loop to run for different electrode workfunction
         
-        par.Phi_left = workfunction_LHS(j);
-        disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
+        par.Phi_right = workfunction_RHS(j);
+        disp(['RHS electrode workfunction = ', num2str(workfunction_RHS(j)), ' eV']);
+        
+        par.EF0(3) = workfunction_RHS(j);
+        disp(['MAPI workfunction = ', num2str(workfunction_RHS(j)), ' eV']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -57,13 +60,13 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1));
 % Preallocation
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(Ncat_array), length(workfunction_RHS), length(sol_CV(1,1).t)); 
+sigma_p_barM = zeros(length(Ncat_array), length(workfunction_RHS), length(sol_CV(1,1).t)); 
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_RHS)); 
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_RHS)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(workfunction_LHS)
+    for j = 1:length(workfunction_RHS)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
@@ -75,7 +78,7 @@ end
 %% Plots
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
+    semilogy(workfunction_RHS, sigma_n_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
@@ -84,7 +87,7 @@ end
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(i, :))
+    semilogy(workfunction_RHS, sigma_p_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
@@ -99,17 +102,17 @@ hold off
 
 
 %% Plot average conductivity
-for j = 1:length(workfunction_LHS)
+for j = 1:length(workfunction_RHS)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_RHS(j))];
     hold on
 end
 
-for j = 1:length(workfunction_LHS)
+for j = 1:length(workfunction_RHS)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_RHS(j))];
     hold on
 end
 
