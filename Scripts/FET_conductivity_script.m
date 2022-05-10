@@ -12,7 +12,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
-workfunction_LHS = -4.5:0.1:-4.2;
+workfunction_LHS = -5.5:0.1:-4.2;
 
 %% while
 for i = 1:length(Ncat_array)
