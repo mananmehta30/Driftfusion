@@ -32,7 +32,7 @@ for i = 1:length(Ncat_array)
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);%num2str=Convert numbers to character representation
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
         
-        par.Phi_left = workfunction_LHS(j);
+        par.Phi_left = workfunction_LHS(j);%change left hand side work funtion only
         disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
