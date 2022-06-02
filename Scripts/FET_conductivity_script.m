@@ -112,7 +112,7 @@ for j = 1:length(workfunction_LHS)
     legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
     hold on
 end
-
+%%check how to write siemens properly
 figure(201)
 xlabel('Voltage [V]')
 ylabel('Average electron conductivity [Siemens]')
