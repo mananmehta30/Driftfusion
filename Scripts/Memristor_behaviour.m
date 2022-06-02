@@ -15,7 +15,7 @@ soleq_memristor = equilibrate(par_memristor);
 Vmax = 1;
  Vmin = -1;
 tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
-sol_CV = doCV(soleq_memristor, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
 
 
