@@ -17,5 +17,6 @@ Vmax = 1;
 tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
 sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
-
+%%No change with sol_JV achieved. Need to find how to vary the surface
+%%recombination formula
 
