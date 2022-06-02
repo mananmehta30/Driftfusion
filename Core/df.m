@@ -415,8 +415,8 @@ end
         Pr = [-V_r+Vbi-Vapp-Vres;
             mobset*(sn_r*(n_r - n0_r));
             mobset*(sp_r*(p_r - p0_r));
-            0;
-            0;];
+            mobset*(sn_r*(n_r - n0_r));
+            mobset*(sn_r*(n_r - n0_r));];
         
         Qr = [0;
             1;
