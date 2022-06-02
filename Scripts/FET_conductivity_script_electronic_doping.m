@@ -15,14 +15,14 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4); %16, 19, 4
-workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
+MAPI_Ef0 = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Number of species
 % par.N_ionic_species=2; %uncomment this to simulate with 2 ionic species
 %% Set ionic mobility to be zero to simulate without affect of ions
 % par.mu_c(:) = 0;
 % par.mu_a(:) = 0;
 %% For loop
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+    for j = 1:length(MAPI_Ef0) %loop to run for different MAPI workfunctions
         %par.Phi_right = MAPI_Ef0(j);%Change workfunction of right electrode with MAPI
         par.EF0(3)= MAPI_Ef0(j);%Change workfunction of MAPI
          %disp(['RHS electrode workfunction = ', num2str(MAPI_Ef0(j)), ' eV']);
@@ -62,13 +62,13 @@ workfunction_LHS = -5.5:0.1:-4.2; %-5.5:0.1:-4.2;
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1)); 
 
-sigma_n_barM = zeros(length(workfunction_LHS), length(sol_CV(1).t)); %Conductivity profiles for different Ncat 
-sigma_p_barM = zeros(length(workfunction_LHS), length(sol_CV(1).t)); %and Workfunctions for each different time steps
-sigma_n_bar_VpeakM = zeros(length(workfunction_LHS)); %Mean conducitvity across all the times
-sigma_p_bar_VpeakM = zeros(length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(MAPI_Ef0), length(sol_CV(1).t)); %Conductivity profiles for different Ncat 
+sigma_p_barM = zeros(length(MAPI_Ef0), length(sol_CV(1).t)); %and Workfunctions for each different time steps
+sigma_n_bar_VpeakM = zeros(length(MAPI_Ef0)); %Mean conducitvity across all the times
+sigma_p_bar_VpeakM = zeros(length(MAPI_Ef0)); 
 
 
-    for j = 1:length(workfunction_LHS)
+    for j = 1:length(MAPI_Ef0)
        
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(j));%call this function
         sigma_n_barM(j,:) = sigma_n_bar; %Put in calculated values for all times for different Ncat and wf
@@ -81,30 +81,30 @@ sigma_p_bar_VpeakM = zeros(length(workfunction_LHS));
 
 
 %% Plots
-for j=1:length(workfunction_LHS)
+for j=1:length(MAPI_Ef0)
     figure(500)
-    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(:,j))
+    semilogy(MAPI_Ef0, sigma_n_bar_VpeakM(:,j))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
      legend('Ncat =0');
-    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+    xlim([MAPI_Ef0(1) MAPI_Ef0(length(MAPI_Ef0))])
 
 end
 
-for j=1:length(workfunction_LHS)
+for j=1:length(MAPI_Ef0)
     figure(501)
-    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(:,j))
+    semilogy(MAPI_Ef0, sigma_p_bar_VpeakM(:,j))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
     legend('Ncat =0');
-    xlim([workfunction_LHS(1) workfunction_LHS(length(workfunction_LHS))])
+    xlim([MAPI_Ef0(1) MAPI_Ef0(length(MAPI_Ef0))])
 end
 
 
 %% Plot average conductivity
-for j = 1:length(workfunction_LHS)
+for j = 1:length(MAPI_Ef0)
     figure(502)
     semilogy(Vappt, sigma_n_barM(j,:)) %remove singleton dimensions (reason?)
   
@@ -115,7 +115,7 @@ for j = 1:length(workfunction_LHS)
     hold on
 end
 hold off
-for j = 1:length(workfunction_LHS)
+for j = 1:length(MAPI_Ef0)
     figure(503)
     semilogy(Vappt, sigma_p_barM(j,:))
     
