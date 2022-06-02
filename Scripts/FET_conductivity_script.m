@@ -238,7 +238,7 @@ legend(legstr_Vx)
 % 
 % 
 %%
-
+%Find how to get the contour done
 % %% Make movie for anions and cations
 % %makemovie(sol_CV, @dfplot.acx, 0, [0, 1.5e18], 'acx', true, true);
 %% Conductivity profiles
