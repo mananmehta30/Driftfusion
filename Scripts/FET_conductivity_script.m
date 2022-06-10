@@ -11,8 +11,8 @@ par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
-Ncat_array = logspace(16, 19, 4);
-workfunction_LHS = -4.5:0.1:-4.2;
+Ncat_array = logspace(16, 17, 2);
+workfunction_LHS = -4.3:0.1:-4.2;
 
 %% while
 for i = 1:length(Ncat_array)
@@ -20,6 +20,9 @@ for i = 1:length(Ncat_array)
     par.Ncat(:) = Ncat_array(i);
     par.Nani(:) = Ncat_array(i);
     
+    %% Set ionic mobility to be zero to simulate without affect of ions
+ par.mu_c(:) = 0;
+par.mu_a(:) = 0;
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
         
@@ -127,7 +130,7 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-workfunction_index = 3;
+workfunction_index = 2;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -182,10 +185,10 @@ legend(legstr_acx)
 %ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
-legstr_Vx = {'dielectric', 'interface', 'perovskite'};
-for i = 1:length(Ncat_array)
+legstr_Vx = {'Dielectric', 'Interface', 'Perovskite'};
+for i = 1:1
     dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
-    legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_Vx{i + 3} = ['Ncat = 0'];
     hold on
 end
 legend(legstr_Vx)
