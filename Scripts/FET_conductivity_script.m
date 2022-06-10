@@ -191,9 +191,73 @@ end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
-%% Plot individual values
+%% Modulability
+workfunction_index = 3;
+legstr_n3 =[];
+legstr_p3 =[];
 
-% makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
+for i = 1:length(Ncat_array)
+    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);%Extract conc at interface
+    n_Modulability=gradient(n_int, Vappt);%Take slope
+    n2=gradient(n_int);%Take slope
+    figure(203)
+    semilogy(Vappt, n_int)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+    figure(303)
+    semilogy(Vappt, n_Modulability)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+    figure(403)
+    semilogy(Vappt, n2)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+for i = 1:length(Ncat_array)
+    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+    p_Modulability=gradient(p_int, Vappt);
+    figure(204)
+    semilogy(Vappt, p_int)
+    legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+    figure(304)
+    semilogy(Vappt, p_Modulability)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+figure(203)
+xlabel('Voltage [V]')
+ylabel('electron density interface (cm-3)')
+legend(legstr_n3)
+hold off
+
+figure(204)
+xlabel('Voltage [V]')
+ylabel('hole density interface (cm-3)')
+legend(legstr_p3)
+hold off
+
+figure(303)
+xlabel('Voltage [V]')
+ylabel('Electron Modulability')
+legend(legstr_n3)
+hold off
+
+figure(403)
+xlabel('Voltage [V]')
+ylabel('2Electron Modulability')
+legend(legstr_n3)
+hold off
+
+figure(304)
+xlabel('Voltage [V]')
+ylabel('Hole Modulability')
+legend(legstr_p3)
+hold off
+
+
 %% Plot average conductivity
 % figure(200)
 % semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
