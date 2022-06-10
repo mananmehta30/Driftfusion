@@ -195,31 +195,39 @@ legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
 %% Modulability
+
+  [val, idx] = max(Vappt);
+%%
 workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
     n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);%Extract conc at interface
-    n_Modulability=gradient(n_int, Vappt);%Take slope
-    n2=gradient(n_int);%Take slope
+  
+n_till_Vmax=n_int(1:idx);
+V_till_Vmax=Vappt(1:idx);
+    n_int_log=log10(n_int);
+    n_Modulability=gradient(n_int_log, Vappt);
+    n_tmm_log=log10(n_till_Vmax);
     figure(203)
     semilogy(Vappt, n_int)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+    figure(505)
+    semilogy(V_till_Vmax, n_tmm_log)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
     figure(303)
     semilogy(Vappt, n_Modulability)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
-    figure(403)
-    semilogy(Vappt, n2)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
 end
 
 for i = 1:length(Ncat_array)
     p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
-    p_Modulability=gradient(p_int, Vappt);
+    p_int_log=log10(p_int);
+    p_Modulability=gradient(p_int_log, Vappt);
     figure(204)
     semilogy(Vappt, p_int)
     legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -236,6 +244,13 @@ ylabel('electron density interface (cm-3)')
 legend(legstr_n3)
 hold off
 
+figure(505)
+xlabel('Voltage [V]')
+ylabel('2em')
+legend(legstr_n3)
+hold off
+
+
 figure(204)
 xlabel('Voltage [V]')
 ylabel('hole density interface (cm-3)')
@@ -248,18 +263,11 @@ ylabel('Electron Modulability')
 legend(legstr_n3)
 hold off
 
-figure(403)
-xlabel('Voltage [V]')
-ylabel('2Electron Modulability')
-legend(legstr_n3)
-hold off
-
 figure(304)
 xlabel('Voltage [V]')
 ylabel('Hole Modulability')
-legend(legstr_p3)
+legend(legstr_n3)
 hold off
-
 
 %% Plot average conductivity
 % figure(200)
