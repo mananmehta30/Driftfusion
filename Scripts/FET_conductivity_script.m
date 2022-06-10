@@ -127,6 +127,9 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
+
+
+%Plot similar for ions (instead of n_int put cat_int)
 workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
