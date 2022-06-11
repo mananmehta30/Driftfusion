@@ -205,8 +205,8 @@ legstr_p3 =[];
 for i = 1:length(Ncat_array)
     n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);%Extract conc at interface
   
-n_till_Vmax=n_int(1:idx);
-V_till_Vmax=Vappt(1:idx);
+    n_till_Vmax=n_int(1:idx);
+    V_till_Vmax=Vappt(1:idx);
     n_int_log=log10(n_int);
     n_Modulability=gradient(n_int_log, Vappt);
     n_tmm_log=log10(n_till_Vmax);
@@ -313,6 +313,78 @@ hold off
 % 
 % 
 %%
+
+%% Plot ionic concentration at interface as function Vapp for different ion densities
+
+
+%Plot similar for ions (instead of n_int put cat_int)
+workfunction_index = 3;
+legstr_n3 =[];
+legstr_p3 =[];
+
+for i = 1:length(Ncat_array)
+    cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
+    figure(703)
+    semilogy(Vappt, cat_int)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+figure(703)
+xlabel('Voltage [V]')
+ylabel('Cation Concentration (cm-3)')
+legend(legstr_n3)
+hold off
+%% Modulability Ions
+workfunction_index = 3;
+legstr_n3 =[];
+legstr_p3 =[];
+for i = 1:length(Ncat_array)
+    cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
+    cat_int_log=log10(cat_int);
+    figure(112)
+    plot(Vappt, cat_int_log)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+figure(112)
+xlabel('Voltage [V]')
+ylabel('Cation Concentration (cm-3)')
+
+hold off
+
+%% Plot ionic concentration modulability at interface as function Vapp for different ion densities
+
+
+workfunction_index = 3;
+legstr_n3 =[];
+legstr_p3 =[];
+
+
+for i = 1:length(Ncat_array)
+    cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(4)+1, 2);%Extract conc at interface
+    cat_int_log=log10(cat_int);
+    cat_Modulability=gradient(cat_int_log, Vappt);
+    
+    cat_till_Vmax=cat_int(1:idx);
+    cat_till_Vmax=cat_till_Vmax.';
+    cat_int_log_till_Vmax=log10(cat_till_Vmax);
+    cat_Modulability_till_Vmax=gradient(cat_int_log_till_Vmax, V_till_Vmax);
+  
+    figure(903)
+    semilogy(Vappt, cat_Modulability)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+    figure(904)
+    semilogy(Vappt, cat_Modulability_till_Vmax)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+figure(903)
+xlabel('Voltage [V]')
+ylabel('Cation Modulability')
+legend(legstr_n3)
+hold off
+
 %Find how to get the contour done
 % %% Make movie for anions and cations
 % %makemovie(sol_CV, @dfplot.acx, 0, [0, 1.5e18], 'acx', true, true);
