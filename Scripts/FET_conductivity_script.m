@@ -214,7 +214,7 @@ legend(legstr_Vx)
 
 %% Electron Modulability
 idx = find(Vappt==0.4);
-workfunction_index = 3;
+workfunction_index = 9;
 legstr_n3 =[];
 legstr_p3 =[];
  
@@ -231,10 +231,10 @@ scatter(Ncat_array, n_store_log,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
-ylim([4.6 6.3])
+ylim([4.6 8.5])
 figure(1111)
 xlabel('Cation concentration')
-ylabel('Electron Modulability Factor')
+ylabel('Electron Modulability Factor (m_V_g)')
 box on
 
 %% Plot average conductivity
