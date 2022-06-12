@@ -47,7 +47,7 @@ for i = 1:length(Ncat_array)
         %set(gca,'YScale','log')
         
         %% Plot anion and cation densities
-        dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+        %dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
         
         %% Plot electron and hole profiles
         %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
