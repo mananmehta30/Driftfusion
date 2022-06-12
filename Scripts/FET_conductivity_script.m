@@ -73,6 +73,8 @@ for i = 1:length(Ncat_array)
 end
 
 %% Plots
+
+%% Conductivity vs Work Function
 for i = 1:length(Ncat_array)
     figure(100)
     semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
@@ -97,6 +99,27 @@ figure(101)
 legend(legstr_p)
 hold off
 
+
+%% Conductivity vs Applied Voltage for different ionic densities
+
+workfunction_index = 9;
+for i=1:241
+    for j=1:length(Ncat_array)
+    conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
+    end
+end
+
+for i = 1:length(Ncat_array)
+    figure(1000)
+    semilogy(Vappt, conductivity(i,:));
+    hold on
+    xlabel('Applied Voltage [eV]')
+    ylabel('Electron conductivity [S cm-1]')
+    legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
+end  
+figure(1000)
+legend(legstr_n)
+hold off
 
 %% Plot average conductivity
 for j = 1:length(workfunction_LHS)
@@ -128,7 +151,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 9;
+workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -161,9 +184,10 @@ legend(legstr_p3)
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
+
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), 0);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -176,11 +200,12 @@ ylim([1e-1, 1e12])
 
 
 
-dfplot.acx(sol_CV(3, 9), Vmax/k_scan)
+%dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
 %% Plot potential as a function position
+workfunction_index = 9;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
-    dfplot.Vx(sol_CV(i, workfunction_index), 0);%Vmax/k_scan)
+    dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
@@ -188,79 +213,30 @@ legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
 %% Electron Modulability
-  idx2 = find(Vappt==0.4);
-  n_values_around_bp=n_int(idx2-1:idx2+1);
-  
-  
-[val, idx] = max(Vappt);
+idx = find(Vappt==0.4);
 workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
-
+ 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);%Extract conc at interface
-  
-    n_till_Vmax=n_int(1:idx);
-    V_till_Vmax=Vappt(1:idx);
-    n_int_log=log10(n_int);
-    n_values_around_bp=n_int(idx2-1:idx2+1);
-    Vappt_around_bp=Vappt(idx2-1:idx2+1);
-    n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
-    n_store(i)=n_bp_modulability(2)
-    n_Modulability=gradient(n_int_log, Vappt);
-    n_tmm_log=log10(n_till_Vmax);
-    n_Modulability_log=gradient( n_tmm_log, V_till_Vmax);
-    figure(203)
-    semilogy(Vappt, n_int)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-    figure(303)
-    semilogy(Vappt, n_Modulability)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-    figure(6603)
-    semilogy(V_till_Vmax, n_Modulability_log)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-     figure(6604)
-    semilogy(Vappt_around_bp, n_bp_modulability)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
+    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+    n_values_around_bp=n_int(idx-1:idx+1);
+    Vappt_around_bp=Vappt(idx-1:idx+1);
+   n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
+   n_modulability_factor(:,i)= n_bp_modulability(2);
+    n_store_log=log10(n_modulability_factor);
+     figure(1111)
 end
-
-
-
-figure(203)
-xlabel('Voltage [V]')
-ylabel('electron density interface (cm-3)')
-legend(legstr_n3)
-hold off
-
-
-
-
-figure(6603)
-xlabel('Voltage [V]')
-ylabel('2Electron Modulability')
-legend(legstr_n3)
-hold off
-
-
-%%
-
- figure(1111)
- nact=log10(Ncat_array);
- n_store_log=log10(n_store);
 scatter(Ncat_array, n_store_log,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
 ylim([4.6 6.3])
-
 figure(1111)
 xlabel('Cation concentration')
-ylabel('Electron Modulability')
+ylabel('Electron Modulability Factor')
 box on
+
 %% Plot average conductivity
 % figure(200)
 % semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
@@ -345,42 +321,14 @@ ylabel('Cation Concentration (cm-3)')
 
 hold off
 
-%% Plot ionic concentration modulability at interface as function Vapp for different ion densities
+contour3
 
-
-workfunction_index = 3;
-legstr_n3 =[];
-legstr_p3 =[];
-
-
-for i = 1:length(Ncat_array)
-    cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(4)+1, 2);%Extract conc at interface
-    cat_int_log=log10(cat_int);
-    cat_Modulability=gradient(cat_int_log, Vappt);
-    
-    cat_till_Vmax=cat_int(1:idx);
-    cat_till_Vmax=cat_till_Vmax.';
-    cat_int_log_till_Vmax=log10(cat_till_Vmax);
-    cat_Modulability_till_Vmax=gradient(cat_int_log_till_Vmax, V_till_Vmax);
-  
-    figure(903)
-    semilogy(Vappt, cat_Modulability)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-    figure(904)
-    semilogy(Vappt, cat_Modulability_till_Vmax)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-end
-figure(903)
-xlabel('Voltage [V]')
-ylabel('Cation Modulability')
-legend(legstr_n3)
-hold off
-
-%Find how to get the contour done
-% %% Make movie for anions and cations
-% %makemovie(sol_CV, @dfplot.acx, 0, [0, 1.5e18], 'acx', true, true);
+%% Find how to get the contour done
+x=workfunction_LHS;
+y=Ncat_array;
+z=sigma_n_bar_VpeakM;
+contour(x,y,z)
+%contour3();
 %% Conductivity profiles
 % So systematically you could look at the following.
 
