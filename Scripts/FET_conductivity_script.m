@@ -13,7 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 
-thickness_array = 0.00001:0.000002:0.00003;
+thickness_array = 0.000005:0.000005:0.00002;
 
 
 %% while
@@ -86,7 +86,7 @@ for i = 1:length(Ncat_array)
     figure(100)
     semilogy(thickness_array, sigma_n_bar_VpeakM(i, :))
     hold on
-    xlabel('LHS workfunction [eV]')
+    xlabel('Insulator Thickness [cm]')
     ylabel('Peak electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
@@ -95,7 +95,7 @@ for i = 1:length(Ncat_array)
     figure(101)
     semilogy(thickness_array, sigma_p_bar_VpeakM(i, :))
     hold on
-    xlabel('LHS workfunction [eV]')
+    xlabel('Insulator Thickness [cm]]')
     ylabel('Peak hole conductivity [S cm-1]')
     legstr_p{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
@@ -134,14 +134,14 @@ hold off
 for j = 1:length(thickness_array)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(thickness_array(j))];
+    legstr_n2{j} = ['Thickness = ', num2str(thickness_array(j))];
     hold on
 end
 
 for j = 1:length(thickness_array)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(thickness_array(j))];
+    legstr_p2{j} = ['Thickness =', num2str(thickness_array(j))];
     hold on
 end
 %%check how to write siemens properly
@@ -162,8 +162,6 @@ hold off
 
 
 insultor_thickness_index = 3;
-
-insulator_thickness_index = 3;
 
 legstr_n3 =[];
 legstr_p3 =[];
@@ -244,7 +242,6 @@ idx = find(Vappt==0.4);
 
 insultor_thickness_index = 9;
 
-insulator_thickness_index = 9;
 
 legstr_n3 =[];
 legstr_p3 =[];
@@ -322,9 +319,8 @@ box on
 
 %Plot similar for ions (instead of n_int put cat_int)
 
-insultor_thickness_index = 3;
+insultor_thickness_index = 9;
 
-insulator_thickness_index = 3;
 
 legstr_n3 =[];
 legstr_p3 =[];
@@ -349,7 +345,7 @@ hold off
 %% Modulability Ions
 
 
-insulator_thickness_index = 3;
+insulator_thickness_index = 9;
 legstr_n3 =[];
 legstr_p3 =[];
 for i = 1:length(Ncat_array)
