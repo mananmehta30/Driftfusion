@@ -13,9 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 
-thickness_array = 0.00002:0.000001:0.00003;
-
-thickness_array = 0.00002:0.000002:0.00002;
+thickness_array = 0.00001:0.000002:0.00003;
 
 
 %% while
@@ -25,7 +23,7 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+    for j = 1:length(thickness_array) %loop to run for different electrode workfunction
         
 
         par.d(1) = thickness_array(j);
@@ -66,13 +64,13 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1));
 % Preallocation
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(Ncat_array), length(thickness_array), length(sol_CV(1,1).t)); 
+sigma_p_barM = zeros(length(Ncat_array), length(thickness_array), length(sol_CV(1,1).t)); 
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(thickness_array)); 
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(thickness_array)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(workfunction_LHS)
+    for j = 1:length(thickness_array)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
@@ -86,7 +84,7 @@ end
 %% Conductivity vs Work Function
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
+    semilogy(thickness_array, sigma_n_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
@@ -95,7 +93,7 @@ end
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(i, :))
+    semilogy(thickness_array, sigma_p_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
@@ -133,17 +131,17 @@ legend(legstr_n)
 hold off
 
 %% Plot average conductivity
-for j = 1:length(workfunction_LHS)
+for j = 1:length(thickness_array)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_n2{j} = ['\Phi_l =', num2str(thickness_array(j))];
     hold on
 end
 
-for j = 1:length(workfunction_LHS)
+for j = 1:length(thickness_array)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_p2{j} = ['\Phi_l =', num2str(thickness_array(j))];
     hold on
 end
 %%check how to write siemens properly
@@ -372,7 +370,7 @@ hold off
 contour3
 
 %% Find how to get the contour done
-x=workfunction_LHS;
+x=thickness_array;
 y=Ncat_array;
 z=sigma_n_bar_VpeakM;
 contour(x,y,z)
