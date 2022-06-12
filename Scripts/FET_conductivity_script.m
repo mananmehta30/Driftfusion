@@ -113,7 +113,7 @@ for i = 1:length(Ncat_array)
     figure(1000)
     semilogy(Vappt, conductivity(i,:));
     hold on
-    xlabel('Applied Voltage [eV]')
+    xlabel('Applied Voltage [V]')
     ylabel('Electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
@@ -138,13 +138,13 @@ end
 %%check how to write siemens properly
 figure(201)
 xlabel('Voltage [V]')
-ylabel('Average electron conductivity [Siemens]')
+ylabel('Average electron conductivity [S cm-1]')
 legend(legstr_n2)
 hold off
 
 figure(202)
 xlabel('Voltage [V]')
-ylabel('Average hole conductivity [Siemens]')
+ylabel('Average hole conductivity [S cm-1]')
 legend(legstr_p2)
 hold off
 
@@ -222,8 +222,8 @@ for i = 1:length(Ncat_array)
     n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
     n_values_around_bp=n_int(idx-1:idx+1);
     Vappt_around_bp=Vappt(idx-1:idx+1);
-   n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
-   n_modulability_factor(:,i)= n_bp_modulability(2);
+    n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
+    n_modulability_factor(:,i)= n_bp_modulability(2);
     n_store_log=log10(n_modulability_factor);
      figure(1111)
 end
