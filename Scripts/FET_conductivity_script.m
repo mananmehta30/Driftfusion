@@ -13,6 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 thickness_array = 0.00002:0.000001:0.00003;
 workfunction_LHS = -5.5:0.1:-4.2;
@@ -20,6 +21,10 @@ workfunction_LHS = -5.5:0.1:-4.2;
 thickness_array = 0.00002:0.0000002:0.00002;
 
 >>>>>>> Stashed changes
+=======
+thickness_array = 0.00002:0.000002:0.00002;
+
+>>>>>>> parent of da0252e (major corrections)
 =======
 thickness_array = 0.00002:0.000002:0.00002;
 
