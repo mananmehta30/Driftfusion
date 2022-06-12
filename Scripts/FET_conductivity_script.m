@@ -12,28 +12,12 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< Updated upstream
+
 thickness_array = 0.00002:0.000001:0.00003;
-workfunction_LHS = -5.5:0.1:-4.2;
-=======
-thickness_array = 0.00002:0.0000002:0.00002;
 
->>>>>>> Stashed changes
-=======
 thickness_array = 0.00002:0.000002:0.00002;
 
->>>>>>> parent of da0252e (major corrections)
-=======
-thickness_array = 0.00002:0.000002:0.00002;
 
->>>>>>> parent of da0252e (major corrections)
-=======
-thickness_array = 0.00002:0.000002:0.00002;
-
->>>>>>> parent of da0252e (major corrections)
 %% while
 for i = 1:length(Ncat_array)
     
@@ -41,14 +25,15 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(thickness_array) %loop to run for different electrode workfunction
+    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
         
+
         par.d(1) = thickness_array(j);
-<<<<<<< Updated upstream
+
         disp(['Insulator Thickness = ', num2str(thickness_array(j)), 'cm']);
-=======
-        disp(['Insulator thickness = ', num2str(thickness_array(j)), 'cm']);
->>>>>>> Stashed changes
+
+ 
+
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -81,13 +66,13 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1));
 % Preallocation
-sigma_n_barM = zeros(length(Ncat_array), length(thickness_array), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(thickness_array), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(thickness_array)); 
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(thickness_array)); 
+sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
+sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(thickness_array)
+    for j = 1:length(workfunction_LHS)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
@@ -101,18 +86,18 @@ end
 %% Conductivity vs Work Function
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(thickness_array, sigma_n_bar_VpeakM(i, :))
+    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
     hold on
-    xlabel('Thickness [cm]')
+    xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(thickness_array, sigma_p_bar_VpeakM(i, :))
+    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(i, :))
     hold on
-    xlabel('Thickness [cm]')
+    xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
     legstr_p{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
@@ -126,17 +111,12 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-<<<<<<< Updated upstream
-insultor_thickness_index = 9;
-for i=1:241
-    for j=1:length(Ncat_array)
-    conductivity(j,i)=sigma_n_barM(j, insultor_thickness_index,i);
-=======
+
 insulator_thickness_index = 9;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, insulator_thickness_index,i);
->>>>>>> Stashed changes
+
     end
 end
 
@@ -153,17 +133,17 @@ legend(legstr_n)
 hold off
 
 %% Plot average conductivity
-for j = 1:length(thickness_array)
+for j = 1:length(workfunction_LHS)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(thickness_array(j))];
+    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
     hold on
 end
 
-for j = 1:length(thickness_array)
+for j = 1:length(workfunction_LHS)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(thickness_array(j))];
+    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
     hold on
 end
 %%check how to write siemens properly
@@ -182,20 +162,20 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-<<<<<<< Updated upstream
+
 insultor_thickness_index = 3;
-=======
+
 insulator_thickness_index = 3;
->>>>>>> Stashed changes
+
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-<<<<<<< Updated upstream
+
     n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
-=======
+
     n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
->>>>>>> Stashed changes
+
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -203,11 +183,11 @@ for i = 1:length(Ncat_array)
 end
 
 for i = 1:length(Ncat_array)
-<<<<<<< Updated upstream
+
     p_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 3);
-=======
+
     p_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 3);
->>>>>>> Stashed changes
+
     figure(204)
     semilogy(Vappt, p_int)
     legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -230,11 +210,11 @@ hold off
 
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-<<<<<<< Updated upstream
+
     dfplot.npx(sol_CV(i, insultor_thickness_index), Vmax/k_scan);% Vmax/k_scan)
-=======
+
     dfplot.npx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);% Vmax/k_scan)
->>>>>>> Stashed changes
+
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -249,17 +229,12 @@ ylim([1e-1, 1e12])
 
 %dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
 %% Plot potential as a function position
-<<<<<<< Updated upstream
-insultor_thickness_index = 9;
-legstr_Vx = {'dielectric', 'interface', 'perovskite'};
-for i = 1:length(Ncat_array)
-    dfplot.Vx(sol_CV(i, insultor_thickness_index), Vmax/k_scan);%Vmax/k_scan)
-=======
+
 insulator_thickness_index = 9;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);%Vmax/k_scan)
->>>>>>> Stashed changes
+
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
@@ -268,20 +243,20 @@ legend(legstr_Vx)
 
 %% Electron Modulability
 idx = find(Vappt==0.4);
-<<<<<<< Updated upstream
+
 insultor_thickness_index = 9;
-=======
+
 insulator_thickness_index = 9;
->>>>>>> Stashed changes
+
 legstr_n3 =[];
 legstr_p3 =[];
  
 for i = 1:length(Ncat_array)
-<<<<<<< Updated upstream
+
     n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
-=======
+
     n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
->>>>>>> Stashed changes
+
     n_values_around_bp=n_int(idx-1:idx+1);
     Vappt_around_bp=Vappt(idx-1:idx+1);
     n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
@@ -348,20 +323,20 @@ box on
 
 
 %Plot similar for ions (instead of n_int put cat_int)
-<<<<<<< Updated upstream
+
 insultor_thickness_index = 3;
-=======
+
 insulator_thickness_index = 3;
->>>>>>> Stashed changes
+
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-<<<<<<< Updated upstream
+
     cat_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3)+1,4);
-=======
+
     cat_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3)+1,4);
->>>>>>> Stashed changes
+
     logcat_int=log10(cat_int);
     figure(703)
     semilogy(Vappt,cat_int)
@@ -374,19 +349,14 @@ ylabel('Cation Concentration (cm-3)')
 legend(legstr_n3)
 hold off
 %% Modulability Ions
-<<<<<<< Updated upstream
-insultor_thickness_index = 3;
-legstr_n3 =[];
-legstr_p3 =[];
-for i = 1:length(Ncat_array)
-    cat_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3)+1,4);
-=======
+
+
 insulator_thickness_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
 for i = 1:length(Ncat_array)
     cat_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3)+1,4);
->>>>>>> Stashed changes
+
     cat_int_log=log10(cat_int);
     figure(112)
     plot(Vappt, cat_int_log)
@@ -402,7 +372,7 @@ hold off
 contour3
 
 %% Find how to get the contour done
-x=thickness_array;
+x=workfunction_LHS;
 y=Ncat_array;
 z=sigma_n_bar_VpeakM;
 contour(x,y,z)
