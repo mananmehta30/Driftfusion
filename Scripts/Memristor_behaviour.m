@@ -12,11 +12,15 @@ soleq_memristor = equilibrate(par_memristor);
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
  k_scan = 0.1;
-Vmax = 1;
- Vmin = -1;
-tpoints=(2*(Vmax-Vmin)/(10*k_scan))+1;
+ tpoints=200;
+ 
+Vmax = 5;
+ Vmin = -5;
+%%
 sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
 %%No change with sol_JV achieved. Need to find how to vary the surface
 %%recombination formula
-
+%% Plot
+dfplot.JtotVapp(sol_CV, 0);
+%set(gca,'YScale','log');
