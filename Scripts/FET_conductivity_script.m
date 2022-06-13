@@ -110,7 +110,7 @@ hold off
 %% Conductivity vs Applied Voltage for different ionic densities
 
 
-insulator_thickness_index = 9;
+insulator_thickness_index = 4;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, insulator_thickness_index,i);
@@ -134,14 +134,14 @@ hold off
 for j = 1:length(thickness_array)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['Thickness = ', num2str(thickness_array(j))];
+    legstr_n2{j} = ['Thickness = ', num2str(thickness_array(j)),'cm'];
     hold on
 end
 
 for j = 1:length(thickness_array)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['Thickness =', num2str(thickness_array(j))];
+    legstr_p2{j} = ['Thickness =', num2str(thickness_array(j)),'cm'];
     hold on
 end
 %%check how to write siemens properly
@@ -170,8 +170,6 @@ for i = 1:length(Ncat_array)
 
     n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
 
-    n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
-
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -181,8 +179,6 @@ end
 for i = 1:length(Ncat_array)
 
     p_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 3);
-
-    p_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 3);
 
     figure(204)
     semilogy(Vappt, p_int)
@@ -226,7 +222,7 @@ ylim([1e-1, 1e12])
 %dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
 %% Plot potential as a function position
 
-insulator_thickness_index = 9;
+insulator_thickness_index = 4;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);%Vmax/k_scan)
@@ -240,7 +236,7 @@ legend(legstr_Vx)
 %% Electron Modulability
 idx = find(Vappt==0.4);
 
-insultor_thickness_index = 9;
+insultor_thickness_index = 1;
 
 
 legstr_n3 =[];
@@ -249,8 +245,6 @@ legstr_p3 =[];
 for i = 1:length(Ncat_array)
 
     n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
-
-    n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
 
     n_values_around_bp=n_int(idx-1:idx+1);
     Vappt_around_bp=Vappt(idx-1:idx+1);
@@ -263,7 +257,7 @@ scatter(Ncat_array, n_store_log,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
-ylim([4.6 8.5])
+ylim([4.6 11])
 figure(1111)
 xlabel('Cation concentration')
 ylabel('Electron Modulability Factor (m_V_g)')
