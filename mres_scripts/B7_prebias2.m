@@ -1,16 +1,18 @@
 % Freezing ions at different prebias voltages after slow CV
 
-% load parameters
+%% Load parameters
 par = pc('1_layer_MAPI_ITO_Ag.csv');
 
+%% Set surface recombination rate
 % Set high sc
 sc = 1;
 
+%% Set scan rate
 % Set slow scan rate
 k = 1e-5;   % cations case
 % k = 1e-8;   % anions case
 
-% CV parameters
+%% CV parameters
 V0 = 0;
 Vmax = 5;   % High DeltaV
 Vmin = -3;   % cations case
@@ -23,11 +25,11 @@ points = (Vmax-Vmin)*ppV*2*cycles+1;
 % 0 no mobile ions
 % 1 cations only
 % 2 cations and anions
-ai = 1;
+number_of_mobile_ions = 1;
 
 % loop mobile anions on/off
 % for ai = 1:2
-    par.N_ionic_species = ai;   % update parameters
+    par.N_ionic_species = number_of_mobile_ions;   % update parameters
     par.sc_r = sc;      % right side
 %     par.sc_l = sc;    % left side
     par = refresh_device(par);
