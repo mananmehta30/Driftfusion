@@ -1,6 +1,7 @@
 %% Code pupose
-% Code is supposed to take different values of doping in different columns and different left 
-% electrode workfunction values in the rows and give max conductivity achieved
+
+%%% Make table of different reactions/theories to explain resistive
+%%% switching. Send to all
 %% Initialize driftfusion
 initialise_df
 
@@ -327,8 +328,10 @@ hold off
 x=workfunction_LHS;
 y=Ncat_array;
 z=sigma_n_bar_VpeakM;
-contour(x,y,z)
-contour3(x,y,z)
+z_log=log10(z);
+surf(x,y,z_log);
+%set(gca,'ZScale','log')
+set(gca,'YScale','log')
 
 %contour3();
 %% Conductivity profiles
