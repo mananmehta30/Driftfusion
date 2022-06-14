@@ -331,6 +331,7 @@ z=sigma_n_bar_VpeakM;
 z_log=log10(z);
 surf(x,y,z_log);
 %set(gca,'ZScale','log')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Peak conductivity')
 set(gca,'YScale','log')
 
 %contour3();
