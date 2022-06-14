@@ -321,13 +321,15 @@ ylabel('Cation Concentration (cm-3)')
 
 hold off
 
-contour3
+
 
 %% Find how to get the contour done
 x=workfunction_LHS;
 y=Ncat_array;
 z=sigma_n_bar_VpeakM;
 contour(x,y,z)
+contour3(x,y,z)
+
 %contour3();
 %% Conductivity profiles
 % So systematically you could look at the following.
