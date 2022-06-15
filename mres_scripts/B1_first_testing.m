@@ -1,22 +1,27 @@
-% Single-layer MAPbICl device, variable workfunctions and ion BC
+%% Single-layer MAPbICl device, variable workfunctions and ion BC
 % 24/03/2021
-%
+% Main code
 %% Load parameters and customize if necessary
-% par = pc('Input_files/1_layer_test.csv');
+
 par = pc('1_layer_MAPI_ITO_Ag.csv');
 
 sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
-sc_size = length(sc_array);
-%% BC range loop
+
+%% Set BC rate for different SC
+
+% sn is Electron surface recombination velocity
+% For electrode layers, entries for sn and sp are stored in the parameters object (par)
+% as the distinct properties sn_l, sn_r, sp_l, and sp_r rather than as part
+% of the sn and sp arrays
+
 
 par_temp = par;
 % par_temp.Phi_right = -4.6;
 % par_temp.Phi_left = -5.0;
-for i = 1:sc_size
+for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_temp.sc_r = sc_array(i);
     par_temp.sc_l = par_temp.sc_r;
     par_temp = refresh_device(par_temp);
-    
     soleq(i) = equilibrate(par_temp);
 end
 
@@ -24,24 +29,27 @@ end
 el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 
-%% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
-k = 1e-1;
+%% Solve for different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
+
+% Graph shows that higher surface recombintion velocity i.e. higher
+% recombintion rate leads to more hystersis and less current
+k_scan = 0.1;
 cycles = 1;
 
 figure()
-for i = 1:sc_size
-    sol_CV(i) = doCV(soleq(i).ion, 0, 0, 1.2, -1.2, k, cycles, 241);
+for i = 1:length(sc_array)
+    sol_CV(i) = doCV(soleq(i).ion, 0, 0, 1.2, -1.2, k_scan, cycles, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
-
+%Total Current Plot for only electron
 dfplot.JtotVapp(el_CV,0)
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
 legentries{end+1} = 'el only';
 legend(legentries)
-title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k]))
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k_scan]))
 
 %% Plot electronic and ionic densities across device, sc both sides
 title_arr = strcat('sc = ',string(sc_array));
@@ -55,27 +63,27 @@ for i = 1:length(sc_array)
     sgtitle(title_arr(i))
     subplot(2,4,1)
     title('0 V')
-    dfplot.npx(sol_CV(i),0/k)
+    dfplot.npx(sol_CV(i),0/k_scan)
     subplot(2,4,2)
     title('1.1 V')
-    dfplot.npx(sol_CV(i),1.1/k)
+    dfplot.npx(sol_CV(i),1.1/k_scan)
     subplot(2,4,3)
     title('1.2 V')
-    dfplot.npx(sol_CV(i),1.2/k)
+    dfplot.npx(sol_CV(i),1.2/k_scan)
     subplot(2,4,4)
     title('-0.5 V')
-    dfplot.npx(sol_CV(i), 2.9/k)
+    dfplot.npx(sol_CV(i), 2.9/k_scan)
     subplot(2,4,5)
-    dfplot.acx(sol_CV(i),0/k)
+    dfplot.acx(sol_CV(i),0/k_scan)
     set(gca,'yscale','log')
     subplot(2,4,6)
-    dfplot.acx(sol_CV(i),1.1/k)
+    dfplot.acx(sol_CV(i),1.1/k_scan)
     set(gca,'yscale','log')
     subplot(2,4,7)
-    dfplot.acx(sol_CV(i),1.2/k)
+    dfplot.acx(sol_CV(i),1.2/k_scan)
     set(gca,'yscale','log')
     subplot(2,4,8)
-    dfplot.acx(sol_CV(i),2.9/k)
+    dfplot.acx(sol_CV(i),2.9/k_scan)
     set(gca,'yscale','log')
 end
 
@@ -151,6 +159,7 @@ sol_CV_0p01 = doCV(soleq(4).ion, 0, 0, 1.2, -1.2, 1e-2, 1, 241);
 sol_CV_0p1 = doCV(soleq(4).ion, 0, 0, 1.2, -1.2, 1e-1, 1, 241);
 sol_CV_1 = doCV(soleq(4).ion, 0, 0, 1.2, -1.2, 1e0, 1, 241);
 
+%% Figures for the variable scan rate
 figure()
 dfplot.JtotVapp(sol_CV_0p001,0)
 hold on
