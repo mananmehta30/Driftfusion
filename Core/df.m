@@ -66,6 +66,7 @@ n0_r = par.n0_r;
 p0_l = par.p0_l;
 p0_r = par.p0_r;
 dev = par.dev;
+c0_r=par.Ncat;
 
 %% Constants
 kB = par.kB;
@@ -135,7 +136,7 @@ sn_r = par.sn_r;
 sp_r = par.sp_r;
 Rs = par.Rs;
 gamma = par.gamma;          % Blakemore approximation coefficient, 0 for Boltzmann stats
-
+sc_r = memristor.sc_array;
 %% Switches and accelerator coefficients
 mobset = par.mobset;        % Electronic carrier transport switch
 mobseti = par.mobseti;      % Ionic carrier transport switch
@@ -415,7 +416,7 @@ end
         Pr = [-V_r+Vbi-Vapp-Vres;
             mobset*(sn_r*(n_r - n0_r));
             mobset*(sp_r*(p_r - p0_r));
-            9.849386596679688e+09;
+            mobset*(sc_r*(c_r - c0_r));
             0;];
         
         Qr = [0;

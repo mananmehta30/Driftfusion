@@ -25,8 +25,7 @@ tpoints=241;
 
  
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
-    par_memristor.sc_r = sc_array(i);
-    par_memristor.sc_l = par_memristor.sc_r;
+    df.sc_r = sc_array(i);
     par_memristor = refresh_device(par_memristor);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
