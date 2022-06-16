@@ -8,7 +8,7 @@ par_memristor = pc('Input_files/memristor');
 
 %% Input Parameters
 
-k_scan_array=[0.01,0.1,1];
+k_scan=[0.01,0.1,1];
 sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
 
  Vmax=5;
@@ -34,30 +34,50 @@ end
 
 
 %% Calculate electron only solution
-el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 
 %% Solve for different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
 
 % Graph shows that higher surface recombintion velocity i.e. higher
 % recombintion rate leads to more hystersis and less current
-k_scan_array = 0.1;
+k_scan = 0.1;
 cycles = 1;
 
 figure()
 for i = 1:length(sc_array)
      % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-    sol_CV(i) = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan_array, 10, tpoints);
+    sol_CV.ion(i) = doCV(soleq_memristor.ion(i), 0, 0, Vmax, Vmin, k_scan, 1, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
 %Total Current Plot for only electron
-dfplot.JtotVapp(el_CV,0)
+dfplot.JtotVapp(sol_CV,0)
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
 legentries{end+1} = 'el only';
 legend(legentries)
-title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k_scan_array]))
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k_scan]))
 
+k_scan = 0.1;
+cycles = 1;
 
+%%
+k_scan = 0.1;
+cycles = 1;
+
+figure()
+for i = 1:length(sc_array)
+    sol_CV(i) = doCV(soleq(i).ion, 0, 0, 1.2, -1.2, k_scan, cycles, 241);
+    dfplot.JtotVapp(sol_CV(i),0)
+    hold on
+end
+%Total Current Plot for only electron
+dfplot.JtotVapp(sol_CV,0)
+hold off
+% set(gca,'yscale','log')
+legentries = cellstr(num2str(sc_array', 'sc=%g'));
+legentries{end+1} = 'el only';
+legend(legentries)
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k_scan]))
