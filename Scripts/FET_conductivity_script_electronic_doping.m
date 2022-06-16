@@ -99,12 +99,13 @@ figure(545)
 plot(t,C_without_ions(:,midpoint_insulator)); 
 xlabel('Time')
 ylabel('Capacitance without ions')
+%% Capacitance_Manan
+[CI, CWI] = capacitance_ana(sol_CV_with_ions);  
 %% Call capacitance function
 %[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
 [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);    
 
-%% Capacitance_Manan
-[CI, CWI] = capacitance_ana(sol_CV_with_ions);  
+
 %%
 
 %%
