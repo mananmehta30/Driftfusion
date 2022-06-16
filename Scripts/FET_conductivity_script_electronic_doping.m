@@ -4,17 +4,17 @@
 
 %% Initialize driftfusion
 initialise_df
+
+%% Add parameter file to path 
+% Filepath Mac
+par_alox = pc('./Input_files/alox.csv');
+par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 %% Rough value of capacitance
 A=1;
 epsilon=par.epp0*par.epp(3)*par.e;
 d=par.d(3);
 Capacitance_rough=(A*epsilon)/d;
-%% Add parameter file to path 
-% Filepath Mac
-par_alox = pc('./Input_files/alox.csv');
-
 %% Par file for ion case
-par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
 par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
 disp(['Cation density = ', num2str(par.Ncat(3)), ' cm^-3']);%num2str=Convert numbers to character representation
@@ -83,7 +83,7 @@ xlabel('Time')
 ylabel('Displacement Current across insulator with ions')
 
 figure(445)
-plot(t,C_disp_with_ions(:,midpoint_insulator)); 
+plot(t,C_with_ions(:,midpoint_insulator)); 
 xlabel('Time')
 ylabel('Capacitance with ions')
 %% Plot Jdisp and Capacitance without ions across time
@@ -91,7 +91,7 @@ ylabel('Capacitance with ions')
 %Take central point of insulator
 midpoint_insulator=(round((par.pcum0(1)+par.pcum0(2))/2));
 figure(544)
-plot(t,J_without_ions(:,midpoint_insulator)); 
+plot(t,J_disp_without_ions(:,midpoint_insulator)); 
 xlabel('Time')
 ylabel('Displacement Current across insulator without ions')
 
@@ -101,7 +101,10 @@ xlabel('Time')
 ylabel('Capacitance without ions')
 %% Call capacitance function
 %[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
-[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);      
+[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);    
+
+%% Capacitance_Manan
+[CI, CWI] = capacitance_ana(sol_CV_with_ions);  
 %%
 
 %%

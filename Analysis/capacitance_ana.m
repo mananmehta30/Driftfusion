@@ -1,6 +1,6 @@
-function [capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions)
-par_t = sol_CV_with_ions.par;
-[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
+function [capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ion)
+par_t = sol_CV_with_ion.par;
+[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ion);
 %% Get Debye Length
 % [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(soleq);
 N_Debye=2; %calculate for specified debye lengths
@@ -10,7 +10,7 @@ epp_pvsk = e*par_t.epp0*par_t.epp(3);       % Perovskite absolute dielectric con
 N0 = par_t.Ncat(3);
 debye_length = sqrt((epp_pvsk*V_T)/(e*N0));
 %% Get the charge for the Debye length
-rho = dfana.calcrho(sol_CV_with_ions, "whole");
+rho = dfana.calcrho(sol_CV_with_ion, "whole");
 total_space_charge_per_unit_area = e.*trapz(x, rho, 2);
 total_electronic_charge_density=(p-n)*e;%not n+p as they have different charges
 total_ionic_charge_density=(c-a)*e;
@@ -30,7 +30,7 @@ del_q_ec=diff(electronic_charge_at_insulator_sc_interface);
 del_q_ic=diff(ionic_charge_at_insulator_sc_interface);
 del_sc=diff(total_space_charge_per_unit_area);
 %% Find change in voltage applied
-Vappt = dfana.calcVapp(sol_CV_with_ions);
+Vappt = dfana.calcVapp(sol_CV_with_ion);
 del_v = diff(Vappt);
 % PC - the built-in function DIFF can be used here to make it more concise-
 % I don't think you need the differences however as you can use the
@@ -42,8 +42,8 @@ Vdrop2 = diff(Vdrop);
 Vdrop = V(:, dsearchn(x', x_perov_left)) - V(:, dsearchn(x', x_perov_left + N_Debye*debye_length));
 
 %%%% Method 1 to get difference in voltage
-Debye_left_V_index = find(x==sol_CV_with_ions.par.dcum0(3));
-target=sol_CV_with_ions.par.dcum0(3)+ N_Debye*debye_length;
+Debye_left_V_index = find(x==sol_CV_with_ion.par.dcum0(3));
+target=sol_CV_with_ion.par.dcum0(3)+ N_Debye*debye_length;
 temp = abs(target - x);
 closest = x(find(temp == min(abs(target - x))));
 % PC- blimey- this looks complicated! I think you can use DSEARCHN(X, X_REQUESTED) to get
@@ -53,7 +53,7 @@ Debye_right_V_index=find(x==(closest));
 Vdrop3=V(:,Debye_left_V_index)-V(:,Debye_right_V_index);
 
 %%%% Method 3 to get difference in voltage
-deltaV = dfana.deltaVt(sol_CV_with_ions, Debye_left_V_index, Debye_right_V_index);
+deltaV = dfana.deltaVt(sol_CV_with_ion, Debye_left_V_index, Debye_right_V_index);
 
 %potential across one side and then another
 %plot the voltage and check the capacitance
@@ -67,7 +67,7 @@ deltaV = dfana.deltaVt(sol_CV_with_ions, Debye_left_V_index, Debye_right_V_index
 pl = Debye_left_V_index;
 pr = Debye_right_V_index;
 
-rho = dfana.calcrho(sol_CV_with_ions,"whole");
+rho = dfana.calcrho(sol_CV_with_ion,"whole");
 % n0=n(:, pl:pr);
 % p0=p(:, pl:pr);
 % a0=a(:, pl:pr);
