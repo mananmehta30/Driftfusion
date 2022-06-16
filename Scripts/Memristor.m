@@ -22,11 +22,13 @@ tpoints=241;
 % For electrode layers, entries for sn and sp are stored in the parameters object (par)
 % as the distinct properties sn_l, sn_r, sp_l, and sp_r rather than as part
 % of the sn and sp arrays
+soleq_memristor = equilibrate(par_memristor);  
+  
 
- 
+  %%
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
-    df.sc_r = sc_array(i);
     par_memristor = refresh_device(par_memristor);
+     df.sc_r(1) = sc_array(i);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
 
