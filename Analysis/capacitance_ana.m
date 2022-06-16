@@ -49,9 +49,25 @@ C_debye_ionic = gradient(IQ, deltaV);
 
 %subplot(2,1,1);
 figure(7444)
-semilogy(deltaV, abs(C_debye_layers), deltaV, abs(C_debye_electronic), '-.', deltaV, abs(C_debye_ionic), '--')
+plot(deltaV, abs(C_debye_layers), deltaV, abs(C_debye_electronic), '-.', deltaV, abs(C_debye_ionic), '--')
 legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
 xlabel('V across debye layers')
+ylabel('Capacitances (F/cm^2)')
+
+%% Get capacitance as total charge (per cm2) divided by Vapplied
+
+C_debye_layers = gradient(Q, Vappt);
+
+C_debye_electronic = gradient(EQ, Vappt);
+
+C_debye_ionic = gradient(IQ, Vappt); 
+
+
+%subplot(2,1,1);
+figure(7445)
+plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
+legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
+xlabel('Voltage applied')
 ylabel('Capacitances (F/cm^2)')
 
 
