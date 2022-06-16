@@ -4,25 +4,32 @@
 
 %% Initialize driftfusion
 initialise_df
+%% Rough value of capacitance
+A=1;
+epsilon=par.epp0*par.epp(3)*par.e;
+d=par.d(3);
+Capacitance_rough=(A*epsilon)/d;
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('./Input_files/alox.csv');
 
+%% Par file for ion case
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
 par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
-
-par2 = par_alox;
-par2.N_ionic_species=0; %keeping no ionic density
-par2.Ncat(:) = 0; %Simulating for 0 ionic density
-par2.Nani(:) = 0; %Simulating for 0 ionic density 
-
 disp(['Cation density = ', num2str(par.Ncat(3)), ' cm^-3']);%num2str=Convert numbers to character representation
       
 par.Phi_left = -4.9;
 disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
 par.Phi_right = -4.9;
 disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);    
+
+
+%% Par file for no ion case
+
+par2 = par_alox;
+par2.mu_c(:) = 0; %Freezing ions
+par.mu_a(:) = 0;
 
 par2.Phi_left = -4.9;
 disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
@@ -34,47 +41,64 @@ soleq= equilibrate(par);
 soleq2= equilibrate(par2);
 %% Current-voltage scan
 k_scan = 0.001;
-Vmax = 10;
+Vmax = 1.2;
 Vmin = -Vmax;
-tpoints=(2*(Vmax-Vmin)/(100*k_scan))+1;
+tpoints=241;
 %Try freezing the ions (keep mobility =0) and then run sol_CV to check
 %later on
 %sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
-%% Vappt and other parameters
+%%  Get and calculate Capacitance
 Vappt = dfana.calcVapp(sol_CV_with_ions);
 Vappt2 = dfana.calcVapp(sol_CV_without_ions);
 
 [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
 [u2,t2,x2,par2,dev2,n2,p2,a2,c2,V2] = dfana.splitsol(sol_CV_without_ions);
 
-%% Get J disp with and without ions
-% J_with_ions = dfana.calcJ(sol_CV_with_ions, "sub");
-% J_without_ions = dfana.calcJ(sol_CV_without_ions, "sub");
-% 
-% delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
-% delta_t=t(:,2)-t(:,1);%change in time dt
-% delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
-% 
-% J_with_ions=J_with_ions.disp;
-% J_with_ions=abs(J_with_ions);%absolute values taken for clarity
-% C_with_ions=J_with_ions/delta_Vapp_by_delta_t;
-% 
-% J_without_ions=J_without_ions.disp;
-% J_without_ions=abs(J_without_ions);
-% C_without_ions=J_without_ions/delta_Vapp_by_delta_t;
-% %% Plot Jdisp and Capacitance with ions across time
-% figure(444)
-% plot(t,J_with_ions(:,122)); 
-% xlabel('Time')
-% ylabel('Displacement Current across insulator with ions')
-% 
-% figure(445)
-% plot(t,C_with_ions(:,122)); 
-% xlabel('Time')
-% ylabel('Capacitance with ions')
+% Get Displacement current with and without ions
+J_with_ions = dfana.calcJ(sol_CV_with_ions, "sub");
+J_without_ions = dfana.calcJ(sol_CV_without_ions, "sub");
+
+delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
+delta_t=t(:,2)-t(:,1);%change in time dt
+delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
+
+J_disp_with_ions=J_with_ions.disp;
+J_disp_with_ions=abs(J_disp_with_ions);%absolute values taken for clarity
+C_with_ions=J_disp_with_ions/delta_Vapp_by_delta_t;
+
+J_disp_without_ions=J_without_ions.disp;
+J_disp_without_ions=abs(J_disp_without_ions);
+C_without_ions=J_disp_without_ions/delta_Vapp_by_delta_t;
+%% Plot Jdisp and Capacitance with ions across time
+
+%Take central point of insulator
+midpoint_insulator=(round((par.pcum0(1)+par.pcum0(2))/2));
+
+figure(444)
+plot(t,J_disp_with_ions(:,midpoint_insulator)); 
+xlabel('Time')
+ylabel('Displacement Current across insulator with ions')
+
+figure(445)
+plot(t,C_disp_with_ions(:,midpoint_insulator)); 
+xlabel('Time')
+ylabel('Capacitance with ions')
+%% Plot Jdisp and Capacitance without ions across time
+
+%Take central point of insulator
+midpoint_insulator=(round((par.pcum0(1)+par.pcum0(2))/2));
+figure(544)
+plot(t,J_without_ions(:,midpoint_insulator)); 
+xlabel('Time')
+ylabel('Displacement Current across insulator without ions')
+
+figure(545)
+plot(t,C_without_ions(:,midpoint_insulator)); 
+xlabel('Time')
+ylabel('Capacitance without ions')
 %% Call capacitance function
 %[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
 [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);      
