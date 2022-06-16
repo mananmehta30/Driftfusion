@@ -69,7 +69,9 @@ for i = 1:length(Ncat_array)
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
         sigma_n_bar_VpeakM(i,j) = sigma_n_bar_Vpeak;
+        n_bar_VpeakM(i,j)= (sigma_n_bar_VpeakM(i,j)./par.e)./par.mu_n(3);
         sigma_p_bar_VpeakM(i,j) = sigma_p_bar_Vpeak;
+        p_bar_VpeakM(i,j)= (sigma_p_bar_VpeakM(i,j)./par.e)./par.mu_p(3);
     end
 end
 
@@ -215,28 +217,32 @@ legend(legstr_Vx)
 
 %% Electron Modulability
 idx = find(Vappt==0.4);
-workfunction_index = 9;
+workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
  
 for i = 1:length(Ncat_array)
     n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
     n_values_around_bp=n_int(idx-1:idx+1);
-    Vappt_around_bp=Vappt(idx-1:idx+1);
-    n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
-    n_modulability_factor(:,i)= n_bp_modulability(2);
-    n_store_log=log10(n_modulability_factor);
-     figure(1111)
+    log_n=log10(n_values_around_bp);%log(n)
+    Vappt_around_bp=Vappt(idx-1:idx+1);%V
+    n_modulability=gradient(log_n,Vappt_around_bp);%dlog(n)/dV
+    n_modulability_factor(:,i)= n_modulability(2);%take the center value
+    
 end
-scatter(Ncat_array, n_store_log,'o', 'MarkerFaceColor', 'b');
+figure(1111)
+scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
-ylim([4.6 8.5])
-figure(1111)
+%ylim([4.6 8.5])
+
 xlabel('Cation concentration')
 ylabel('Electron Modulability Factor (m_V_g)')
 box on
+
+
+
 
 %% Plot average conductivity
 % figure(200)
@@ -327,13 +333,29 @@ hold off
 
 
 %% Find how to get the contour done
+
+legstr_n3 =[];
+legstr_p3 =[];
+Vappt_2=0.001;
+for i = 1:length(Ncat_array)
+    for j=1:length(workfunction_LHS)
+          n_int_2(i,j) = n_bar_VpeakM(i,j);
+    
+         log_n(i,j)=log10(n_int_2(i,j));%log(n)
+        n_modulability(i,j)=log_n(i,j)./0.02;%dlog(n)/dV
+         %n_modulability(i,j)=gradient(log_n(i,j),Vappt);%dlog(n)/dV
+         n_modulability_factor(i,j)= n_modulability(2);%take the center value
+    end 
+end
+
+
 x=workfunction_LHS;
 y=Ncat_array;
-z=sigma_n_bar_VpeakM;
+z=n_modulability_factor;
 z_log=log10(z);
-surf(x,y,z_log);
-%set(gca,'ZScale','log')
-xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Peak conductivity')
+surf(x,y,z);
+set(gca,'ZScale','log')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
 set(gca,'YScale','log')
 
 %contour3();
