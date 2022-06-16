@@ -41,7 +41,7 @@ soleq= equilibrate(par);
 soleq2= equilibrate(par2);
 %% Current-voltage scan
 k_scan = 0.001;
-Vmax = 1.2;
+Vmax = 5;
 Vmin = -Vmax;
 tpoints=241;
 %Try freezing the ions (keep mobility =0) and then run sol_CV to check
