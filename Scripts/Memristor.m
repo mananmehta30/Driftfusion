@@ -46,8 +46,8 @@ cycles = 1;
 
 figure()
 for i = 1:length(sc_array)
-     % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-    sol_CV.ion(i) = doCV(soleq_memristor.ion(i), 0, 0, Vmax, Vmin, k_scan, 1, 241);
+    %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
+    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
