@@ -107,6 +107,12 @@ else
     par.sp = import_single_property(par.sp, T, {'sp'}, start_row, end_row);
 end
 
+% Cation surface recombination velocity/extraction coefficient RHS
+ try
+ par.sc_r = T{1, 'sc_r'};
+ catch
+ warning('No sc_r defined in .csv . Using default in PC')
+ end
 par.optical_model = import_single_property(par.optical_model, T, {'optical_model', 'OM'}, 1, 1);
 % Illumination side
 par.side = import_single_property(par.side, T, {'side'}, 1, 1);

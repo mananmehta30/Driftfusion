@@ -27,8 +27,7 @@ soleq_memristor = equilibrate(par_memristor);
 
   %%
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
-    par_memristor = refresh_device(par_memristor);
-     df.sc_r = sc_array(i);
+     par.sc_r = sc_array(i);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
 
@@ -51,6 +50,7 @@ for i = 1:length(sc_array)
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
+%%
 %Total Current Plot for only electron
 dfplot.JtotVapp(sol_CV,0)
 hold off
