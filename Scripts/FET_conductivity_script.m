@@ -305,6 +305,8 @@ ylabel('Cation Concentration (cm-3)')
 legend(legstr_n3)
 hold off
 %% Modulability Ions
+
+v_built_in=par.Phi_left-par.Phi_right;
 workfunction_index = 3;
 legstr_n3 =[];
 legstr_p3 =[];
