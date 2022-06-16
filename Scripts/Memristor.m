@@ -1,6 +1,8 @@
-
+%% Initialise Driftfusio0n
 par_memristor = pc('Input_files/memristor');
 
+
+%% Find equilibrium solutions for different surface recombination rates
 soleq_memristor = equilibrate(par_memristor);
 
  tpoints=(2*(Vmax-Vmin)/10*k_scan)+1;
