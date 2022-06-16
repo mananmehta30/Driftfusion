@@ -28,7 +28,7 @@ soleq_memristor = equilibrate(par_memristor);
   %%
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_memristor = refresh_device(par_memristor);
-     df.sc_r(1) = sc_array(i);
+     df.sc_r = sc_array(i);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
 

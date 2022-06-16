@@ -136,7 +136,13 @@ sn_r = par.sn_r;
 sp_r = par.sp_r;
 Rs = par.Rs;
 gamma = par.gamma;          % Blakemore approximation coefficient, 0 for Boltzmann stats
-sc_r(1)=5;
+sc_r=par.sc_r;
+sc_l=par.sc_l;
+sa_r=par.sa_r;
+sa_l=par.sc_l;
+
+
+ 
 %% Switches and accelerator coefficients
 mobset = par.mobset;        % Electronic carrier transport switch
 mobseti = par.mobseti;      % Ionic carrier transport switch
