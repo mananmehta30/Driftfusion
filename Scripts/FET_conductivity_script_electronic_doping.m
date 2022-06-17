@@ -8,58 +8,89 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('./Input_files/alox.csv');
-par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
+par_for_ions = par_alox;     % Create temporary parameters object for overwriting parameters in loop
+par_freeze_ions = par_alox;
 %% Rough value of capacitance
 A=1;
-epsilon=par.epp0*par.epp(3)*par.e;
-d=par.d(3);
+epsilon=par_for_ions.epp0*par_for_ions.epp(3)*par_for_ions.e;
+d=par_for_ions.d(3);
 Capacitance_rough=(A*epsilon)/d;
-%% Par file for ion case
-par.Ncat(:) = 1e19; %Simulating for commonly reported ionic density
-par.Nani(:) = 1e19; %Simulating for commonly reported ionic density 
-disp(['Cation density = ', num2str(par.Ncat(3)), ' cm^-3']);%num2str=Convert numbers to character representation
-      
-par.Phi_left = -4.9;
-disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
-par.Phi_right = -4.9;
-disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);    
+%% Set up parameters
+
+Ncat_array = logspace(16, 19, 4);
+kscan_index = [0.001;0.001;01;1];
 
 
-%% Par file for no ion case
+%% Loop
+for i = 1:length(Ncat_array)
+    
+    par_for_ions.Ncat(:) = Ncat_array(i);
+    par_for_ions.Nani(:) = Ncat_array(i);
+    disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
+    par_freeze_ions.Ncat(:) = Ncat_array(i);
+    par_freeze_ions.Nani(:) = Ncat_array(i);
+    
+    for j = 1:length(kscan_index) %loop to run for different electrode workfunction
+        
+              % This line is required to rebuild various arrays used DF
+        par_for_ions.Phi_left = -4.9;
+        disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
+        par_for_ions.Phi_right = -4.9;
+        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
 
-par2 = par_alox;
-par2.mu_c(:) = 0; %Freezing ions
-par.mu_a(:) = 0;
+        
+        par_freeze_ions.mu_c(:) = 0; %Freezing ions
+        par_for_ions.mu_a(:) = 0;
 
-par2.Phi_left = -4.9;
-disp(['LHS electrode workfunction = ', num2str(par.Phi_left), ' eV']);
-par2.Phi_right = -4.9;
-disp(['RHS electrode workfunction = ', num2str(par.Phi_right), ' eV']);
+        par_freeze_ions.Phi_left = -4.9;
+        disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
+        par_freeze_ions.Phi_right = -4.9;
+        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
+        par_for_ions = refresh_device(par_for_ions);
+        %% Find equilibrium
+        soleq(i, j)= equilibrate(par_for_ions);
+        soleq2(i, j)= equilibrate(par_freeze_ions);
+        
+ 
+        
+        %% Current-voltage scan
+        k_scan = kscan_index(j);
+        disp(['Scan rate = ', num2str(kscan_index(j)), ' V/s']);
+        Vmax = 5;
+        Vmin = -5;
+        tpoints=400;
+        % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+        
+        sol_CV_with_ions(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+        sol_CV_without_ions(i, j) = doCV(soleq2(i, j).el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+        %% Plot Vapp vs time
+        % dfplot.Vappt(sol_CV)
+        
+        %% Plot JV scan
+        %dfplot.JtotVapp(sol_CV, 0);
+        %set(gca,'YScale','log')
+        
+        %% Plot anion and cation densities
+        %dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+        
+        %% Plot electron and hole profiles
+        %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+    end   
+end
 
-%% Find equilibrium
-soleq= equilibrate(par);
-soleq2= equilibrate(par2);
-%% Current-voltage scan
-k_scan = 0.001;
-Vmax = 5;
-Vmin = -Vmax;
-tpoints=241;
-%Try freezing the ions (keep mobility =0) and then run sol_CV to check
-%later on
-%sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-sol_CV_with_ions = doCV(soleq.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
-sol_CV_without_ions = doCV(soleq2.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+
+
 
 %%  Get and calculate Capacitance
-Vappt = dfana.calcVapp(sol_CV_with_ions);
-Vappt2 = dfana.calcVapp(sol_CV_without_ions);
+Vappt = dfana.calcVapp(sol_CV_with_ions(i,j));
+Vappt2 = dfana.calcVapp(sol_CV_without_ions(i,j));
 
-[u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
-[u2,t2,x2,par2,dev2,n2,p2,a2,c2,V2] = dfana.splitsol(sol_CV_without_ions);
+[u,t,x,par_for_ions,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions(i,j));
+[u2,t2,x2,par_freeze_ions,dev2,n2,p2,a2,c2,V2] = dfana.splitsol(sol_CV_without_ions(i,j));
 
 % Get Displacement current with and without ions
-J_with_ions = dfana.calcJ(sol_CV_with_ions, "sub");
-J_without_ions = dfana.calcJ(sol_CV_without_ions, "sub");
+J_with_ions = dfana.calcJ(sol_CV_with_ions(i,j), "sub");
+J_without_ions = dfana.calcJ(sol_CV_without_ions(i,j), "sub");
 
 delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
 delta_t=t(:,2)-t(:,1);%change in time dt
@@ -75,7 +106,7 @@ C_without_ions=J_disp_without_ions/delta_Vapp_by_delta_t;
 %% Plot Jdisp and Capacitance with ions across time
 
 %Take central point of insulator
-midpoint_insulator=(round((par.pcum0(1)+par.pcum0(2))/2));
+midpoint_insulator=(round((par_for_ions.pcum0(1)+par_for_ions.pcum0(2))/2));
 
 figure(444)
 plot(t,J_disp_with_ions(:,midpoint_insulator)); 
@@ -89,7 +120,7 @@ ylabel('Capacitance with ions')
 %% Plot Jdisp and Capacitance without ions across time
 
 %Take central point of insulator
-midpoint_insulator=(round((par.pcum0(1)+par.pcum0(2))/2));
+midpoint_insulator=(round((par_for_ions.pcum0(1)+par_for_ions.pcum0(2))/2));
 figure(544)
 plot(t,J_disp_without_ions(:,midpoint_insulator)); 
 xlabel('Time')
