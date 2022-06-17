@@ -121,15 +121,15 @@ classdef dfana
             %% Currents from the boundaries
             jn_l = -par.sn_l*(n(:, 1) - par.n0_l);
             jn_r = par.sn_r*(n(:, end) - par.n0_r);
-
+            jc_l = par.mobseti*-par.sc_l*(c(:, 1) - dev.Ncat(1));
+            ja_l = par.mobseti*-par.sa_l*(a(:, 1) - dev.Nani(1));
+            
+            
             jp_l = -par.sp_l*(p(:, 1) - par.p0_l);
             jp_r = par.sp_r*(p(:, end) - par.p0_r);
-
-            jc_l = 0;
-            jc_r = 0;
-
-            ja_l = 0;
-            ja_r = 0;
+            jc_r = par.mobseti*par.sc_r*(c(:, end) - dev.Ncat(end));
+            ja_r = par.mobseti*par.sa_r*(a(:, end) - dev.Nani(end));
+       
 
             % Calculate total electron and hole currents from fluxes
             % Use the minority carrier flux as the boundary condition

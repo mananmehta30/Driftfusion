@@ -1,4 +1,4 @@
 layer_type,material,thickness,layer_points,xmesh_coeff,Phi_EA,Phi_IP,EF0,Et,Nc,Nv,Ncat,Nani,c_max,a_max,mu_n,mu_p,mu_c,mu_a,epp,g0,B,taun,taup,sn_l,sn_r,sp_l,sp_r,sc_l,sc_r,Phi_left,Phi_right,OM,xmesh_type,side,N_ionic_species,sn,sp,Red,Green,Blue,vsr_zone_loc
-electrode,ITO,,,,,,-4.1,,,,,,,,,,,,,,,,,1.00E+07,1.00E+07,1.00E+07,1.00E+07,0.00E+00,0.00E+00,,,uniform,erf-linear,left,1.00E+00,1.00E+07,1.00E+07,,,,
+electrode,ITO,,,,,,-4.5,,,,,,,,,,,,,,,,,1.00E+07,1.00E+07,1.00E+07,1.00E+07,0.00E+00,0.00E+00,,,uniform,erf-linear,left,1.00E+00,1.00E+07,1.00E+07,,,,
 active,MAPICl,4.00E-05,800,0.7,-3.8,-5.4,-4.6,-5,1.00E+19,1.00E+19,1.00E+18,1.00E+18,1.21E+22,1.21E+22,2.00E+01,2.00E+01,1.00E-10,1.00E-14,2.30E+01,2.64E+21,3.60E-12,1.00E-07,1.00E-07,,,,,,,-4.50E+00,-4.30E+00,1.00E+00,5.00E+00,1.00E+00,1.00E+00,1.00E+00,1.00E+00,1.00E+00,1.00E+00,1.00E+00,auto
-electrode,Silver,,,,,,-4.1,,,,,,,,,,,,,,,,,1.00E+07,1.00E+07,1.00E+07,1.00E+07,0.00E+00,0.00E+00,,,,,,,1.00E+07,1.00E+07,,,,
+electrode,Silver,,,,,,-4.3,,,,,,,,,,,,,,,,,1.00E+07,1.00E+07,1.00E+07,1.00E+07,0.00E+00,0.00E+00,,,,,,,1.00E+07,1.00E+07,,,,
