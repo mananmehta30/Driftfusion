@@ -24,9 +24,9 @@ end
 el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 
-%% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
+%% Plot different BC, both sides, medium scan rate (0.1 Vs-1), one cycles
 k = 1e-1;
-cycles = 2;
+cycles = 1;
 
 figure()
 for i = 1:sc_size
