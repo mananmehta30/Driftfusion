@@ -65,8 +65,8 @@ n0_l = par.n0_l;
 n0_r = par.n0_r;
 p0_l = par.p0_l;
 p0_r = par.p0_r;
+c0_r = par.Ncat(end);
 dev = par.dev;
-c0_r=par.Ncat;
 
 %% Constants
 kB = par.kB;

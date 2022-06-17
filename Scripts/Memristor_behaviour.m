@@ -11,13 +11,12 @@ soleq_memristor = equilibrate(par_memristor);
 %% Soleq plot
 dfplot.ELnpx(soleq_memristor.ion);
 %% Cyclic Voltammogram scan
+k_scan = 0.1;
+tpoints=200;
 
- k_scan = 0.1;
- tpoints=200;
- 
 Vmax = 6;
- Vmin = -6;
-%%
+Vmin = -6;
+
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
 sol_CV_ion = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 sol_CV_el = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
