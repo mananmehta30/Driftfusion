@@ -25,23 +25,23 @@ tpoints=241;
 % of the sn and sp arrays
 soleq_memristor = equilibrate(par_memristor);  
 
-%%
+%% For just right hand side
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_memristor.sc_r = sc_array(i);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
 
-%% Calculate electron only solution
+ %Calculate electron only solution
 sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
-%% Solve for different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
+% Solve for different BC, only right sides, medium scan rate (0.1 Vs-1), two cycles
 
 % Graph shows that higher surface recombintion velocity i.e. higher
 % recombintion rate leads to more hystersis and less current
 k_scan = 0.1;
 cycles = 1;
 
-figure()
+figure(1)
 for i = 1:length(sc_array)
     %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
     sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
@@ -56,28 +56,71 @@ hold off
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
 legentries{end+1} = 'el only';
 legend(legentries)
-title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k_scan]))
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on right side only',[cycles,k_scan]))
 
 
-%%
+%% For just left hand side
+for i = 1:length(sc_array) % Loop to run for different recombination velocities
+    par_memristor.sc_l = sc_array(i);
+    soleq_memristor(i) = equilibrate(par_memristor);   
+end
+
+% Calculate electron only solution
+sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+
+% Solve for different BC, only right sides, medium scan rate (0.1 Vs-1), two cycles
+
+% Graph shows that higher surface recombintion velocity i.e. higher
+% recombintion rate leads to more hystersis and less current
 k_scan = 0.1;
 cycles = 1;
 
-figure()
+figure(2)
 for i = 1:length(sc_array)
-    sol_CV(i) = doCV(soleq(i).ion, 0, 0, 1.2, -1.2, k_scan, cycles, 241);
+    %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
+    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
+
 %Total Current Plot for only electron
-dfplot.JtotVapp(sol_CV,0)
+%dfplot.JtotVapp(sol_CV,0)
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
 legentries{end+1} = 'el only';
 legend(legentries)
-title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k_scan]))
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on left side only',[cycles,k_scan]))
 
+%% For both sides
+for i = 1:length(sc_array) % Loop to run for different recombination velocities
+    par_memristor.sc_l = sc_array(i);
+    par_memristor.sc_r = sc_array(i);
+    soleq_memristor(i) = equilibrate(par_memristor);   
+end
+
+% Calculate electron only solution
+sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+
+k_scan = 0.1;
+cycles = 1;
+
+figure(3)
+for i = 1:length(sc_array)
+    %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
+    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
+    dfplot.JtotVapp(sol_CV(i),0)
+    hold on
+end
+
+%Total Current Plot for only electron
+%dfplot.JtotVapp(sol_CV,0)
+hold off
+% set(gca,'yscale','log')
+legentries = cellstr(num2str(sc_array', 'sc=%g'));
+legentries{end+1} = 'el only';
+legend(legentries)
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on left side only',[cycles,k_scan]))
 %% Felix code
 % Single-layer MAPbICl device, variable workfunctions and ion BC
 % 24/03/2021
