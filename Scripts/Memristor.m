@@ -25,6 +25,35 @@ tpoints=241;
 % of the sn and sp arrays
 soleq_memristor = equilibrate(par_memristor);  
 
+
+%% For both sides
+for i = 1:length(sc_array) % Loop to run for different recombination velocities
+    par_memristor.sc_l = sc_array(i);
+    par_memristor.sc_r = sc_array(i);
+    soleq_memristor(i) = equilibrate(par_memristor);   
+end
+
+% Calculate electron only solution
+sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 1, 241);
+
+k_scan = 0.1;
+cycles = 1;
+
+for i = 1:length(sc_array)
+    %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
+    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, cycles, 241);
+    dfplot.JtotVapp(sol_CV(i),0)
+    hold on
+end
+
+%Total Current Plot for only electron
+%dfplot.JtotVapp(sol_CV,0)
+hold off
+% set(gca,'yscale','log')
+legentries = cellstr(num2str(sc_array', 'sc=%g'));
+legentries{end+1} = 'el only';
+legend(legentries)
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc both sides',[cycles,k_scan]))
 %% For just right hand side
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_memristor.sc_r = sc_array(i);
@@ -92,34 +121,7 @@ legentries{end+1} = 'el only';
 legend(legentries)
 title(sprintf('%i cycle, scan rate = %g Vs-1, sc on left side only',[cycles,k_scan]))
 
-%% For both sides
-for i = 1:length(sc_array) % Loop to run for different recombination velocities
-    par_memristor.sc_l = sc_array(i);
-    par_memristor.sc_r = sc_array(i);
-    soleq_memristor(i) = equilibrate(par_memristor);   
-end
 
-% Calculate electron only solution
-sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 1, 241);
-
-k_scan = 0.1;
-cycles = 1;
-
-for i = 1:length(sc_array)
-    %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
-    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, cycles, 241);
-    dfplot.JtotVapp(sol_CV(i),0)
-    hold on
-end
-
-%Total Current Plot for only electron
-%dfplot.JtotVapp(sol_CV,0)
-hold off
-% set(gca,'yscale','log')
-legentries = cellstr(num2str(sc_array', 'sc=%g'));
-legentries{end+1} = 'el only';
-legend(legentries)
-title(sprintf('%i cycle, scan rate = %g Vs-1, sc both sides',[cycles,k_scan]))
 %% Felix code
 % Single-layer MAPbICl device, variable workfunctions and ion BC
 % 24/03/2021
