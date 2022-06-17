@@ -1,6 +1,7 @@
 % equilibrium ELx for all boundary cases
 %% Initialize Driftfusion
-initialise_df
+
+intialize_df;
 
 %%
 par = pc('1_layer_MAPI_Ag_Al.csv');
