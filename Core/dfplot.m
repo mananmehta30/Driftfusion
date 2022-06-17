@@ -221,7 +221,7 @@ classdef dfplot
             Vapp = dfana.calcVapp(sol);
 
             figure(91)
-            plot(Vapp, J.tot(:, ppos));
+            semilogy(Vapp, J.tot(:, ppos));
             xlabel('Applied Voltage, Vapp [V]');
             ylabel('Current Density, J [A cm^{-2}]');
             set(legend,'FontSize',16);

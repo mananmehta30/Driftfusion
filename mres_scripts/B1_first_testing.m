@@ -21,12 +21,12 @@ for i = 1:sc_size
 end
 
 %% Calculate electron only solution
-%el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 
 %% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
 k = 1e-1;
-cycles = 1;
+cycles = 2;
 
 figure()
 for i = 1:sc_size
