@@ -38,7 +38,7 @@ sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 % Graph shows that higher surface recombintion velocity i.e. higher
 % recombintion rate leads to more hystersis and less current
-k_scan = 0.1;
+k_scan = 0.01;
 cycles = 1;
 
 
@@ -72,7 +72,7 @@ sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 % Graph shows that higher surface recombintion velocity i.e. higher
 % recombintion rate leads to more hystersis and less current
-k_scan = 0.1;
+k_scan = 0.001;
 cycles = 1;
 
 
@@ -102,7 +102,7 @@ end
 % Calculate electron only solution
 sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
-k_scan = 0.1;
+k_scan = 0.001;
 cycles = 2;
 
 figure(3)

@@ -184,10 +184,10 @@ classdef pc
         sn_r = 1e7;     % electron extraction velocity right boundary
         sp_l = 1e7;     % hole extraction left boundary
         sp_r = 1e7;     % hole surface recombination velocity right boundary
-        sc_l = 1e7;     % cation extraction left boundary
-        sc_r = 1e7;     % cation surface recombination velocity right boundary
-        sa_l = 1e7;     % anion extraction left boundary
-        sa_r = 1e7;     % anion surface recombination velocity right boundary
+        sc_l = 0;     % cation extraction left boundary
+        sc_r = 0;     % cation surface recombination velocity right boundary
+        sa_l = 0;     % anion extraction left boundary
+        sa_r = 0;     % anion surface recombination velocity right boundary
         
         %% Volumetric surface recombination
         vsr_mode = 1;               % Either 1 for volumetric surface recombination approximation or 0 for off
