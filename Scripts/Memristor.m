@@ -41,7 +41,7 @@ sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 k_scan = 0.1;
 cycles = 1;
 
-figure(1)
+
 for i = 1:length(sc_array)
     %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
     sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
@@ -75,7 +75,7 @@ sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 k_scan = 0.1;
 cycles = 1;
 
-figure(2)
+
 for i = 1:length(sc_array)
     %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
     sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
@@ -103,12 +103,12 @@ end
 sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 k_scan = 0.1;
-cycles = 1;
+cycles = 2;
 
 figure(3)
 for i = 1:length(sc_array)
     %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
-    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
+    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, cycles, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
