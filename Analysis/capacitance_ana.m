@@ -1,4 +1,4 @@
-function [C_debye_layers,C_debye_electronic,C_debye_ionic] = capacitance_ana(sol_CV_with_ions)
+function [C_debye_layers,C_debye_electronic,C_debye_ionic] = capacitance_ana(sol_CV_with_ions,Vappt)
 par_t = sol_CV_with_ions.par;
 [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
 %% Get Debye Length

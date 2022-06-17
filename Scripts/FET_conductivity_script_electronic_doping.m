@@ -119,19 +119,23 @@ end
 % plot(t,C_without_ions(:,midpoint_insulator)); 
 % xlabel('Time')
 % ylabel('Capacitance without ions')
-%% 
+%% Create data structure to store capacitance value
+C = struct;
+C.C_total=zeros(length(Ncat_array),length(kscan_index));
+C.C_ionic=zeros(length(Ncat_array),length(kscan_index));
+C.C_electronic=zeros(length(Ncat_array),length(kscan_index));
 
 %% Capacitance_Manan Analysis
-Vappt = dfana.calcVapp(sol_CV(1,1)); 
+Vappt = dfana.calcVapp(sol_CV_with_ions(1,1)); 
 
 
 for i = 1:length(Ncat_array)
     for j = 1:length(kscan_index)
        
-        [Ctotal, Cionic, Celectronic] = capacitance_ana(sol_CV_with_ions(i,j));%call this function
-        C_total(i,j)=Ctotal;
-        C_ionic(i,j)=Cionic;
-        C_electronic(i,j)=Celectronic;
+        [Ctotal, Cionic, Celectronic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
+        C.C_total(i,j)=Ctotal;
+        C.C_ionic(i,j)=Cionic;
+        C.C_ionic(i,j)=Celectronic;
     end
 end
 
