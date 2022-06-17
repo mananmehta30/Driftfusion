@@ -12,8 +12,8 @@ par_memristor = pc('./Input_files/memristor.csv');
 k_scan=[0.01, 0.1, 1];
 sc_array = [0, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
 
-Vmax = 5;
-Vmin = -5;
+Vmax = 1.2;
+Vmin = -1.2;
 
 tpoints=241;
 
