@@ -1,4 +1,4 @@
-function [capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions)
+function [C_debye_layers,C_debye_electronic,C_debye_ionic] = capacitance_ana(sol_CV_with_ions)
 par_t = sol_CV_with_ions.par;
 [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol_CV_with_ions);
 %% Get Debye Length
@@ -63,7 +63,6 @@ C_debye_electronic = gradient(EQ, Vappt);
 C_debye_ionic = gradient(IQ, Vappt); 
 
 
-%subplot(2,1,1);
 figure(7445)
 plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
 legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
