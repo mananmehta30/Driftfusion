@@ -38,21 +38,6 @@ EQ = e*trapz(x(pl:pr), electronic_rho(:, pl:pr), 2);
 ionic_rho= par.z_a*a + par.z_c*c - par.z_c*Nani0 - par.z_c*Ncat0;
 IQ= e*trapz(x(pl:pr), ionic_rho(:, pl:pr), 2);
 
-%% Get capacitance as total charge (per cm2) divided by dV
-
-C_debye_layers = gradient(Q, deltaV);
-
-C_debye_electronic = gradient(EQ, deltaV);
-
-C_debye_ionic = gradient(IQ, deltaV); 
-
-
-%subplot(2,1,1);
-% figure(7444)
-% plot(deltaV, abs(C_debye_layers), deltaV, abs(C_debye_electronic), '-.', deltaV, abs(C_debye_ionic), '--')
-% legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
-% xlabel('V across debye layers')
-% ylabel('Capacitances (F/cm^2)')
 
 %% Get capacitance as total charge (per cm2) divided by Vapplied
 
