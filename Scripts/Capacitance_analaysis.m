@@ -17,7 +17,7 @@ d=par_for_ions.d(3);
 Capacitance_rough=(A*epsilon)/d;
 %% Set up parameters
 
-Ncat_array = logspace(16, 19, 4);
+Ncat_array = logspace(16, 17, 2);
 kscan_index = [0.01;0.1;1];
 
 
@@ -108,33 +108,8 @@ end
 
 
 %% Plots
-
-%% Plot average conductivity
-for j = 1:length(workfunction_LHS)
-    figure(201)
-    semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
-    hold on
-end
-
-for j = 1:length(workfunction_LHS)
-    figure(202)
-    semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
-    hold on
-end
-%%check how to write siemens properly
-figure(201)
-xlabel('Voltage [V]')
-ylabel('Average electron conductivity [Siemens]')
-legend(legstr_n2)
-hold off
-
-figure(202)
-xlabel('Voltage [V]')
-ylabel('Average hole conductivity [Siemens]')
-legend(legstr_p2)
-hold off
+figure (222)
+   plot(Vappt, C_ionic(1).N_cat(1).k_scan)
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
