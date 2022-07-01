@@ -2,8 +2,8 @@
 % 24/03/2021
 %
 %% Load parameters and customize if necessary
-% par = pc('Input_files/1_layer_test.csv');
-par = pc('1_layer_MAPI_ITO_Ag.csv');
+ par = pc('Input_files/1_layer_test.csv');
+%par = pc('1_layer_MAPI_ITO_Ag.csv');
 
 sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
 sc_size = length(sc_array);
