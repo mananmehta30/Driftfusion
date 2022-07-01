@@ -70,6 +70,69 @@ end
 
 
 
+
+%%
+
+C_ionic = struct;
+C_electronic = struct;
+C_total=struct;
+%% Preallocatee
+for i=1:length(Ncat_array);
+       C_ionic(i).N_cat=struct;
+       C_electronic(i).N_cat=struct;
+       C_total(i).N_cat=struct;
+     
+end
+%%
+
+for i=1:length(Ncat_array)
+    
+ for j=1:length(kscan_index)
+       C_ionic(i).N_cat(j).k_scan=struct;
+       C_electronic(i).N_cat(j).k_scan=struct;
+       C_total(i).N_cat(j).k_scan=struct;
+ end
+ end
+%% Create data structure to store capacitance value
+% C = struct;
+% C_total=struct;
+% 
+% C_ionic=struct;
+% C_electronic=struct;
+% %C.C_total=zeros(length(Ncat_array),length(kscan_index));
+% C.C_ionic=zeros(length(Ncat_array),length(kscan_index));
+% C.C_electronic=zeros(length(Ncat_array),length(kscan_index));
+
+%% Capacitance_Manan Analysis
+Vappt = dfana.calcVapp(sol_CV_with_ions(1,1)); 
+
+
+for i = 1:length(Ncat_array)
+    for j = 1:length(kscan_index)
+       
+        [Ctotal, Cionic, Celectronic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
+       
+        C_ionic(i).N_cat(j).k_scan=Cionic;
+        C_electronic(i).N_cat(j).k_scan=Celectronic;
+        C_total(i).N_cat(j).k_scan=Ctotal;
+        
+    end
+end
+
+%% Call capacitance function
+%[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
+% [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);    
+
+
+%% Plots
+
+figure(7445)
+plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
+legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
+xlabel('Voltage applied')
+ylabel('Capacitances (F/cm^2)')
+
+
 %%  Get and calculate Capacitance
 % Vappt = dfana.calcVapp(sol_CV_with_ions(i,j));
 % Vappt2 = dfana.calcVapp(sol_CV_without_ions(i,j));
@@ -119,69 +182,6 @@ end
 % plot(t,C_without_ions(:,midpoint_insulator)); 
 % xlabel('Time')
 % ylabel('Capacitance without ions')
-%%
-
-C_ionic = struct;
-C_electronic = struct;
-C_total=struct;
-%% Preallocatee
-for i=1:length(Ncat_array);
-       C_ionic(i).N_cat=struct;
-       C_electronic(i).N_cat=struct;
-       C_total(i).N_cat=struct;
-     
-end
-%%
-
-for i=1:length(Ncat_array);
-    
- for j=1:length(kscan_index);
-       C_ionic(i).N_cat(j).k_scan=struct;
-       C_electronic(i).N_cat(j).k_scan=struct;
-       C_total(i).N_cat(j).k_scan=struct;
- end
- end
-%% Create data structure to store capacitance value
-% C = struct;
-% C_total=struct;
-% 
-% C_ionic=struct;
-% C_electronic=struct;
-% %C.C_total=zeros(length(Ncat_array),length(kscan_index));
-% C.C_ionic=zeros(length(Ncat_array),length(kscan_index));
-% C.C_electronic=zeros(length(Ncat_array),length(kscan_index));
-
-%% Capacitance_Manan Analysis
-Vappt = dfana.calcVapp(sol_CV_with_ions(1,1)); 
-
-
-for i = 1:length(Ncat_array)
-    for j = 1:length(kscan_index)
-       
-        [Ctotal, Cionic, Celectronic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
-       
-        C_ionic(i).N_cat(j).k_scan;
-        C_electronic(i).N_cat(j).k_scan;
-        C_total(i).N_cat(j).k_scan;
-        
-    end
-end
-
-%% Call capacitance function
-%[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
-[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);    
-
-
-%% Plots
-
-figure(7445)
-plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
-legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
-xlabel('Voltage applied')
-ylabel('Capacitances (F/cm^2)')
-
-
-
 
 
 %%
