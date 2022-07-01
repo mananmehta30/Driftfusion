@@ -95,7 +95,7 @@ Vappt = dfana.calcVapp(sol_CV_with_ions(1,1));
 for i = 1:length(Ncat_array)
     for j = 1:length(kscan_index)
        
-        [Ctotal, Cionic, Celectronic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
+        [Ctotal,Celectronic,Cionic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
        
         C_ionic(i).N_cat(j).k_scan=Cionic;
         C_electronic(i).N_cat(j).k_scan=Celectronic;
