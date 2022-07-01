@@ -119,11 +119,37 @@ end
 % plot(t,C_without_ions(:,midpoint_insulator)); 
 % xlabel('Time')
 % ylabel('Capacitance without ions')
+%%
+
+C_ionic = struct;
+C_electronic = struct;
+C_total=struct;
+%% Preallocatee
+for i=1:length(Ncat_array);
+       C_ionic(i).N_cat=struct;
+       C_electronic(i).N_cat=struct;
+       C_total(i).N_cat=struct;
+     
+end
+%%
+
+for i=1:length(Ncat_array);
+    
+ for j=1:length(kscan_index);
+       C_ionic(i).N_cat(j).k_scan=struct;
+       C_electronic(i).N_cat(j).k_scan=struct;
+       C_total(i).N_cat(j).k_scan=struct;
+ end
+ end
 %% Create data structure to store capacitance value
-C = struct;
-C.C_total=zeros(length(Ncat_array),length(kscan_index));
-C.C_ionic=zeros(length(Ncat_array),length(kscan_index));
-C.C_electronic=zeros(length(Ncat_array),length(kscan_index));
+% C = struct;
+% C_total=struct;
+% 
+% C_ionic=struct;
+% C_electronic=struct;
+% %C.C_total=zeros(length(Ncat_array),length(kscan_index));
+% C.C_ionic=zeros(length(Ncat_array),length(kscan_index));
+% C.C_electronic=zeros(length(Ncat_array),length(kscan_index));
 
 %% Capacitance_Manan Analysis
 Vappt = dfana.calcVapp(sol_CV_with_ions(1,1)); 
@@ -133,9 +159,11 @@ for i = 1:length(Ncat_array)
     for j = 1:length(kscan_index)
        
         [Ctotal, Cionic, Celectronic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
-        C.C_total(i,j)=Ctotal;
-        C.C_ionic(i,j)=Cionic;
-        C.C_ionic(i,j)=Celectronic;
+       
+        C_ionic(i).N_cat(j).k_scan;
+        C_electronic(i).N_cat(j).k_scan;
+        C_total(i).N_cat(j).k_scan;
+        
     end
 end
 
