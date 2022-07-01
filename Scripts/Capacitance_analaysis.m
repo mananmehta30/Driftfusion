@@ -68,22 +68,14 @@ for i = 1:length(Ncat_array)
 end
 
 
-
-
-
-%%
-
-C_ionic = struct;
-C_electronic = struct;
-C_total=struct;
-%% Preallocatee
-for i=1:length(Ncat_array);
+%% Preallocate
+for i=1:length(Ncat_array)
        C_ionic(i).N_cat=struct;
        C_electronic(i).N_cat=struct;
        C_total(i).N_cat=struct;
      
 end
-%%
+%% Preallocate
 
 for i=1:length(Ncat_array)
     
@@ -93,17 +85,10 @@ for i=1:length(Ncat_array)
        C_total(i).N_cat(j).k_scan=struct;
  end
  end
-%% Create data structure to store capacitance value
-% C = struct;
-% C_total=struct;
-% 
-% C_ionic=struct;
-% C_electronic=struct;
-% %C.C_total=zeros(length(Ncat_array),length(kscan_index));
-% C.C_ionic=zeros(length(Ncat_array),length(kscan_index));
-% C.C_electronic=zeros(length(Ncat_array),length(kscan_index));
+
 
 %% Capacitance_Manan Analysis
+
 Vappt = dfana.calcVapp(sol_CV_with_ions(1,1)); 
 
 
@@ -119,69 +104,97 @@ for i = 1:length(Ncat_array)
     end
 end
 
-%% Call capacitance function
-%[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
-% [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);    
+ 
 
 
 %% Plots
 
-figure(7445)
-plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
-legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
-xlabel('Voltage applied')
-ylabel('Capacitances (F/cm^2)')
+%% Plot average conductivity
+for j = 1:length(workfunction_LHS)
+    figure(201)
+    semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
+    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    hold on
+end
+
+for j = 1:length(workfunction_LHS)
+    figure(202)
+    semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
+    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    hold on
+end
+%%check how to write siemens properly
+figure(201)
+xlabel('Voltage [V]')
+ylabel('Average electron conductivity [Siemens]')
+legend(legstr_n2)
+hold off
+
+figure(202)
+xlabel('Voltage [V]')
+ylabel('Average hole conductivity [Siemens]')
+legend(legstr_p2)
+hold off
 
 
-%%  Get and calculate Capacitance
-% Vappt = dfana.calcVapp(sol_CV_with_ions(i,j));
-% Vappt2 = dfana.calcVapp(sol_CV_without_ions(i,j));
-% 
-% [u,t,x,par_for_ions,dev,n,p,a,c,Ctotal] = dfana.splitsol(sol_CV_with_ions(i,j));
-% [u2,t2,x2,par_freeze_ions,dev2,n2,p2,a2,c2,V2] = dfana.splitsol(sol_CV_without_ions(i,j));
+%% Plot carrier concentration at interface as function Vapp for different ion densities
+scanrate_index = 1;
+legstr_n3 =[];
+legstr_p3 =[];
 
-% % Get Displacement current with and without ions
-% J_with_ions = dfana.calcJ(sol_CV_with_ions(i,j), "sub");
-% J_without_ions = dfana.calcJ(sol_CV_without_ions(i,j), "sub");
-% 
-% delta_Vapp=Vappt(:,2)-Vappt(:,1);%change in voltage dV
-% delta_t=t(:,2)-t(:,1);%change in time dt
-% delta_Vapp_by_delta_t=delta_Vapp/delta_t;%(dV/dt or k_scan basically)
-% 
-% J_disp_with_ions=J_with_ions.disp;
-% J_disp_with_ions=abs(J_disp_with_ions);%absolute values taken for clarity
-% C_with_ions=J_disp_with_ions/delta_Vapp_by_delta_t;
-% 
-% J_disp_without_ions=J_without_ions.disp;
-% J_disp_without_ions=abs(J_disp_without_ions);
-% C_without_ions=J_disp_without_ions/delta_Vapp_by_delta_t;
-% %% Plot Jdisp and Capacitance with ions across time
-% 
-% %Take central point of insulator
-% midpoint_insulator=(round((par_for_ions.pcum0(1)+par_for_ions.pcum0(2))/2));
-% 
-% figure(444)
-% plot(t,J_disp_with_ions(:,midpoint_insulator)); 
-% xlabel('Time')
-% ylabel('Displacement Current across insulator with ions')
-% 
-% figure(445)
-% plot(t,C_with_ions(:,midpoint_insulator)); 
-% xlabel('Time')
-% ylabel('Capacitance with ions')
-% %% Plot Jdisp and Capacitance without ions across time
-% 
-% %Take central point of insulator
-% midpoint_insulator=(round((par_for_ions.pcum0(1)+par_for_ions.pcum0(2))/2));
-% figure(544)
-% plot(t,J_disp_without_ions(:,midpoint_insulator)); 
-% xlabel('Time')
-% ylabel('Displacement Current across insulator without ions')
-% 
-% figure(545)
-% plot(t,C_without_ions(:,midpoint_insulator)); 
-% xlabel('Time')
-% ylabel('Capacitance without ions')
+for i = 1:length(Ncat_array)
+    figure(203)
+    plot(Vappt, C_total(i).N_cat(scanrate_index).k_scan)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+
+figure(203)
+xlabel('Voltage [V]')
+ylabel('Total Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+for i = 1:length(Ncat_array)
+    figure(204)
+    plot(Vappt, C_ionic(i).N_cat(scanrate_index).k_scan)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+
+figure(204)
+xlabel('Voltage [V]')
+ylabel('Ionic Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+for i = 1:length(Ncat_array)
+    figure(205)
+    plot(Vappt, C_electronic(i).N_cat(scanrate_index).k_scan)
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+
+
+figure(205)
+xlabel('Voltage [V]')
+ylabel('Electronic Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+
+%% Call capacitance function
+%[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
+% [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
+% figure(7445)
+% plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
+% legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
+% xlabel('Voltage applied')
+% ylabel('Capacitances (F/cm^2)')
+
+
 
 
 %%
