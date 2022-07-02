@@ -340,25 +340,25 @@ legstr_p3 =[];
 Vappt_2=0.001;
 for i = 1:length(Ncat_array)
     for j=1:length(workfunction_LHS)
-          n_int_2(i,j) = n_bar_VpeakM(i,j);
-    
-         log_n(i,j)=log10(n_int_2(i,j));%log(n)
-        n_modulability(i,j)=log_n(i,j)./0.02;%dlog(n)/dV
-         %n_modulability(i,j)=gradient(log_n(i,j),Vappt);%dlog(n)/dV
-         n_modulability_factor(i,j)= n_modulability(2);%take the center value
+          n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
+    n_values_around_bp=n_int(idx-1:idx+1);
+    log_n=log10(n_values_around_bp);%log(n)
+    Vappt_around_bp=Vappt(idx-1:idx+1);%V
+    n_modulability=gradient(log_n,Vappt_around_bp);%dlog(n)/dV
+    n_modulability_factor(i,j)= n_modulability(2);
     end 
 end
-
-
+%n_modulability_factor(:,i)= n_modulability(2);%take the center value
+%%
 x=workfunction_LHS;
 y=Ncat_array;
 z=n_modulability_factor;
 z_log=log10(z);
 surf(x,y,z);
-set(gca,'ZScale','log')
+set(gca,'ZScale','linear')
 xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
 set(gca,'YScale','log')
-
+box on
 %contour3();
 %% Conductivity profiles
 % So systematically you could look at the following.
