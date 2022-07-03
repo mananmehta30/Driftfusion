@@ -211,36 +211,24 @@ end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
-%% Electron Modulability
-% workfunction_index=1;
-% built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-% %idx = find(Vappt==(built_in_potential));
-% legstr_n3 =[];
-% legstr_p3 =[];
-% target=built_in_potential; 
-% temp=abs(target-Vappt);
-% [M,I] = min(temp);
-% idx=I;
+
+
+
+%% Electon Modulability vs Cation Concentration
 workfunction_index=1;
-built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-idx = find(Vappt==(built_in_potential));
-legstr_n3 =[];
-legstr_p3 =[];
-target=built_in_potential; 
-temp=abs(target-Vappt);
-[M,I] = min(temp);
-idx=I;
 for i = 1:length(Ncat_array)
-    n_int_mod = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
-    n_values_around_bp_mod=n_int(idx-1:idx+1);
-    log_n_mod=log10(n_values_around_bp_mod);%log(n)
-    Vappt_around_bp_mod=Vappt(idx-1:idx+1);%V
-    n_modulability_mod=gradient(log_n_mod,Vappt_around_bp_mod);%dlog(n)/dV
-    n_modulability_factor_mod(:,i)= n_modulability_mod(2);%take the center value
+    
+        
+          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+           n_modulability=gradient(log_n,Vappt);%dlog(p)/dV
+            
+            n_modulability_factor(i)= n_modulability(I);
     
 end
-figure(1111)
-scatter(Ncat_array, n_modulability_factor_mod,'o', 'MarkerFaceColor', 'b');
+
+figure(1112)
+scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
@@ -251,11 +239,29 @@ ylabel('Electron Modulability Factor (m_V_g)')
 box on
 
 
+%% Hole Modulability vs Cation Concentration
+workfunction_index=1;
+for i = 1:length(Ncat_array)
+    
+        
+          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+           n_modulability=gradient(log_n,Vappt);%dlog(p)/dV
+            
+            n_modulability_factor(i)= n_modulability(I);
+    
+end
 
+figure(1112)
+scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
 
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
 
-
-
+xlabel('Cation concentration')
+ylabel('Electron Modulability Factor (m_V_g)')
+box on
 %% Electron Modulability Contour
 
 
