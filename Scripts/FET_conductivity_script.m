@@ -106,7 +106,7 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-workfunction_index = 9;
+workfunction_index = 1;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
@@ -155,7 +155,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 3;
+workfunction_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -199,14 +199,9 @@ end
 legend(legstr_npx)
 ylim([1e-1, 1e12])
 
-%% Plot cation and anion densities at Vmax as a function of position
 
-
-
-
-%dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
 %% Plot potential as a function position
-workfunction_index = 9;
+workfunction_index = 1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
@@ -217,22 +212,23 @@ legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
 %% Electron Modulability
-idx = find(Vappt==0.4);
-workfunction_index = 3;
+workfunction_index=1;
+built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+idx = find(Vappt==(built_in_potential));
 legstr_n3 =[];
 legstr_p3 =[];
- 
+
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
-    n_values_around_bp=n_int(idx-1:idx+1);
-    log_n=log10(n_values_around_bp);%log(n)
-    Vappt_around_bp=Vappt(idx-1:idx+1);%V
-    n_modulability=gradient(log_n,Vappt_around_bp);%dlog(n)/dV
-    n_modulability_factor(:,i)= n_modulability(2);%take the center value
+    n_int_mod = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+    n_values_around_bp_mod=n_int(idx-1:idx+1);
+    log_n_mod=log10(n_values_around_bp_mod);%log(n)
+    Vappt_around_bp_mod=Vappt(idx-1:idx+1);%V
+    n_modulability_mod=gradient(log_n_mod,Vappt_around_bp_mod);%dlog(n)/dV
+    n_modulability_factor_mod(:,i)= n_modulability_mod(2);%take the center value
     
 end
 figure(1111)
-scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+scatter(Ncat_array, n_modulability_factor_mod,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
@@ -244,6 +240,63 @@ box on
 
 
 
+
+
+
+
+%% Modulability Contour
+
+idx = find(Vappt==0.4);
+for i = 1:length(Ncat_array)
+    for j=1:length(workfunction_LHS)
+          n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+            n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
+            n_modulability_factor(i,j)= n_modulability(idx);
+    end 
+end
+
+x=workfunction_LHS;
+y=Ncat_array;
+z=n_modulability_factor;
+z_log=log10(z);
+surf(x,y,z);
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
+set(gca,'YScale','log')
+box on
+
+%% Conductivity profiles
+% So systematically you could look at the following.
+
+% 1)Electrode workfunctions
+% 2)Ion density 
+% 3)1 ion, opposite charge (i.e. mobile anions)
+% 4)2 ions
+% 5)Different ion densities
+
+% Ideally you would set some of these parameter explorations up as loops and extract peak conductivity then plot 
+% on a contour plot with x = Ion density, y = Electrode workfunctions, z = peak conductivity for example.
+
+%% Modulability Ions
+
+% v_built_in=par.Phi_left-par.Phi_right;
+% workfunction_index = 3;
+% legstr_n3 =[];
+% legstr_p3 =[];
+% for i = 1:length(Ncat_array)
+%     cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
+%     cat_int_log=log10(cat_int);
+%     figure(112)
+%     plot(Vappt, cat_int_log)
+%     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+%     hold on
+% end
+% figure(112)
+% xlabel('Voltage [V]')
+% ylabel('Cation Concentration (cm-3)')
+% 
+% hold off
 
 %% Plot average conductivity
 % figure(200)
@@ -288,86 +341,33 @@ box on
 % % legend('Electron', 'Hole')
 % 
 % 
-%%
+
 
 %% Plot ionic concentration at interface as function Vapp for different ion densities
 
 
 %Plot similar for ions (instead of n_int put cat_int)
-workfunction_index = 3;
-legstr_n3 =[];
-legstr_p3 =[];
+% workfunction_index = 3;
+% legstr_n3 =[];
+% legstr_p3 =[];
+% 
+% for i = 1:length(Ncat_array)
+%     cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
+%     logcat_int=log10(cat_int);
+%     figure(703)
+%     semilogy(Vappt,cat_int)
+%     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+%     hold on
+% end
+% figure(703)
+% xlabel('Voltage [V]')
+% ylabel('Cation Concentration (cm-3)')
+% legend(legstr_n3)
+% hold off
 
-for i = 1:length(Ncat_array)
-    cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
-    logcat_int=log10(cat_int);
-    figure(703)
-    semilogy(Vappt,cat_int)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-end
-figure(703)
-xlabel('Voltage [V]')
-ylabel('Cation Concentration (cm-3)')
-legend(legstr_n3)
-hold off
-%% Modulability Ions
-
-v_built_in=par.Phi_left-par.Phi_right;
-workfunction_index = 3;
-legstr_n3 =[];
-legstr_p3 =[];
-for i = 1:length(Ncat_array)
-    cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
-    cat_int_log=log10(cat_int);
-    figure(112)
-    plot(Vappt, cat_int_log)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
-end
-figure(112)
-xlabel('Voltage [V]')
-ylabel('Cation Concentration (cm-3)')
-
-hold off
+%% Plot cation and anion densities at Vmax as a function of position
 
 
 
-%% Find how to get the contour done
 
-legstr_n3 =[];
-legstr_p3 =[];
-Vappt_2=0.001;
-for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
-          n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
-    n_values_around_bp=n_int(idx-1:idx+1);
-    log_n=log10(n_values_around_bp);%log(n)
-    Vappt_around_bp=Vappt(idx-1:idx+1);%V
-    n_modulability=gradient(log_n,Vappt_around_bp);%dlog(n)/dV
-    n_modulability_factor(i,j)= n_modulability(2);
-    end 
-end
-%n_modulability_factor(:,i)= n_modulability(2);%take the center value
-%%
-x=workfunction_LHS;
-y=Ncat_array;
-z=n_modulability_factor;
-z_log=log10(z);
-surf(x,y,z);
-set(gca,'ZScale','linear')
-xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
-set(gca,'YScale','log')
-box on
-%contour3();
-%% Conductivity profiles
-% So systematically you could look at the following.
-
-% 1)Electrode workfunctions
-% 2)Ion density 
-% 3)1 ion, opposite charge (i.e. mobile anions)
-% 4)2 ions
-% 5)Different ion densities
-
-% Ideally you would set some of these parameter explorations up as loops and extract peak conductivity then plot 
-% on a contour plot with x = Ion density, y = Electrode workfunctions, z = peak conductivity for example.
+%dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
