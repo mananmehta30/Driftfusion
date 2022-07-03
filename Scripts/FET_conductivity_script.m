@@ -244,23 +244,23 @@ workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         
-          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
-          log_n=log10(n_int);%log(n)
-           n_modulability=gradient(log_n,Vappt);%dlog(p)/dV
+          p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+          log_p=log10(p_int);%log(n)
+           p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
             
-            n_modulability_factor(i)= n_modulability(I);
+            p_modulability_factor(i)= p_modulability(I);
     
 end
 
-figure(1112)
-scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+figure(1113)
+scatter(Ncat_array, p_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
 %ylim([4.6 8.5])
 
 xlabel('Cation concentration')
-ylabel('Electron Modulability Factor (m_V_g)')
+ylabel('Hole Modulability Factor (m_V_g)')
 box on
 %% Electron Modulability Contour
 
