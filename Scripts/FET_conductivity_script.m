@@ -214,13 +214,14 @@ legend(legstr_Vx)
 %% Electron Modulability
 workfunction_index=1;
 built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-idx = find(Vappt==(built_in_potential));
+%idx = find(Vappt==(built_in_potential));
 legstr_n3 =[];
 legstr_p3 =[];
 target=built_in_potential; 
-temp = abs(target - x);
-closest = x(find(temp == min(abs(target - x))));
-Debye_right_V_index=find(x==(closest));
+temp=abs(target-Vappt);
+[M,I] = min(temp);
+idx=I;
+
 for i = 1:length(Ncat_array)
     n_int_mod = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
     n_values_around_bp_mod=n_int(idx-1:idx+1);
@@ -248,14 +249,27 @@ box on
 
 
 %% Modulability Contour
-
-idx = find(Vappt==0.4);
+workfunction_index=1;
+built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+idx = find(Vappt==(built_in_potential));
+legstr_n3 =[];
+legstr_p3 =[];
+target=built_in_potential; 
+temp=abs(target-Vappt);
+[M,I] = min(temp);
+idx=I;
+%%
+%idx = find(Vappt==0.4);
 for i = 1:length(Ncat_array)
     for j=1:length(workfunction_LHS)
+        built_in_potential=par.Phi_right-workfunction_LHS(j);
           n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
             n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
-            n_modulability_factor(i,j)= n_modulability(idx);
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            n_modulability_factor(i,j)= n_modulability(I);
     end 
 end
 
