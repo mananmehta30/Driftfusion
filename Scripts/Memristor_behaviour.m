@@ -25,6 +25,7 @@ sol_CV_el = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 %% Plot
 dfplot.JtotVapp(sol_CV_ion, 0);
 hold on
+%%
 dfplot.JtotVapp(sol_CV_el, 0);
 hold off
 %set(gca,'YScale','log');

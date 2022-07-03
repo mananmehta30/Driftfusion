@@ -3,8 +3,8 @@ initialise_df;
 
 %% Get file parameters
 % OS X path
-% par_memristor = pc('./Input_files/memristor.csv');
-par_memristor = pc('./Input_files/1_layer_MAPI_ITO_Ag.csv'); 
+ par_memristor = pc('Input_files/memristor.csv');
+%par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv'); 
 % Windows path
 %par_memristor = pc('Input_files/memristor');
 
