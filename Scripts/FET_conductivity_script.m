@@ -155,7 +155,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 1;
+workfunction_index = 7;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -214,15 +214,17 @@ legend(legstr_Vx)
 
 
 
-%% Electon Modulability vs Cation Concentration
-workfunction_index=1;
+%% Electon concentration Modulability vs Cation Concentration
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
-        
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
           n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
-           n_modulability=gradient(log_n,Vappt);%dlog(p)/dV
-            
+           n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
             n_modulability_factor(i)= n_modulability(I);
     
 end
@@ -238,16 +240,69 @@ xlabel('Cation concentration')
 ylabel('Electron Modulability Factor (m_V_g)')
 box on
 
+%% Calculate manually
+workfunction_index=7;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+          sigma_nn_int= par.e.*par.mu_n(3).*n_int;
 
-%% Hole Modulability vs Cation Concentration
+         
+          log_nn=log10(sigma_nn_int);%log(n)
+           nn_modulability=gradient(log_nn,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            nn_modulability_factor(i)= nn_modulability(I);
+    
+end
+figure(1112)
+scatter(Ncat_array, nn_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Electron Conductivity Modulability Factor (m_V_g)')
+box on
+%% Electon conductivity Modulability vs Cation Concentration
 workfunction_index=1;
 for i = 1:length(Ncat_array)
     
-        
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+          sigma_n_int = sigma_n_bar;
+          log_sigma_n=log10(sigma_n_int);%log(n)
+           sigma_n_modulability=gradient(log_sigma_n,Vappt);%dlog(sigma)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            sigma_n_modulability_factor(i)= sigma_n_modulability(I);
+    
+end
+
+figure(2222)
+scatter(Ncat_array, sigma_n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Electron Conductivity Modulability Factor (m_V_g)')
+box on
+%% Hole concentration Modulability vs Cation Concentration
+workfunction_index=7;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
           p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
-            
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
             p_modulability_factor(i)= p_modulability(I);
     
 end
