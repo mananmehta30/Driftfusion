@@ -212,16 +212,24 @@ legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
 %% Electron Modulability
+% workfunction_index=1;
+% built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+% %idx = find(Vappt==(built_in_potential));
+% legstr_n3 =[];
+% legstr_p3 =[];
+% target=built_in_potential; 
+% temp=abs(target-Vappt);
+% [M,I] = min(temp);
+% idx=I;
 workfunction_index=1;
 built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-%idx = find(Vappt==(built_in_potential));
+idx = find(Vappt==(built_in_potential));
 legstr_n3 =[];
 legstr_p3 =[];
 target=built_in_potential; 
 temp=abs(target-Vappt);
 [M,I] = min(temp);
 idx=I;
-
 for i = 1:length(Ncat_array)
     n_int_mod = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
     n_values_around_bp_mod=n_int(idx-1:idx+1);
@@ -248,18 +256,10 @@ box on
 
 
 
-%% Modulability Contour
-workfunction_index=1;
-built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-idx = find(Vappt==(built_in_potential));
-legstr_n3 =[];
-legstr_p3 =[];
-target=built_in_potential; 
-temp=abs(target-Vappt);
-[M,I] = min(temp);
-idx=I;
-%%
-%idx = find(Vappt==0.4);
+%% Electron Modulability Contour
+
+
+
 for i = 1:length(Ncat_array)
     for j=1:length(workfunction_LHS)
         built_in_potential=par.Phi_right-workfunction_LHS(j);
@@ -277,12 +277,39 @@ x=workfunction_LHS;
 y=Ncat_array;
 z=n_modulability_factor;
 z_log=log10(z);
+figure(1)
 surf(x,y,z);
 set(gca,'ZScale','linear')
 xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
 set(gca,'YScale','log')
 box on
+%% Hole Modulability Contour
 
+
+
+for i = 1:length(Ncat_array)
+    for j=1:length(workfunction_LHS)
+        built_in_potential=par.Phi_right-workfunction_LHS(j);
+          p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
+          log_p=log10(p_int);%log(n)
+            p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            p_modulability_factor(i,j)= p_modulability(I);
+    end 
+end
+figure(2)
+x2=workfunction_LHS;
+y2=Ncat_array;
+z2=p_modulability_factor;
+z2_log=log10(z2);
+surf(x2,y2,z2);
+
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
+set(gca,'YScale','log')
+box on
 %% Conductivity profiles
 % So systematically you could look at the following.
 
