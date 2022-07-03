@@ -217,7 +217,10 @@ built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
 idx = find(Vappt==(built_in_potential));
 legstr_n3 =[];
 legstr_p3 =[];
-
+target=built_in_potential; 
+temp = abs(target - x);
+closest = x(find(temp == min(abs(target - x))));
+Debye_right_V_index=find(x==(closest));
 for i = 1:length(Ncat_array)
     n_int_mod = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
     n_values_around_bp_mod=n_int(idx-1:idx+1);
