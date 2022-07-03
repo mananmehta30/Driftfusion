@@ -3,8 +3,8 @@ initialise_df;
 
 %% Get file parameters
 % OS X path
-% par_memristor = pc('Input_files/memristor.csv');
-par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv'); 
+ par_memristor = pc('Input_files/memristor.csv');
+%par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv'); 
 % Windows path
 %par_memristor = pc('Input_files/memristor');
 
@@ -51,7 +51,7 @@ end
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
-legentries{end+1} = 'el only';
+%legentries{end+1} = 'el only';
 legend(legentries)
 title(sprintf('%i cycle, scan rate = %g Vs-1, sc both sides',[cycles,k_scan]))
 %% For just right hand side
@@ -67,7 +67,7 @@ sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 0.6, -0.6, 1e-1, 2, 241);
 
 % Graph shows that higher surface recombintion velocity i.e. higher
 % recombintion rate leads to more hystersis and less current
-k_scan = 0.01;
+k_scan = 0.1;
 cycles = 1;
 
 

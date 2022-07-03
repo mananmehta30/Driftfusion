@@ -162,10 +162,10 @@ classdef dfana
                 j.p = jp_l + deltajp;
             end
 
-            %j.c = jc_l + deltajc; %The original one
-            %j.a = ja_l + deltaja;
-            j.a = 0 + deltaja; %Taken from Felix
-            j.c = jc_l + jc_r + deltajc;
+            j.c = jc_l + deltajc; %The original one
+            j.a = ja_l + deltaja;
+            %j.a = 0 + deltaja; %Taken from Felix
+            %j.c = jc_l + jc_r + deltajc;
 
             % Apply switches and accelerators
             j.n = par.mobset*j.n;
