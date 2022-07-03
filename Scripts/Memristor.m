@@ -1,6 +1,6 @@
 %% Initialise Driftfusion
 initialise_df;
-ggg
+
 %% Get file parameters
 % OS X path
  par_memristor = pc('Input_files/memristor.csv');
