@@ -1,7 +1,5 @@
 %% Code pupose
 
-%%% Make table of different reactions/theories to explain resistive
-%%% switching. Send to all
 %% Initialize driftfusion
 initialise_df
 
@@ -155,7 +153,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 7;
+workfunction_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -215,7 +213,7 @@ legend(legstr_Vx)
 
 
 %% Electon concentration Modulability vs Cation Concentration
-workfunction_index=7;
+workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -293,7 +291,7 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulability Factor (m_V_g)')
 box on
 %% Hole concentration Modulability vs Cation Concentration
-workfunction_index=7;
+workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -330,13 +328,13 @@ for i = 1:length(Ncat_array)
             target=built_in_potential; 
              temp=abs(target-Vappt);
              [M,I] = min(temp);
-            n_modulability_factor(i,j)= n_modulability(I);
+            n_modulability_factor_contour(i,j)= n_modulability(I);
     end 
 end
 
 x=workfunction_LHS;
 y=Ncat_array;
-z=n_modulability_factor;
+z=n_modulability_factor_contour;
 z_log=log10(z);
 figure(1)
 surf(x,y,z);
@@ -357,13 +355,13 @@ for i = 1:length(Ncat_array)
             target=built_in_potential; 
              temp=abs(target-Vappt);
              [M,I] = min(temp);
-            p_modulability_factor(i,j)= p_modulability(I);
+            p_modulability_factor_contour(i,j)= p_modulability(I);
     end 
 end
 figure(2)
 x2=workfunction_LHS;
 y2=Ncat_array;
-z2=p_modulability_factor;
+z2=p_modulability_factor_contour;
 z2_log=log10(z2);
 surf(x2,y2,z2);
 
