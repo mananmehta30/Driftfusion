@@ -11,9 +11,18 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
-Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
-workfunction_LHS = -5.5:0.1:-4.2;
+%Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
+%workfunction_LHS = -5.5:0.1:-4.2;
 
+Ncat_array=logspace(16,19,10);
+
+first_half=(logspace(log10(4.9),log10(4.2),8));
+first_half_arrange = flip( first_half,2 );
+second_half=logspace(log10(4.9),log10(5.5),8);
+concatenate= cat(2,first_half_arrange,second_half);
+remove_extra_values= unique(concatenate);
+arrange_in_order = flip(remove_extra_values , 2 );
+workfunction_LHS = -1.*arrange_in_order;
 %% while
 for i = 1:length(Ncat_array)
     
