@@ -23,7 +23,7 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(thickness_array) %loop to run for different electrode workfunction
+    for j = 1:length(thickness_array) %loop to run for insulator thickness
         
 
         par.d(1) = thickness_array(j);
@@ -81,7 +81,7 @@ end
 
 %% Plots
 
-%% Conductivity vs Work Function
+%% Conductivity vs Insulator Thickness
 for i = 1:length(Ncat_array)
     figure(100)
     semilogy(thickness_array, sigma_n_bar_VpeakM(i, :))
@@ -110,7 +110,7 @@ hold off
 %% Conductivity vs Applied Voltage for different ionic densities
 
 
-insulator_thickness_index = 4;
+insulator_thickness_index = 2;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, insulator_thickness_index,i);
@@ -134,14 +134,14 @@ hold off
 for j = 1:length(thickness_array)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['Thickness = ', num2str(thickness_array(j)),'cm'];
+    legstr_n2{j} = ['Thickness = ', num2str(thickness_array(j)),' ','cm'];
     hold on
 end
 
 for j = 1:length(thickness_array)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['Thickness =', num2str(thickness_array(j)),'cm'];
+    legstr_p2{j} = ['Thickness =', num2str(thickness_array(j)),' ','cm'];
     hold on
 end
 %%check how to write siemens properly
@@ -233,87 +233,50 @@ end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 
-%% Electron Modulability
-idx = find(Vappt==0.4);
 
-insultor_thickness_index = 1;
-
-
-legstr_n3 =[];
-legstr_p3 =[];
- 
-for i = 1:length(Ncat_array)
-
-    n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
-
-    n_values_around_bp=n_int(idx-1:idx+1);
-    Vappt_around_bp=Vappt(idx-1:idx+1);
-    n_bp_modulability=gradient(n_values_around_bp,Vappt_around_bp);
-    n_modulability_factor(:,i)= n_bp_modulability(2);
-    n_store_log=log10(n_modulability_factor);
-     figure(1111)
-end
-scatter(Ncat_array, n_store_log,'o', 'MarkerFaceColor', 'b');
-set(gca,'xscale','log')
-
-xlim([1e15 1e20])
-ylim([4.6 11])
-figure(1111)
-xlabel('Cation concentration')
-ylabel('Electron Modulability Factor (m_V_g)')
-box on
 
 %% Plot average conductivity
-% figure(200)
-% semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
+% figure(201)
+% plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
 % xlabel('Voltage [V]')
-% ylabel('Average channel conductivity [Semilog]')
+% ylabel('Average channel conductivity [Linear]')
 % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(201)
-% % plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-% xlabel('Voltage [V]')
-% % ylabel('Average channel conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
+
+%% Plot average conductivity
 % figure(202)
 % semilogy(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
 % xlabel('Voltage [V]')
 % ylabel('Average bulk conductivity [Semilog]')
 % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(203)
-% % plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-% % xlabel('Voltage [V]')
-% % ylabel('Average bulk conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
+
+%% Plot average conductivity
+% figure(203)
+% plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
+% xlabel('Voltage [V]')
+% ylabel('Average bulk conductivity [Linear]')
+% legend('Electron', 'Hole')
+
+%% Plot average conductivity
 % figure(204)
 % semilogy(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
 % xlabel('Voltage [V]')
 % ylabel('Average entire conductivity [Semilog]')
 % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(205)
-% % plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-% % xlabel('Voltage [V]')
-% % ylabel('Average entire conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% 
-%%
 
-%% Plot ionic concentration at interface as function Vapp for different ion densities
+%% Plot average conductivity
+% figure(205)
+% plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
+% xlabel('Voltage [V]')
+% ylabel('Average entire conductivity [Linear]')
+% legend('Electron', 'Hole')
+
+
+%% Plot ionic concentration at interface as function Vapp for different ionic densities
 
 
 %Plot similar for ions (instead of n_int put cat_int)
 
-insultor_thickness_index = 9;
+insultor_thickness_index = 4;
 
 
 legstr_n3 =[];
@@ -322,9 +285,6 @@ legstr_p3 =[];
 for i = 1:length(Ncat_array)
 
     cat_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3)+1,4);
-
-    
-
     logcat_int=log10(cat_int);
     figure(703)
     semilogy(Vappt,cat_int)
@@ -339,32 +299,195 @@ hold off
 %% Modulability Ions
 
 
-insulator_thickness_index = 9;
+Ncat_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
-for i = 1:length(Ncat_array)
-    cat_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3)+1,4);
+for i = 1:length(thickness_array)
+    cat_int = sol_CV(Ncat_index, i).u(:, par.pcum0(3)+1,4);
 
-    cat_int_log=log10(cat_int);
-    figure(112)
-    plot(Vappt, cat_int_log)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-    hold on
+    cat_int_log=log10(cat_int);%log(c)
+
+           cation_modulability=gradient(cat_int_log,Vappt);%dlog(n)/dV
+            
+            cation_modulability_factor(i)= abs(cation_modulability(1));
+   
 end
-figure(112)
-xlabel('Voltage [V]')
-ylabel('Cation Concentration (cm-3)')
 
-hold off
+figure(1112)
+scatter(thickness_array, cation_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','linear')
 
-contour3
+%xlim([1e15 1e20])
+%ylim([4.6 8.5])
 
-%% Find how to get the contour done
+xlabel('Insulator Thickness')
+ylabel('Cation Modulability Factor (m_V_g)')
+box on
+
+%% Electon concentration Modulability vs Cation Concentration
+insultor_thickness_index=2;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=0;
+          n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+           n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            n_modulability_factor(i)= n_modulability(I);
+    
+end
+
+figure(1112)
+scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Electron Modulability Factor (m_V_g)')
+box on
+
+
+
+
+
+
+
+%% Electon concentration Modulability vs Insulator Thickness
+Ncat_index=2;
+for i = 1:length(thickness_array)
+    
+        built_in_potential=0;
+          nnn_int = sol_CV(Ncat_index, i).u(:, par.pcum0(3), 2);
+          log_nnn=log10(nnn_int);%log(n)
+           nnn_modulability=gradient(log_nnn,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            nnn_modulability_factor(i)= nnn_modulability(5);
+    
+end
+
+figure(1155)
+scatter(thickness_array, nnn_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','linear')
+
+%xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Insulator Thickess')
+ylabel('Electron Modulability Factor (m_V_g)')
+box on
+
+
+
+
+
+
+
+
+
+%% Electon conductivity Modulability vs Cation Concentration
+insultor_thickness_index=1;
+for i = 1:length(Ncat_array)
+    
+        
+          sigma_n_int = sigma_n_bar;
+          log_sigma_n=log10(sigma_n_int);%log(n)
+           sigma_n_modulability=gradient(log_sigma_n,Vappt);%dlog(sigma)/dV
+            sigma_n_modulability_factor(i)= sigma_n_modulability(1);
+    
+end
+
+figure(2222)
+scatter(Ncat_array, sigma_n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Electron Conductivity Modulability Factor (m_V_g)')
+box on
+%% Hole concentration Modulability vs Cation Concentration
+insultor_thickness_index=1;
+for i = 1:length(Ncat_array)
+
+          p_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 3);
+          log_p=log10(p_int);%log(n)
+           p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
+            p_modulability_factor(i)= p_modulability(I);
+    
+end
+
+figure(1113)
+scatter(Ncat_array, p_modulability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Hole Modulability Factor (m_V_g)')
+box on
+%% Electron Modulability Contour
+
+
+
+for i = 1:length(Ncat_array)
+    for j=1:length(thickness_array)
+        built_in_potential=0;
+          n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+            n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            n_modulability_factor_contour(i,j)= n_modulability(I);
+    end 
+end
+
 x=thickness_array;
 y=Ncat_array;
-z=sigma_n_bar_VpeakM;
-contour(x,y,z)
-%contour3();
+z=n_modulability_factor_contour;
+z_log=log10(z);
+figure(1)
+surf(x,y,z);
+set(gca,'ZScale','linear')
+xlabel('Insulator thickness'), ylabel('Cation Concentration'), zlabel('Modulability factor')
+set(gca,'YScale','log')
+box on
+%% Hole Modulability Contour
+
+
+
+for i = 1:length(Ncat_array)
+    for j=1:length(thickness_array)
+        built_in_potential=0;
+          p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
+          log_p=log10(p_int);%log(n)
+            p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            p_modulability_factor_contour(i,j)= p_modulability(I);
+    end 
+end
+figure(2)
+x2=thickness_array;
+y2=Ncat_array;
+z2=p_modulability_factor_contour;
+z2_log=log10(z2);
+surf(x2,y2,z2);
+
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
+set(gca,'YScale','log')
+box on
+
 %% Conductivity profiles
 % So systematically you could look at the following.
 
