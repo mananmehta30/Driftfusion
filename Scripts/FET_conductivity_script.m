@@ -18,11 +18,16 @@ Ncat_array=logspace(16,19,10);
 
 first_half=(logspace(log10(4.9),log10(4.2),8));
 first_half_arrange = flip( first_half,2 );
+plot(first_half_arrange);
 second_half=logspace(log10(4.9),log10(5.5),8);
+plot(second_half);
 concatenate= cat(2,first_half_arrange,second_half);
 remove_extra_values= unique(concatenate);
 arrange_in_order = flip(remove_extra_values , 2 );
 workfunction_LHS = -1.*arrange_in_order;
+% B=gradient(workfunction_LHS,1);
+% plot(workfunction_LHS) ;
+% plot(B) ;
 %% while
 for i = 1:length(Ncat_array)
     
