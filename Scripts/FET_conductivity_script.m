@@ -13,7 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 
-thickness_array = 0.000005:0.000005:0.00002;
+thickness_array = 0.000005:0.000005:0.00003;
 
 
 %% while
@@ -323,7 +323,7 @@ for i = 1:length(Ncat_array)
 
     cat_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3)+1,4);
 
-    cat_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3)+1,4);
+    
 
     logcat_int=log10(cat_int);
     figure(703)
