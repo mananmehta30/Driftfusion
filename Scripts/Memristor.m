@@ -3,19 +3,22 @@ initialise_df;
 
 %% Get file parameters
 % OS X path
- par_memristor = pc('Input_files/memristor.csv');
-%par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv'); 
+ %par_memristor = pc('Input_files/memristor.csv');
+par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv'); 
 % Windows path
 %par_memristor = pc('Input_files/memristor');
 
 %% Input Parameters
 k_scan=[0.01, 0.1, 1];
-sc_array = [0, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
-
+%sc_array = [0, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
+sc_array = [1e-4];
 Vmax = 1.2;
 Vmin = -1.2;
 
 tpoints=241;
+sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
+sc_size = length(sc_array);
+
 
 %% Find equilibrium solutions for different surface recombination rates
 
@@ -23,13 +26,15 @@ tpoints=241;
 % For electrode layers, entries for sn and sp are stored in the parameters object (par)
 % as the distinct properties sn_l, sn_r, sp_l, and sp_r rather than as part
 % of the sn and sp arrays
-soleq_memristor = equilibrate(par_memristor);  
+
+%soleq_memristor = equilibrate(par_memristor);  
 
 
 %% For both sides
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_memristor.sc_l = sc_array(i);
     par_memristor.sc_r = sc_array(i);
+    par_temp = refresh_device(par_temp);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
 
