@@ -221,9 +221,9 @@ classdef dfplot
 
             J = dfana.calcJ(sol);
             Vapp = dfana.calcVapp(sol);
-
+        semilogy(Vapp, abs(J.tot(:, ppos)),'-'); %plot variant showing absolute values of current
             
-           plot(Vapp, abs(J.tot(:, ppos)));
+           %plot(Vapp, abs(J.tot(:, ppos)));
             xlabel('Applied Voltage, Vapp [V]');
             ylabel('Current Density, J [A cm^{-2}]');
             set(legend,'FontSize',16);
