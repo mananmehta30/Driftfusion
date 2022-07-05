@@ -15,19 +15,19 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %workfunction_LHS = -5.5:0.1:-4.2;
 
 Ncat_array=logspace(16,19,10);
-
-first_half=(logspace(log10(4.9),log10(4.2),8));
-first_half_arrange = flip( first_half,2 );
-plot(first_half_arrange);
-second_half=logspace(log10(4.9),log10(5.5),8);
-plot(second_half);
-concatenate= cat(2,first_half_arrange,second_half);
-remove_extra_values= unique(concatenate);
-arrange_in_order = flip(remove_extra_values , 2 );
-workfunction_LHS = -1.*arrange_in_order;
-% B=gradient(workfunction_LHS,1);
-% plot(workfunction_LHS) ;
-% plot(B) ;
+% first_half=(logspace(log10(4.9),log10(4.2),8));
+% first_half_arrange = flip( first_half,2 );
+% plot(first_half_arrange);
+% second_half=logspace(log10(4.9),log10(5.5),8);
+% concatenate= cat(2,first_half_arrange,second_half);
+% remove_extra_values= unique(concatenate);
+% arrange_in_order = flip(remove_extra_values , 2 );
+% workfunction_LHS = -1.*arrange_in_order;
+% difference=diff(workfunction_LHS);
+% % B=gradient(workfunction_LHS,1);
+%  plot(workfunction_LHS) ;
+% plot(B);
+workfunction_LHS = -4.95:0.01:-4.85;
 %% No of ionic species
 par.N_ionic_species=2;
 %% while
@@ -358,6 +358,13 @@ set(gca,'ZScale','linear')
 xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
 set(gca,'YScale','log')
 box on
+figure(444)
+contour(x,y,z)
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability factor')
+set(gca,'YScale','log')
+box on
+
 %% Hole Modulability Contour
 
 
