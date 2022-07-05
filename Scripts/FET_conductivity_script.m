@@ -28,6 +28,8 @@ workfunction_LHS = -1.*arrange_in_order;
 % B=gradient(workfunction_LHS,1);
 % plot(workfunction_LHS) ;
 % plot(B) ;
+%% No of ionic species
+par.N_ionic_species=2;
 %% while
 for i = 1:length(Ncat_array)
     
