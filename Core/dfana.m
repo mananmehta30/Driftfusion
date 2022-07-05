@@ -192,10 +192,12 @@ classdef dfana
                     jn_l = -par.sn_l*(n(:, 1) - par.nleft);
                     jp_l = -par.sp_l*(p(:, 1) - par.pleft);
                     jc_l = par.mobseti*-par.sc_l*(c(:, 1) - dev.Ncat(1));
+                    ja_l = par.mobseti*-par.sa_l*(a(:, 1) - dev.Nani(1));
 
                     jn_r = par.sn_r*(n(:, end) - par.nright);
                     jp_r = par.sp_r*(p(:, end) - par.pright);
                     jc_r = par.mobseti*par.sc_r*(c(:, end) - dev.Ncat(end));
+                    ja_r = par.mobseti*par.sa_r*(a(:, end) - dev.Nani(end));
             end
 
             % Calculate total electron and hole currents from fluxes
