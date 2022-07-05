@@ -215,8 +215,12 @@ classdef dfana
                 j.p = jp_l + deltajp;
             end
 
-            j.a = 0 + deltaja;
-            j.c = jc_l + jc_r + deltajc;
+            
+            j.c = jc_l + deltajc; %The original one
+            j.a = ja_l + deltaja;
+           
+            %j.a = 0 + deltaja;
+            %j.c = jc_l + jc_r + deltajc;
 %             j.c = 0 + deltajc; % old cation flux term
             % displacement flux
             FV_ihalf = dfana.calcF_ihalf(sol);
