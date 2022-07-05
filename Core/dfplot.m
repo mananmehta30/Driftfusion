@@ -223,7 +223,7 @@ classdef dfplot
             Vapp = dfana.calcVapp(sol);
 
             
-           plot(Vapp, J.tot(:, ppos));
+           plot(Vapp, abs(J.tot(:, ppos)));
             xlabel('Applied Voltage, Vapp [V]');
             ylabel('Current Density, J [A cm^{-2}]');
             set(legend,'FontSize',16);
