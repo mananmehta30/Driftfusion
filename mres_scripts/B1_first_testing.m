@@ -3,6 +3,8 @@
 
 %% What to do
 % Check the flux equations and compare with the new dfana file.
+
+%From the graphs it looks like only el and high surface recombination is the same results. Need to confirm.
 %% Load parameters and customize if necessary
 % par = pc('Input_files/1_layer_test.csv');
 par = pc('1_layer_MAPI_ITO_Ag.csv');
