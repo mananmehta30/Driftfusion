@@ -1,11 +1,14 @@
 % Single-layer MAPbICl device, variable workfunctions and ion BC
 % 24/03/2021
-%
+
+%% What to do
+% Check the flux equations and compare with the new dfana file.
 %% Load parameters and customize if necessary
 % par = pc('Input_files/1_layer_test.csv');
 par = pc('1_layer_MAPI_ITO_Ag.csv');
 
-sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
+%sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
+sc_array = [0,1e-4];
 sc_size = length(sc_array);
 %% BC range loop
 
