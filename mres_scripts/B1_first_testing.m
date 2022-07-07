@@ -49,10 +49,9 @@ title_arr(end+1) = 'el only';
 
 sol_CV(end+1) = el_CV;
 
-
 for i = 1:length(sc_array)
     figure(10+i)
-    sgtitle(title_arr(i))
+    title(title_arr(i))
     subplot(2,4,1)
     title('0 V')
     dfplot.npx(sol_CV(i),0/k)
