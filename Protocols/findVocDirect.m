@@ -1,4 +1,4 @@
-function [sol_Voc, Voc] = findVocDirect(sol_ini, light_intensity, mobseti, tpoints)
+function [sol_Voc, Voc] = findVocDirect(sol_ini, light_intensity, mobseti)
 % Obtain approximate open circuit voltage directly using high Rs
 %
 %% LICENSE
@@ -8,11 +8,11 @@ function [sol_Voc, Voc] = findVocDirect(sol_ini, light_intensity, mobseti, tpoin
 % it under the terms of the GNU Affero General Public License as published
 % by the Free Software Foundation, either version 3 of the License, or
 % (at your option) any later version.
-% 
+%
 %% Start code
-sol_Voc = lightonRs(sol_ini, light_intensity, -1, mobseti, 1e6, tpoints);
+sol_Voc = lightonRs(sol_ini, light_intensity, -1, mobseti, 1e6, 400);
 
-Voct = dfana.calcDeltaQFL(sol_Voc);
+Voct = dfana.calcVQFL(sol_Voc);
 Voc = Voct(end);
 
 end

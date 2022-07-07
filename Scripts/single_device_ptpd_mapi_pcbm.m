@@ -1,3 +1,4 @@
+%
 %% LICENSE
 % Copyright (C) 2020  Philip Calado, Ilario Gelmetti, and Piers R. F. Barnes
 % Imperial College London
@@ -12,22 +13,32 @@ initialise_df
 
 %% Create a parameters object for Spiro/MAPI/TiO2 by including a filepath to the 
 % appropriate .csv as the arugment to the parameters class PC
-par_pn_hetero = pc('Input_files/pn_heterojunction.csv');
+par_ptpd_mapi_pcbm = pc('Input_files/ptpd_mapi_pcbm.csv');
 
 %% Find the equilibrium solutions
-soleq_pn_hetero = equilibrate(par_pn_hetero);
+soleq_ptpd_mapi_pcbm = equilibrate(par_ptpd_mapi_pcbm);
 
 %% Perform dark and light current-voltage scan at 50 mVs-1 from 0 V to 1.2 V
-% sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-sol_CV_100mVs_pn_hetero = doCV(soleq_pn_hetero.el, 0, 0, 0.8, -0.2, 100e-3, 1, 281);
+% Input arguments: 
+% JVsol = doJV(sol_ini, JVscan_rate, JVscan_pnts, Intensity, mobseti, Vstart, Vend, option)
+sol_CV_100mVs_ptpd_mapi_pcbm = doCV(soleq_ptpd_mapi_pcbm.ion, 1, 0, 1.2, -0.2, 100e-3, 1, 281);
+sol_CV_200mVs_ptpd_mapi_pcbm = doCV(soleq_ptpd_mapi_pcbm.ion, 1, 0, 1.2, -0.2, 200e-3, 1, 281);
+sol_CV_400mVs_ptpd_mapi_pcbm = doCV(soleq_ptpd_mapi_pcbm.ion, 1, 0, 1.2, -0.2, 400e-3, 1, 281);
 
-%% plot the energy level diagram and carrier densities for the device at
+%% plot the current voltage curve
+dfplot.JtotVapp(sol_CV_100mVs_ptpd_mapi_pcbm, 0)
+hold on
+dfplot.JtotVapp(sol_CV_200mVs_ptpd_mapi_pcbm, 0)
+hold on
+dfplot.JtotVapp(sol_CV_400mVs_ptpd_mapi_pcbm, 0)
+hold off
+ylim([-30e-3,10e-3])
+xlim([-0.2, 1.2])
+legend('100 mVs-1', '200 mVs-1', '400 mVs-1') 
+
+%% plot the energy level diagram and carrier densities for the tio2 device at
 % 1 V (t= 10s) during the illuminated forward scan
-dfplot.ELxnpxacx(sol_CV_100mVs_pn_hetero, 10)
-
-%% plot J-V
-dfplot.JVapp(sol_CV_100mVs_pn_hetero, par_pn_hetero.d_midactive)
-%ylim([-20e-3, 20e-3])
+dfplot.ELxnpxacx(sol_CV_100mVs_ptpd_mapi_pcbm, 10)
 
 %% Save the workspace- this is commented out as the filepath should lead to
 % a folder on your computer. It is not recommended to store large files in

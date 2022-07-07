@@ -1,5 +1,5 @@
-function var_sub = getvar_sub(var)
-% Builds individual variable arrays on the subinterval xmesh
+function xsolver = getxihalf(sol)
+% Builds subinterval xmesh from xmesh- can use GETVARIHALF instead
 %
 %% LICENSE
 % Copyright (C) 2020  Philip Calado, Ilario Gelmetti, and Piers R. F. Barnes
@@ -10,9 +10,8 @@ function var_sub = getvar_sub(var)
 % (at your option) any later version.
 %
 %% Start code
-
-assert(isnumeric(var) && size(var,2) > 1, [mfilename ' - The input ' inputname(1)...
-    ' has to be provided as a row vector or as a matrix'])
-
-var_sub = (var(:,1:(end-1)) + var(:,2:end)) / 2;
+x = sol.par.xx;
+for i = 1:length(x)-1
+    xsolver(i) = x(i)+((x(i+1)-x(i))/2);
+end
 end
