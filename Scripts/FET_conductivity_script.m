@@ -11,7 +11,7 @@ par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
-Ncat_array = logspace(16, 19, 4);
+Ncat_array = logspace(16, 19, 10);
 
 thickness_array = 0.000005:0.000005:0.00003;
 
@@ -299,7 +299,7 @@ hold off
 %% Modulability Ions
 
 
-Ncat_index = 1;
+Ncat_index = 4;
 legstr_n3 =[];
 legstr_p3 =[];
 for i = 1:length(thickness_array)
@@ -375,7 +375,7 @@ figure(1155)
 scatter(thickness_array, nnn_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','linear')
 
-%xlim([1e15 1e20])
+xlim([0 3.5e-5])
 %ylim([4.6 8.5])
 
 xlabel('Insulator Thickess')
