@@ -222,7 +222,7 @@ ylim([1e-1, 1e12])
 %dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
 %% Plot potential as a function position
 
-insulator_thickness_index = 4;
+insulator_thickness_index = 1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);%Vmax/k_scan)
