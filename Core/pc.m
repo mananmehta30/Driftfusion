@@ -199,7 +199,8 @@ classdef pc
         %% Cationic surface recombination velocity coefficients [cm s-1]
         sc_l = 0;
         sc_r = 0;
-        
+         sa_l = 0;
+        sa_r = 0;
         %% Series resistance
         Rs = 0;
         Rs_initial = 0;         % Switch to allow linear ramp of Rs on first application
