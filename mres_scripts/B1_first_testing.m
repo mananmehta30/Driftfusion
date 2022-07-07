@@ -1,6 +1,7 @@
 % Single-layer MAPbICl device, variable workfunctions and ion BC
 % 24/03/2021
 %
+initialise_df
 %% Load parameters and customize if necessary
 % par = pc('Input_files/1_layer_test.csv');
 par = pc('1_layer_MAPI_ITO_Ag.csv');
