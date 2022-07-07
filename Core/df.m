@@ -411,7 +411,7 @@ end
         Pl = [-V_l;
             mobset*(-sn_l*(n_l - n0_l));
             mobset*(-sp_l*(p_l - p0_l));
-            0;
+            mobset*(sc_l*(c_l - c0_l));
             0;];
         
         Ql = [0;
