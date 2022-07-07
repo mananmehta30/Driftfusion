@@ -10,8 +10,8 @@ par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv');
 
 %% Input Parameters
 k_scan=[0.01, 0.1, 1];
-%sc_array = [0, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
-sc_array = [1e-4];
+sc_array = [0, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
+%sc_array = [1e-4];
 Vmax = 1.2;
 Vmin = -1.2;
 
@@ -34,7 +34,7 @@ sc_size = length(sc_array);
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_memristor.sc_l = sc_array(i);
     par_memristor.sc_r = sc_array(i);
-    par_temp = refresh_device(par_temp);
+    par_memristor = refresh_device(par_memristor);
     soleq_memristor(i) = equilibrate(par_memristor);   
 end
 
