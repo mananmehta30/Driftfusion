@@ -177,7 +177,7 @@ for i = 1:length(Ncat_array)
     n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
     figure(203)
     semilogy(Vappt, n_int)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_n3{i} = ['Ncat =',fprintf('%.2f', num2str(Ncat_array(i)))];
     hold on
 end
 
