@@ -29,7 +29,7 @@ Ncat_array=logspace(16,19,10);
 % plot(B);
 workfunction_LHS = -4.95:0.01:-4.85;
 %% No of ionic species
-par.N_ionic_species=2;
+par.N_ionic_species=1;
 %% while
 for i = 1:length(Ncat_array)
     
