@@ -8,13 +8,14 @@ initialise_df
 %par_alox = pc('./Input_files/alox.csv');
 par_alox = pc('./Input_files/alox_2 _gates');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
-
+par.Phi_right=-4.9;
+par.Phi_left=-4.9;
 %% Initialise the parameter arrays
-%Ncat_array = logspace(16, 19, 4);
+Ncat_array = logspace(18, 19, 2);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
 %workfunction_LHS = -5.5:0.1:-4.2;
 
-Ncat_array=logspace(16,19,10);
+%Ncat_array=logspace(16,19,10);
 % first_half=(logspace(log10(4.9),log10(4.2),8));
 % first_half_arrange = flip( first_half,2 );
 % plot(first_half_arrange);
@@ -27,15 +28,16 @@ Ncat_array=logspace(16,19,10);
 % % B=gradient(workfunction_LHS,1);
 %  plot(workfunction_LHS) ;
 % plot(B);
-workfunction_LHS = -4.95:0.01:-4.85;
+workfunction_LHS = -4.95:0.1:-4.85;
 %% No of ionic species
-par.N_ionic_species=2;
+par.N_ionic_species=1;
+
 %% while
 for i = 1:length(Ncat_array)
     
     par.Ncat(:) = Ncat_array(i);
     par.Nani(:) = Ncat_array(i);
-    
+
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
     for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
         
