@@ -6,23 +6,26 @@ initialise_df
 % par = pc('Input_files/1_layer_test.csv');
 par = pc('1_layer_MAPI_ITO_Ag.csv');
 
-sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
-sc_size = length(sc_array);
+%sc_array = [1e-12, 1e-8, 1e-6, 1e-2, 1e2, 1e6];
+sc_array = [1e-12, 1e-2];
+
 %% BC range loop
 
 par_temp = par;
 % par_temp.Phi_right = -4.6;
 % par_temp.Phi_left = -5.0;
-for i = 1:sc_size
+for i = 1:length(sc_array)
     par_temp.sc_r = sc_array(i);
     par_temp.sc_l = par_temp.sc_r;
     par_temp = refresh_device(par_temp);
-    
     soleq(i) = equilibrate(par_temp);
+   % dfplot.Vxacx
 end
 
+%% Equilibrium plots
+%dfplot.acx(soleq(1),1);
 %% Calculate electron only solution
-el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+%el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 
 %% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
@@ -30,7 +33,7 @@ k = 1e-1;
 cycles = 1;
 
 figure()
-for i = 1:sc_size
+for i = 1:length(sc_array)
     sol_CV(i) = doCV(soleq(i).ion, 0, 0, 1.2, -1.2, k, cycles, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
@@ -40,7 +43,7 @@ dfplot.JtotVapp(el_CV,0)
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
-legentries{end+1} = 'el only';
+ %legentries{end+1} = 'el only';
 legend(legentries)
 title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k]))
 
