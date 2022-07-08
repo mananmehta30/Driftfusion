@@ -29,7 +29,7 @@ Ncat_array=logspace(16,19,10);
 % plot(B);
 workfunction_LHS = -4.95:0.01:-4.85;
 %% No of ionic species
-par.N_ionic_species=1;
+par.N_ionic_species=2;
 %% while
 for i = 1:length(Ncat_array)
     
@@ -250,7 +250,7 @@ set(gca,'xscale','log')
 xlim([1e15 1e20])
 %ylim([4.6 8.5])
 
-xlabel('Cation concentration')
+xlabel('Ionic concentration')
 ylabel('Electron Modulability Factor (m_V_g)')
 box on
 
