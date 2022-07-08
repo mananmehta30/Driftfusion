@@ -23,9 +23,43 @@ for i = 1:length(sc_array)
 end
 
 %% Equilibrium plots
-%dfplot.acx(soleq(1),1);
+for i = 1:length(sc_array)
+   dfplot.acx(soleq(i).ion,'b');
+    hold on
+   % dfplot.Vxacx
+   legstr_acx{i} = ['SC rate =', num2str(sc_array(i))];
+end
+hold off
+figure(1)
+legend(legstr_acx)
+hold off
+
+%% 
+for i = 1:length(sc_array)
+   dfplot.npx(soleq(i).ion);
+     legstr_npx{i} = ['SC rate =', num2str(sc_array(i))];
+     hold on
+end
+hold off
+figure(1)
+legend(legstr_npx)
+
+
+%%
+ % Plot Vapp vs time
+        % dfplot.Vappt(sol_CV)
+        
+        % Plot JV scan
+        %dfplot.JtotVapp(sol_CV, 0);
+        %set(gca,'YScale','log')
+        
+        % Plot anion and cation densities
+        %dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+        
+        % Plot electron and hole profiles
+        %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
 %% Calculate electron only solution
-%el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
 
 
 %% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
@@ -39,7 +73,7 @@ for i = 1:length(sc_array)
     hold on
 end
 
-dfplot.JtotVapp(el_CV,0)
+%dfplot.JtotVapp(el_CV,0)
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
