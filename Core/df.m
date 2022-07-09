@@ -127,9 +127,11 @@ beta0_xp = device.beta0_xp;         % beta0_xp is beta for F = 0 referenced to x
 z_c = par.z_c;
 z_a = par.z_a;
 n0_l = par.n0_l;
-n0_r = par.n0_r;
 p0_l = par.p0_l;
+c0_l = par.c0_l;
+n0_r = par.n0_r;
 p0_r = par.p0_r;
+c0_r = par.c0_r;
 sn_l = par.sn_l;
 sp_l = par.sp_l;
 sn_r = par.sn_r;

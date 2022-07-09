@@ -1,64 +1,117 @@
-%% Initialise Driftfusion
-initialise_df;
+% Single-layer MAPbICl device, variable workfunctions and ion BC
 
-%% Get file parameters
-% OS X path
- %par_memristor = pc('Input_files/memristor.csv');
-par_memristor = pc('Input_files/1_layer_MAPI_ITO_Ag.csv'); 
-% Windows path
-%par_memristor = pc('Input_files/memristor');
+initialise_df
+%% Load parameters and customize if necessary
+% par = pc('Input_files/1_layer_test.csv');
+par = pc('1_layer_MAPI_ITO_Ag.csv');
 
-%% Input Parameters
-k_scan=[0.01, 0.1, 1];
-sc_array = [0, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
-%sc_array = [1e-4];
-Vmax = 1.2;
-Vmin = -1.2;
+sc_array = [1e-12, 1e-4, 1e+4, 1e+12];
+%sc_array = [1e-12, 1e-8];
 
-tpoints=241;
-sc_array = [0,1e-12, 1e-10, 1e-8, 1e-6, 1e-4];
-sc_size = length(sc_array);
+%% BC range loop
 
-
-%% Find equilibrium solutions for different surface recombination rates
-
-% sn is Electron surface recombination velocity
-% For electrode layers, entries for sn and sp are stored in the parameters object (par)
-% as the distinct properties sn_l, sn_r, sp_l, and sp_r rather than as part
-% of the sn and sp arrays
-
-%soleq_memristor = equilibrate(par_memristor);  
-
-
-%% For both sides
-for i = 1:length(sc_array) % Loop to run for different recombination velocities
-    par_memristor.sc_l = sc_array(i);
-    par_memristor.sc_r = sc_array(i);
-    par_memristor = refresh_device(par_memristor);
-    soleq_memristor(i) = equilibrate(par_memristor);   
+par_temp = par;
+% par_temp.Phi_right = -4.6;
+% par_temp.Phi_left = -5.0;
+for i = 1:length(sc_array)
+    par_temp.sc_r = sc_array(i);
+    par_temp.sc_l = par_temp.sc_r;
+    par_temp = refresh_device(par_temp);
+    soleq(i) = equilibrate(par_temp);
+   % dfplot.Vxacx
 end
 
-% Calculate electron only solution
-sol_CV_el = doCV(soleq_memristor(1).el, 0, 0, 1.2, -1.2, 1e-1, 1, 241);
+%% Equilibrium plots
+for i = 1:length(sc_array)
+   dfplot.acx(soleq(i).ion,'b');
+    hold on
+   % dfplot.Vxacx
+   legstr_acx{i} = ['SC rate =', num2str(sc_array(i))];
+end
+hold off
+figure(1)
+legend(legstr_acx)
+hold off
 
-k_scan = 0.1;
+%% 
+for i = 1:length(sc_array)
+   dfplot.npx(soleq(i).ion);
+     legstr_npx{i} = ['SC rate =', num2str(sc_array(i))];
+     hold on
+end
+hold off
+figure(1)
+legend(legstr_npx)
+
+
+%%
+ % Plot Vapp vs time
+        % dfplot.Vappt(sol_CV)
+        
+        % Plot JV scan
+        %dfplot.JtotVapp(sol_CV, 0);
+        %set(gca,'YScale','log')
+        
+        % Plot anion and cation densities
+        %dfplot.acx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+        
+        % Plot electron and hole profiles
+        %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
+%% Calculate electron only solution
+el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
+%% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
+k = 1e-1;
 cycles = 1;
 
+figure()
 for i = 1:length(sc_array)
-    %sol_CV(i) = doCV(soleq(i).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints)
-    sol_CV(i) = doCV(soleq_memristor(i).ion, 0, 0, Vmax, Vmin, k_scan, cycles, 241);
+    sol_CV(i) = doCV(soleq(i).ion, 0, 0, 1.2, -1.2, k, cycles, 241);
     dfplot.JtotVapp(sol_CV(i),0)
     hold on
 end
 
-%Total Current Plot for only electron
-%dfplot.JtotVapp(sol_CV,0)
+%dfplot.JtotVapp(el_CV,0)
 hold off
 % set(gca,'yscale','log')
 legentries = cellstr(num2str(sc_array', 'sc=%g'));
-%legentries{end+1} = 'el only';
+ %legentries{end+1} = 'el only';
 legend(legentries)
-title(sprintf('%i cycle, scan rate = %g Vs-1, sc both sides',[cycles,k_scan]))
+title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k]))
+%% Plot distribution
+
+for i = 1:length(sc_array)
+   dfplot.acx(sol_CV(i));
+     legstr_npx{i} = ['SC rate =', num2str(sc_array(i))];
+     hold on
+end
+hold off
+figure(2)
+legend(legstr_npx)
+
+%% Plot electronic and ionic densities across device, sc both sides
+title_arr = strcat('sc = ',string(sc_array));
+title_arr(end+1) = 'el only';
+
+%sol_CV(end+1) = el_CV;
+
+
+for i = 1:length(sc_array)
+    figure(10+i)
+    sgtitle(title_arr(i))
+    subplot(2,2,1)
+    title('0 V')
+    dfplot.npx(sol_CV(i),0/k)
+    subplot(2,2,2)
+    title('1.2 V')
+    dfplot.npx(sol_CV(i),1.2/k)
+    subplot(2,2,3)
+    dfplot.acx(sol_CV(i),0/k)
+    set(gca,'yscale','log')
+    subplot(2,2,4)
+    dfplot.acx(sol_CV(i),1.2/k)
+    set(gca,'yscale','log')
+    
+end
 %% For just right hand side
 for i = 1:length(sc_array) % Loop to run for different recombination velocities
     par_memristor.sc_r = sc_array(i);
