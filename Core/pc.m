@@ -275,8 +275,6 @@ classdef pc
         wp
         wscr            % Space charge region width
         x0              % Initial spatial mesh value
-        c0_l       %Added terms
-        c0_r       %Added terms
     end
 
     methods
