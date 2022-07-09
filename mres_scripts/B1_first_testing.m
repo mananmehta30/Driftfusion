@@ -7,7 +7,7 @@ initialise_df
 par = pc('1_layer_MAPI_ITO_Ag.csv');
 
 %sc_array = [1e-12, 1e-8, 1e-6, 1e-2, 1e2, 1e6];
-sc_array = [1e-12, 1e-2];
+sc_array = [1e-12, 1e-8];
 
 %% BC range loop
 
