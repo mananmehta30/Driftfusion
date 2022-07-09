@@ -6,8 +6,8 @@ initialise_df
 % par = pc('Input_files/1_layer_test.csv');
 par = pc('1_layer_MAPI_ITO_Ag.csv');
 
-%sc_array = [1e-12, 1e-8, 1e-6, 1e-2, 1e2, 1e6];
-sc_array = [1e-12, 1e-8];
+sc_array = [1e-12, 1e-4, 1e+4, 1e+12];
+%sc_array = [1e-12, 1e-8];
 
 %% BC range loop
 
@@ -60,8 +60,6 @@ legend(legstr_npx)
         %dfplot.npx(sol_CV, 1/k_scan*[0:Vmax/3:Vmax]);
 %% Calculate electron only solution
 el_CV = doCV(soleq(1).el, 0, 0, 1.2, -1.2, 1e-1, 2, 241);
-
-
 %% Plot different BC, both sides, medium scan rate (0.1 Vs-1), two cycles
 k = 1e-1;
 cycles = 1;
@@ -80,41 +78,40 @@ legentries = cellstr(num2str(sc_array', 'sc=%g'));
  %legentries{end+1} = 'el only';
 legend(legentries)
 title(sprintf('%i cycle, scan rate = %g Vs-1, sc on both sides',[cycles,k]))
+%% Plot distribution
+
+for i = 1:length(sc_array)
+   dfplot.acx(sol_CV(i));
+     legstr_npx{i} = ['SC rate =', num2str(sc_array(i))];
+     hold on
+end
+hold off
+figure(2)
+legend(legstr_npx)
 
 %% Plot electronic and ionic densities across device, sc both sides
 title_arr = strcat('sc = ',string(sc_array));
 title_arr(end+1) = 'el only';
 
-sol_CV(end+1) = el_CV;
+%sol_CV(end+1) = el_CV;
 
 
 for i = 1:length(sc_array)
     figure(10+i)
     sgtitle(title_arr(i))
-    subplot(2,4,1)
+    subplot(2,2,1)
     title('0 V')
     dfplot.npx(sol_CV(i),0/k)
-    subplot(2,4,2)
-    title('1.1 V')
-    dfplot.npx(sol_CV(i),1.1/k)
-    subplot(2,4,3)
+    subplot(2,2,2)
     title('1.2 V')
     dfplot.npx(sol_CV(i),1.2/k)
-    subplot(2,4,4)
-    title('-0.5 V')
-    dfplot.npx(sol_CV(i), 2.9/k)
-    subplot(2,4,5)
+    subplot(2,2,3)
     dfplot.acx(sol_CV(i),0/k)
     set(gca,'yscale','log')
-    subplot(2,4,6)
-    dfplot.acx(sol_CV(i),1.1/k)
-    set(gca,'yscale','log')
-    subplot(2,4,7)
+    subplot(2,2,4)
     dfplot.acx(sol_CV(i),1.2/k)
     set(gca,'yscale','log')
-    subplot(2,4,8)
-    dfplot.acx(sol_CV(i),2.9/k)
-    set(gca,'yscale','log')
+    
 end
 
 
