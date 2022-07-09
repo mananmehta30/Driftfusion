@@ -413,7 +413,7 @@ end
         Pl = [-V_l;
             mobset*(-sn_l*(n_l - n0_l));
             mobset*(-sp_l*(p_l - p0_l));
-            mobset*(sc_l*(c_l - c0_l));
+            mobset*(sc_l*(c_l - Ncat(1)));
             0;];
         
         Ql = [0;
@@ -425,7 +425,7 @@ end
         Pr = [-V_r+Vbi-Vapp-Vres;
             mobset*(sn_r*(n_r - n0_r));
             mobset*(sp_r*(p_r - p0_r));
-            mobset*(sc_r*(c_r - c0_r));
+            mobset*(sc_r*(c_r - Ncat(end)));
             0;];
         
         Qr = [0;
