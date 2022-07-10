@@ -5,8 +5,7 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-%par_alox = pc('./Input_files/alox.csv');
-par_alox = pc('./Input_files/alox_2 _gates');
+par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
