@@ -10,6 +10,9 @@ par_alox = pc('./Input_files/alox.csv');
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
+
+par.Phi_right-4.9;
+par.Phi_left=-4.9;
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
 workfunction_RHS = -5.5:0.1:-4.2;
@@ -23,8 +26,8 @@ for i = 1:length(Ncat_array)
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
     for j = 1:length(workfunction_RHS) %loop to run for different electrode workfunction
         
-        par.Phi_right = workfunction_RHS(j);
-        disp(['RHS electrode workfunction = ', num2str(workfunction_RHS(j)), ' eV']);
+        %par.Phi_right = workfunction_RHS(j);
+        %disp(['RHS electrode workfunction = ', num2str(workfunction_RHS(j)), ' eV']);
         
         par.EF0(3) = workfunction_RHS(j);
         disp(['MAPI workfunction = ', num2str(workfunction_RHS(j)), ' eV']);
@@ -193,7 +196,170 @@ for i = 1:length(Ncat_array)
 end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
+%% Electon concentration Modulatability vs Cation Concentration
+workfunction_index=1;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+           n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            n_Modulatability_factor(i)= n_Modulatability(I);
+    
+end
 
+figure(1112)
+scatter(Ncat_array, n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+legend('Modulatability factor')
+xlabel('Ionic concentration')
+ylabel('Electron Modulatability Factor (m_V_g)')
+box on
+
+%% Calculate manually
+workfunction_index=7;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+          sigma_nn_int= par.e.*par.mu_n(3).*n_int;
+
+         
+          log_nn=log10(sigma_nn_int);%log(n)
+           nn_Modulatability=gradient(log_nn,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            nn_Modulatability_factor(i)= nn_Modulatability(I);
+    
+end
+figure(1112)
+scatter(Ncat_array, nn_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
+box on
+%% Electon conductivity Modulatability vs Cation Concentration
+workfunction_index=1;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+          sigma_n_int = sigma_n_bar;
+          log_sigma_n=log10(sigma_n_int);%log(n)
+           sigma_n_Modulatability=gradient(log_sigma_n,Vappt);%dlog(sigma)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            sigma_n_Modulatability_factor(i)= sigma_n_Modulatability(I);
+    
+end
+
+figure(2222)
+scatter(Ncat_array, sigma_n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
+box on
+%% Hole concentration Modulatability vs Cation Concentration
+workfunction_index=1;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+          p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+          log_p=log10(p_int);%log(n)
+           p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            p_Modulatability_factor(i)= p_Modulatability(I);
+    
+end
+
+figure(1113)
+scatter(Ncat_array, p_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+
+xlim([1e15 1e20])
+%ylim([4.6 8.5])
+
+xlabel('Cation concentration')
+ylabel('Hole Modulatability Factor (m_V_g)')
+box on
+%% Electron Modulatability Contour
+
+
+
+for i = 1:length(Ncat_array)
+    for j=1:length(workfunction_LHS)
+        built_in_potential=par.Phi_right-workfunction_LHS(j);
+          n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
+          log_n=log10(n_int);%log(n)
+            n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            n_Modulatability_factor_contour(i,j)= n_Modulatability(I);
+    end 
+end
+
+x=workfunction_LHS;
+y=Ncat_array;
+z=n_Modulatability_factor_contour;
+z_log=log10(z);
+figure(1)
+surf(x,y,z);
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
+set(gca,'YScale','log')
+box on
+figure(444)
+contour(x,y,z)
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
+set(gca,'YScale','log')
+box on
+
+%% Hole Modulatability Contour
+
+
+
+for i = 1:length(Ncat_array)
+    for j=1:length(workfunction_LHS)
+        built_in_potential=par.Phi_right-workfunction_LHS(j);
+          p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
+          log_p=log10(p_int);%log(n)
+            p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            p_Modulatability_factor_contour(i,j)= p_Modulatability(I);
+    end 
+end
+figure(2)
+x2=workfunction_LHS;
+y2=Ncat_array;
+z2=p_Modulatability_factor_contour;
+z2_log=log10(z2);
+surf(x2,y2,z2);
+
+set(gca,'ZScale','linear')
+xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
+set(gca,'YScale','log')
+box on
 %% Plot individual values
 
 % makemovie(sol_CV, @dfplot.npx, 0, [0, 1.5e18], 'npx', true, true);
