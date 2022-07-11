@@ -14,7 +14,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 par.Phi_right=-4.9;
 par.Phi_left=-4.9;
 %% Initialise the parameter arrays
-Ncat_array = logspace(16, 19, 4);
+Ncat_array=logspace(16,19,10);
 workfunction_RHS = -5.5:0.1:-4.2;
 
 %% while
