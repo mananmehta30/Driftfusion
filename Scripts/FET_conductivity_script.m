@@ -278,7 +278,7 @@ box on
 workfunction_index=1;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+        built_in_potential=par.Phi_right-workfunction_RHS(workfunction_index);
           p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
