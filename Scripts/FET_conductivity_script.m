@@ -11,7 +11,7 @@ par_alox = pc('./Input_files/alox.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 
-par.Phi_right-4.9;
+par.Phi_right=-4.9;
 par.Phi_left=-4.9;
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 4);
