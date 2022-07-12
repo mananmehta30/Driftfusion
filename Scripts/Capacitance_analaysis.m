@@ -1,6 +1,12 @@
-%% Code pupose
-% To get value of capacitance per area by integrating the current and using C(V)=J_displacement(V)/dV/dT
-%Instead of using soleq.el better try with separate file
+%% Code pupose and issue
+% To get capacitance for different scan rates and other parameters.
+% Code should store the Capacitance values for different voltage points in
+% a array that can be accessed via data structures that store total,ionic
+% and electronic capacitances
+
+%Issue: The electronic capacitances seem to have some mini spikes and bumps
+%that I am unable to understand as such. Also wanted to confirm if the data
+%structures have been assigned properly.
 
 %% Initialize driftfusion
 initialise_df
@@ -68,7 +74,7 @@ for i = 1:length(Ncat_array)
 end
 
 
-%% Preallocate
+%% Preallocate structures
 for i=1:length(Ncat_array)
        C_ionic(i).N_cat=struct;
        C_electronic(i).N_cat=struct;
@@ -161,21 +167,14 @@ hold off
 
 
 %% Call capacitance function
-%[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
-% [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
-% figure(7445)
-% plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
-% legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
-% xlabel('Voltage applied')
-% ylabel('Capacitances (F/cm^2)')
+[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
+[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
+figure(7445)
+plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
+legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
+xlabel('Voltage applied')
+ylabel('Capacitances (F/cm^2)')
 
 
 
-
-%%
-%Alternate ways to calculate capacitance
-
-%1) https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=923259
-%get surface electric field [FV, Frho] = dfana.calcF(sol_CV, "whole")(not
-%working?)
 
