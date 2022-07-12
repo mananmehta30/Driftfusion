@@ -7,6 +7,7 @@
 %Issue: The electronic capacitances seem to have some mini spikes and bumps
 %that I am unable to understand as such (would changing tpoints with each loop help?)
 % Also wanted to confirm if the data structures have been assigned properly.
+% In capacitance_ana_PC some dot indexing issue is occuring
 
 %% Initialize driftfusion
 initialise_df
@@ -211,7 +212,7 @@ xlabel('Voltage [V]')
 ylabel('Electronic Capacitance (cm-3)')
 legend(legstr_n3)
 hold off
-%% Call capacitance function
+%% Call capacitance function 
 [capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
 [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
 figure(7445)
