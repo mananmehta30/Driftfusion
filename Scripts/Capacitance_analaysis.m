@@ -24,7 +24,7 @@ Capacitance_rough=(A*epsilon)/d;
 %% Set up parameters
 
 Ncat_array = logspace(16, 19, 4);
-kscan_index = [0.001;0.01;0.1];
+kscan_array = [0.001;0.01;0.1];
 
 
 %% Loop
@@ -36,7 +36,7 @@ for i = 1:length(Ncat_array)
 %     par_freeze_ions.Ncat(:) = Ncat_array(i);
 %     par_freeze_ions.Nani(:) = Ncat_array(i);
     
-    for j = 1:length(kscan_index) %loop to run for different k_scans
+    for j = 1:length(kscan_array) %loop to run for different k_scans
         
              
         par_for_ions.Phi_left = -4.9;
@@ -60,8 +60,8 @@ par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild 
  
         
         %% Current-voltage scan
-        k_scan = kscan_index(j);
-        disp(['Scan rate = ', num2str(kscan_index(j)), ' V/s']);
+        k_scan = kscan_array(j);
+        disp(['Scan rate = ', num2str(kscan_array(j)), ' V/s']);
         Vmax = 5;
         Vmin = -5;
         tpoints=400; 
@@ -85,7 +85,7 @@ end
 
 for i=1:length(Ncat_array)
     
- for j=1:length(kscan_index)
+ for j=1:length(kscan_array)
        C_ionic(i).N_cat(j).k_scan=struct;
        C_electronic(i).N_cat(j).k_scan=struct;
        C_total(i).N_cat(j).k_scan=struct;
@@ -99,7 +99,7 @@ Vappt = dfana.calcVapp(sol_CV_with_ions(1,1));
 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(kscan_index)
+    for j = 1:length(kscan_array)
        
         [Ctotal,Celectronic,Cionic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
        
@@ -165,7 +165,52 @@ ylabel('Electronic Capacitance (cm-3)')
 legend(legstr_n3)
 hold off
 
+%% Plot carrier concentration at interface as function Vapp for different scan rates
+ion_concentration_index = 1;
+legstr_n3 =[];
+legstr_p3 =[];
 
+for i = 1:length(kscan_array)
+    figure(203)
+    plot(Vappt, C_total(ion_concentration_index).N_cat(i).k_scan)
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
+    hold on
+end
+
+
+figure(203)
+xlabel('Voltage [V]')
+ylabel('Total Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+for i = 1:length(kscan_array)
+    figure(204)
+    plot(Vappt, C_ionic(ion_concentration_index).N_cat(i).k_scan)
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
+    hold on
+end
+
+
+figure(204)
+xlabel('Voltage [V]')
+ylabel('Ionic Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+for i = 1:length(kscan_array)
+    figure(205)
+    plot(Vappt, C_electronic(ion_concentration_index).N_cat(i).k_scan)
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
+    hold on
+end
+
+
+figure(205)
+xlabel('Voltage [V]')
+ylabel('Electronic Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
 %% Call capacitance function
 [capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
 [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
