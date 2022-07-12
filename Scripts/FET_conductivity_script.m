@@ -7,17 +7,7 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 par_alox = pc('./Input_files/alox.csv');
-% no_of_diff_ion_conc=abs(log10((par_alox.Ncat(1,3)/1e17)))+1;%number of different ionic values
-% epoints=round((par_alox.Phi_left-par_alox.Phi_right)/-(0.1))+1;%number of different electrode values
-% valuestore_n=zeros(epoints,no_of_diff_ion_conc);%create the matrix for storing n values
-% valuestore_p=zeros(epoints,no_of_diff_ion_conc);%create the matrix for storing p values
-% phi_left_electrode = par_alox.Phi_left; %store value in a variable that will change in the loop
-% row=1; %intialize 
-% column=1;%intialize 
-% electrodeval=zeros(epoints); %store electrode values
-% electrodeval_counter=0;
-% ionsval=zeros(no_of_diff_ion_conc);%store ion values
-% ionsval_counter=0;
+
 
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
@@ -108,24 +98,7 @@ figure(101)
 legend(legstr_p)
 hold off
 
-%%
-% figure
-% contour(valuestore_n)
-% contour(valuestore_p)
-% % Plot the outputs
-% figure(101)
-% Ntr = 6;            % Number of voltage transients
-% 
-% for i = 1:Ntr
-%     plot(sol_VTROTTR(i).t, DeltaVoc(i,:));
-%     hold on
-% end
-% 
-% xlabel('Time [s]')
-% ylabel('DeltaV [V]')
-% xlim([0, 1e-5])
-% hold off
-% %
+
 %% Plot average conductivity
 for j = 1:length(workfunction_LHS)
     figure(201)
