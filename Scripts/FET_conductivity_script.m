@@ -1,5 +1,8 @@
-%% Code pupose
+%% Code issue
 
+%Issue: Results are incorrect. Sometimes time integration problem occurs
+% To find: Wheter having two gates can help to fix ions at a side and help
+% with better modulation
 %% Initialize driftfusion
 initialise_df
 
