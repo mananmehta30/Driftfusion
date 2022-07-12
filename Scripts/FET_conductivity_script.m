@@ -1,6 +1,8 @@
-%% Code pupose
-% Code is supposed to take different values of doping in different columns and different left 
-% electrode workfunction values in the rows and give max conductivity achieved
+%% Code purpose and issue
+% Code is supposed to take different values of doping by chaning the Ef0 of
+% the MAPI
+% Issue: The max conductivity sees a sudden jump for some Ef0 values
+% instead of a gradual change that might be expected
 %% Initialize driftfusion
 initialise_df
 
