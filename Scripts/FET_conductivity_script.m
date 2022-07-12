@@ -200,14 +200,12 @@ legend(legstr_Vx)
 workfunction_index=1;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+
           n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
            n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
-            target=built_in_potential; 
-             temp=abs(target-Vappt);
-             [M,I] = min(temp);
-            n_Modulatability_factor(i)= n_Modulatability(I);
+           
+            n_Modulatability_factor(i)= n_Modulatability(1);
     
 end
 
@@ -225,19 +223,13 @@ box on
 %% Calculate manually
 workfunction_index=7;
 for i = 1:length(Ncat_array)
-    
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+
           n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
           sigma_nn_int= par.e.*par.mu_n(3).*n_int;
-
-         
           log_nn=log10(sigma_nn_int);%log(n)
            nn_Modulatability=gradient(log_nn,Vappt);%dlog(n)/dV
-            target=built_in_potential; 
-             temp=abs(target-Vappt);
-             [M,I] = min(temp);
-            nn_Modulatability_factor(i)= nn_Modulatability(I);
-    
+            nn_Modulatability_factor(i)= nn_Modulatability(1);
+
 end
 figure(1112)
 scatter(Ncat_array, nn_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
@@ -253,15 +245,11 @@ box on
 workfunction_index=1;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+       
           sigma_n_int = sigma_n_bar;
           log_sigma_n=log10(sigma_n_int);%log(n)
            sigma_n_Modulatability=gradient(log_sigma_n,Vappt);%dlog(sigma)/dV
-            target=built_in_potential; 
-             temp=abs(target-Vappt);
-             [M,I] = min(temp);
-            sigma_n_Modulatability_factor(i)= sigma_n_Modulatability(I);
-    
+            sigma_n_Modulatability_factor(i)= sigma_n_Modulatability(1);
 end
 
 figure(2222)
@@ -278,14 +266,11 @@ box on
 workfunction_index=1;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_RHS(workfunction_index);
+
           p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
-            target=built_in_potential; 
-             temp=abs(target-Vappt);
-             [M,I] = min(temp);
-            p_Modulatability_factor(i)= p_Modulatability(I);
+            p_Modulatability_factor(i)= p_Modulatability(1);
     
 end
 
@@ -305,14 +290,10 @@ box on
 
 for i = 1:length(Ncat_array)
     for j=1:length(workfunction_LHS)
-        built_in_potential=par.Phi_right-workfunction_LHS(j);
           n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
-            n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
-            target=built_in_potential; 
-             temp=abs(target-Vappt);
-             [M,I] = min(temp);
-            n_Modulatability_factor_contour(i,j)= n_Modulatability(I);
+            n_Modulatability=gradient(log_n,Vappt);%dlog(n)/d
+            n_Modulatability_factor_contour(i,j)= n_Modulatability(1);
     end 
 end
 
@@ -339,14 +320,10 @@ box on
 
 for i = 1:length(Ncat_array)
     for j=1:length(workfunction_LHS)
-        built_in_potential=par.Phi_right-workfunction_LHS(j);
           p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
             p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
-            target=built_in_potential; 
-             temp=abs(target-Vappt);
-             [M,I] = min(temp);
-            p_Modulatability_factor_contour(i,j)= p_Modulatability(I);
+            p_Modulatability_factor_contour(i,j)= p_Modulatability(1);
     end 
 end
 figure(2)
