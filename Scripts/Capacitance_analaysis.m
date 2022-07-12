@@ -5,8 +5,8 @@
 % and electronic capacitances
 
 %Issue: The electronic capacitances seem to have some mini spikes and bumps
-%that I am unable to understand as such. Also wanted to confirm if the data
-%structures have been assigned properly.
+%that I am unable to understand as such (would changing tpoints with each loop help?)
+% Also wanted to confirm if the data structures have been assigned properly.
 
 %% Initialize driftfusion
 initialise_df
@@ -23,8 +23,8 @@ d=par_for_ions.d(3);
 Capacitance_rough=(A*epsilon)/d;
 %% Set up parameters
 
-Ncat_array = logspace(16, 17, 2);
-kscan_index = [0.01;0.1;1];
+Ncat_array = logspace(16, 19, 4);
+kscan_index = [0.001;0.01;0.1];
 
 
 %% Loop
@@ -33,29 +33,29 @@ for i = 1:length(Ncat_array)
     par_for_ions.Ncat(:) = Ncat_array(i);
     par_for_ions.Nani(:) = Ncat_array(i);
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    par_freeze_ions.Ncat(:) = Ncat_array(i);
-    par_freeze_ions.Nani(:) = Ncat_array(i);
+%     par_freeze_ions.Ncat(:) = Ncat_array(i);
+%     par_freeze_ions.Nani(:) = Ncat_array(i);
     
-    for j = 1:length(kscan_index) %loop to run for different electrode workfunction
+    for j = 1:length(kscan_index) %loop to run for different k_scans
         
-              % This line is required to rebuild various arrays used DF
+             
         par_for_ions.Phi_left = -4.9;
         disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
         par_for_ions.Phi_right = -4.9;
         disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
 
         
-        par_freeze_ions.mu_c(:) = 0; %Freezing ions
-        par_for_ions.mu_a(:) = 0;
-
-        par_freeze_ions.Phi_left = -4.9;
-        disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
-        par_freeze_ions.Phi_right = -4.9;
-        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
-        par_for_ions = refresh_device(par_for_ions);
+       % par_freeze_ions.mu_c(:) = 0; %Freezing ions
+        %par_for_ions.mu_a(:) = 0;
+        %par_freeze_ions.Phi_left = -4.9;
+%   disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
+%        par_freeze_ions.Phi_right = -4.9;
+%        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
+       
+par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild various arrays used DF
         %% Find equilibrium
         soleq(i, j)= equilibrate(par_for_ions);
-        soleq2(i, j)= equilibrate(par_freeze_ions);
+        %soleq2(i, j)= equilibrate(par_freeze_ions);
         
  
         
@@ -64,11 +64,11 @@ for i = 1:length(Ncat_array)
         disp(['Scan rate = ', num2str(kscan_index(j)), ' V/s']);
         Vmax = 5;
         Vmin = -5;
-        tpoints=400;
+        tpoints=400; 
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         
         sol_CV_with_ions(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
-        sol_CV_without_ions(i, j) = doCV(soleq2(i, j).el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+       % sol_CV_without_ions(i, j) = doCV(soleq2(i, j).el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
       
     end   
 end
@@ -81,7 +81,7 @@ for i=1:length(Ncat_array)
        C_total(i).N_cat=struct;
      
 end
-%% Preallocate
+%% Preallocate structures to store k_scan values
 
 for i=1:length(Ncat_array)
     
@@ -113,7 +113,7 @@ end
  
 
 
-%% Plots
+%% Plot testing
 figure (222)
    plot(Vappt, C_ionic(1).N_cat(1).k_scan)
 
