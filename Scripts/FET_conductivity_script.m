@@ -11,7 +11,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 par.Phi_right=-4.9;
 par.Phi_left=-4.9;
 %% Initialise the parameter arrays
-Ncat_array = logspace(18, 19, 2);
+Ncat_array = logspace(16, 19, 4);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
 %workfunction_LHS = -5.5:0.1:-4.2;
 
@@ -28,7 +28,7 @@ Ncat_array = logspace(18, 19, 2);
 % % B=gradient(workfunction_LHS,1);
 %  plot(workfunction_LHS) ;
 % plot(B);
-workfunction_LHS = -4.95:0.1:-4.85;
+workfunction_LHS = -4.92:0.01:-4.88;
 %% No of ionic species
 par.N_ionic_species=1;
 
