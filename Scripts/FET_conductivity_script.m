@@ -11,14 +11,16 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
-%workfunction_LHS = -5.5:0.1:-4.2;
+workfunction_LHS = -5.5:0.1:-4.2;
 
-Ncat_array=logspace(16,19,10);
-% first_half=(logspace(log10(4.9),log10(4.2),8));
+% Ncat_array=logspace(16,19,10);
+% ff_half=-5.5:0.1:-5.1;
+% ss_half=-4.7:0.1:-4.1;
+% first_half=(logspace(log10(4.9),log10(4.7),3));
 % first_half_arrange = flip( first_half,2 );
 % plot(first_half_arrange);
-% second_half=logspace(log10(4.9),log10(5.5),8);
-% concatenate= cat(2,first_half_arrange,second_half);
+% second_half=logspace(log10(4.9),log10(5.1),3);
+% concatenate= cat(2,ss_half,first_half_arrange,second_half,ff_half);
 % remove_extra_values= unique(concatenate);
 % arrange_in_order = flip(remove_extra_values , 2 );
 % workfunction_LHS = -1.*arrange_in_order;
@@ -26,7 +28,7 @@ Ncat_array=logspace(16,19,10);
 % % B=gradient(workfunction_LHS,1);
 %  plot(workfunction_LHS) ;
 % plot(B);
-workfunction_LHS = -4.95:0.01:-4.85;
+%workfunction_LHS = -4.95:0.01:-4.85;
 %% No of ionic species
 par.N_ionic_species=1;
 %% while
