@@ -2,7 +2,9 @@
 % Code is supposed to take different values of doping by chaning the Ef0 of
 % the MAPI
 % Issue: The max conductivity sees a sudden jump for some Ef0 values
-% instead of a gradual change that might be expected
+% instead of a gradual change that might be expected. From surface plot of
+% modultability it can be seen. During equilibriate some ionic jumps were
+% seen
 %% Initialize driftfusion
 initialise_df
 
@@ -291,7 +293,7 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
+    for j=1:length(workfunction_MAPI)
           n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
             n_Modulatability=gradient(log_n,Vappt);%dlog(n)/d
@@ -299,7 +301,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 
-x=workfunction_LHS;
+x=workfunction_MAPI;
 y=Ncat_array;
 z=n_Modulatability_factor_contour;
 z_log=log10(z);
@@ -321,7 +323,7 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
+    for j=1:length(workfunction_MAPI)
           p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
             p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
@@ -329,7 +331,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 figure(2)
-x2=workfunction_LHS;
+x2=workfunction_MAPI;
 y2=Ncat_array;
 z2=p_Modulatability_factor_contour;
 z2_log=log10(z2);
