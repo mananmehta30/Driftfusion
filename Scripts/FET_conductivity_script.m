@@ -127,7 +127,7 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-workfunction_index = 1;
+workfunction_index = 7;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
@@ -176,7 +176,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 1;
+workfunction_index = 7;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -221,7 +221,7 @@ ylim([1e-1, 1e12])
 
 
 %% Plot potential as a function position
-workfunction_index = 1;
+workfunction_index = 7;
 legstr_Vx = {'dielectric', 'interface', 'perovskite', 'interface', 'dielectric'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
@@ -235,7 +235,7 @@ legend(legstr_Vx)
 
 
 %% Electon concentration Modulability vs Cation Concentration
-workfunction_index=1;
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -288,7 +288,7 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulability Factor (m_V_g)')
 box on
 %% Electon conductivity Modulability vs Cation Concentration
-workfunction_index=1;
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -313,7 +313,7 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulability Factor (m_V_g)')
 box on
 %% Hole concentration Modulability vs Cation Concentration
-workfunction_index=1;
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
