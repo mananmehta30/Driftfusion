@@ -13,7 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
 workfunction_LHS = -5.5:0.1:-4.2;
 
-% Ncat_array=logspace(16,19,10);
+Ncat_array=logspace(16,19,10);
 % ff_half=-5.5:0.1:-5.1;
 % ss_half=-4.7:0.1:-4.1;
 % first_half=(logspace(log10(4.9),log10(4.7),3));
@@ -50,7 +50,7 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion)
         
         %% Current-voltage scan
-        k_scan = 0.001;
+        k_scan = 0.1;
         Vmax = 1.2;
         Vmin = -1.2;
         
