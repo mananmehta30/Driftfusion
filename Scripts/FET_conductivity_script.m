@@ -252,8 +252,8 @@ set(gca,'xscale','log')
 
 xlim([1e15 1e20])
 %ylim([4.6 8.5])
-legend('Modulatability factor')
-xlabel('Ionic concentration')
+legend('Modulatability factor (m_V_g)')
+xlabel('Ionic concentration (cm-3)')
 ylabel('Electron Modulatability Factor (m_V_g)')
 box on
 
@@ -281,7 +281,7 @@ set(gca,'xscale','log')
 xlim([1e15 1e20])
 %ylim([4.6 8.5])
 
-xlabel('Cation concentration')
+xlabel('Cation concentration (cm-3)')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Electon conductivity Modulatability vs Cation Concentration
