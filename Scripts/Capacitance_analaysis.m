@@ -114,11 +114,6 @@ end
  
 
 
-%% Plot testing
-figure (222)
-   plot(Vappt, C_ionic(1).N_cat(1).k_scan)
-
-
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 scanrate_index = 1;
 legstr_n3 =[];
@@ -213,7 +208,7 @@ ylabel('Electronic Capacitance (cm-3)')
 legend(legstr_n3)
 hold off
 %% Call capacitance function 
-[capacitance_device_electronic,capacitance_device_ionic] = capacitance_ana(sol_CV_with_ions);%call this function
+
 [V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
 figure(7445)
 plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
