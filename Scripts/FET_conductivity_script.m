@@ -1,6 +1,6 @@
 %% Code issue
 
-%Issue: Results are incorrect. Sometimes time integration problem occurs
+% Issue: Results are incorrect. Sometimes time integration problem occurs
 % To find: Wheter having two gates can help to fix ions at a side and help
 % with better modulation
 %% Initialize driftfusion
@@ -9,7 +9,7 @@ initialise_df
 %% Add parameter file to path 
 % Filepath Mac
 %par_alox = pc('./Input_files/alox.csv');
-par_alox = pc('./Input_files/alox_2 _gates');
+par_alox = pc('./Input_files/alox_2_gates.csv');
 par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 par.Phi_right=-4.9;
 par.Phi_left=-4.9;
@@ -51,17 +51,19 @@ for i = 1:length(Ncat_array)
         
         %% Find equilibrium
         soleq(i, j) = equilibrate(par);
-        dfplot.acx(soleq(i, j).ion)
+        dfplot.ELx(soleq(i, j).ion)
         
         %% Current-voltage scan
         k_scan = 0.001;
         Vmax = 1.2;
         Vmin = -1.2;
         
+        tic
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
         %% Plot Vapp vs time
         % dfplot.Vappt(sol_CV)
+        toc
         
         %% Plot JV scan
         %dfplot.JtotVapp(sol_CV, 0);
@@ -207,8 +209,7 @@ legend(legstr_p3)
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-
-legstr_npx = {'', '', ''};
+legstr_npx = {'dielectric', 'interface', 'perovskite', 'interface', 'dielectric'};
 for i = 1:length(Ncat_array)
     dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
@@ -221,7 +222,7 @@ ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
 workfunction_index = 1;
-legstr_Vx = {'dielectric', 'interface', 'perovskite'};
+legstr_Vx = {'dielectric', 'interface', 'perovskite', 'interface', 'dielectric'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
@@ -337,9 +338,6 @@ xlabel('Cation concentration')
 ylabel('Hole Modulability Factor (m_V_g)')
 box on
 %% Electron Modulability Contour
-
-
-
 for i = 1:length(Ncat_array)
     for j=1:length(workfunction_LHS)
         built_in_potential=par.Phi_right-workfunction_LHS(j);

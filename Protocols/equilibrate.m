@@ -78,8 +78,13 @@ par.mobset = 1;
 par.radset = 1;
 par.SRHset = 1;
 
+%% Switch all mobilities to 1
+par.mu_n(:) = 1;
+par.mu_p(:) = 1;
+par = refresh_device(par);
+
 % Characteristic diffusion time
-t_diff = (par.dcum0(end)^2)/(2*par.kB*par.T*min(min(par.mu_n), min(par.mu_p)));
+t_diff = (par.dcum0(end)^2)/(2*par.kB*par.T);
 par.tmax = 100*t_diff;
 par.t0 = par.tmax/1e6;
 
@@ -103,6 +108,11 @@ while any(all_stable) == 0
 
     all_stable = verifyStabilization(sol.u, sol.t, 0.7);
 end
+
+%% reset mobilities
+sol.par.mu_n = par_origin.mu_n;
+sol.par.mu_p = par_origin.mu_p;
+sol.par = refresh_device(sol.par);
 
 soleq.el = sol;
 % Manually check final section of solution for VSR self-consitency
