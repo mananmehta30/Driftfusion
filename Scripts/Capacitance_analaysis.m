@@ -53,7 +53,7 @@ for i = 1:length(Ncat_array)
 %        par_freeze_ions.Phi_right = -4.9;
 %        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
        
-par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild various arrays used DF
+        par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild various arrays used DF
         %% Find equilibrium
         soleq(i, j)= equilibrate(par_for_ions);
         %soleq2(i, j)= equilibrate(par_freeze_ions);
