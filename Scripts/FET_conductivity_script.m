@@ -27,7 +27,7 @@ for i = 1:length(Ncat_array)
     for j = 1:length(mobility_arrays) %loop to run for different electrode workfunction
         
         par.mu_c(3) = mobility_arrays(j);
-        disp(['Mobility of anio anion = ', num2str(mobility_arrays(j)), ' cm2/Vs']);
+        disp(['Mobility of cation = ', num2str(mobility_arrays(j)), ' cm2/Vs']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
