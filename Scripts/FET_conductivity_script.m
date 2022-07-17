@@ -11,24 +11,10 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
-workfunction_LHS = -5.5:0.1:-4.2;
-
+mobility_arrays = [1e-10,2e-10,1e-9,1e-7];
 Ncat_array=logspace(16,19,10);
-% ff_half=-5.5:0.1:-5.1;
-% ss_half=-4.7:0.1:-4.1;
-% first_half=(logspace(log10(4.9),log10(4.7),3));
-% first_half_arrange = flip( first_half,2 );
-% plot(first_half_arrange);
-% second_half=logspace(log10(4.9),log10(5.1),3);
-% concatenate= cat(2,ss_half,first_half_arrange,second_half,ff_half);
-% remove_extra_values= unique(concatenate);
-% arrange_in_order = flip(remove_extra_values , 2 );
-% workfunction_LHS = -1.*arrange_in_order;
-% difference=diff(workfunction_LHS);
-% % B=gradient(workfunction_LHS,1);
-%  plot(workfunction_LHS) ;
-% plot(B);
-%workfunction_LHS = -4.95:0.01:-4.85;
+par.Phi_left=-4.9;
+par.Phi_right=-4.9;
 %% No of ionic species
 par.N_ionic_species=1;
 %% while
@@ -38,10 +24,10 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+    for j = 1:length(mobility_arrays) %loop to run for different electrode workfunction
         
-        par.Phi_left = workfunction_LHS(j);
-        disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
+        par.mu_c(3) = mobility_arrays(j);
+        disp(['Mobility of anio anion = ', num2str(mobility_arrays(j)), ' cm2/Vs']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -74,13 +60,13 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1));
 % Preallocation
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(Ncat_array), length(mobility_arrays), length(sol_CV(1,1).t)); 
+sigma_p_barM = zeros(length(Ncat_array), length(mobility_arrays), length(sol_CV(1,1).t)); 
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(mobility_arrays)); 
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(mobility_arrays)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(workfunction_LHS)
+    for j = 1:length(mobility_arrays)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
@@ -96,7 +82,7 @@ end
 %% Conductivity vs Work Function
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
+    semilogy(mobility_arrays, sigma_n_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
@@ -105,7 +91,7 @@ end
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(i, :))
+    semilogy(mobility_arrays, sigma_p_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
@@ -141,17 +127,17 @@ legend(legstr_n)
 hold off
 
 %% Plot average conductivity
-for j = 1:length(workfunction_LHS)
+for j = 1:length(mobility_arrays)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_n2{j} = ['\Phi_l =', num2str(mobility_arrays(j))];
     hold on
 end
 
-for j = 1:length(workfunction_LHS)
+for j = 1:length(mobility_arrays)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_p2{j} = ['\Phi_l =', num2str(mobility_arrays(j))];
     hold on
 end
 %%check how to write siemens properly
@@ -235,7 +221,7 @@ legend(legstr_Vx)
 workfunction_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+        built_in_potential=par.Phi_right-mobility_arrays(workfunction_index);
           n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
            n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
@@ -261,7 +247,7 @@ box on
 workfunction_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+        built_in_potential=par.Phi_right-mobility_arrays(workfunction_index);
           n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
           sigma_nn_int= par.e.*par.mu_n(3).*n_int;
 
@@ -288,7 +274,7 @@ box on
 workfunction_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+        built_in_potential=par.Phi_right-mobility_arrays(workfunction_index);
           sigma_n_int = sigma_n_bar;
           log_sigma_n=log10(sigma_n_int);%log(n)
            sigma_n_Modulatability=gradient(log_sigma_n,Vappt);%dlog(sigma)/dV
@@ -313,7 +299,7 @@ box on
 workfunction_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+        built_in_potential=par.Phi_right-mobility_arrays(workfunction_index);
           p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
@@ -339,8 +325,8 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
-        built_in_potential=par.Phi_right-workfunction_LHS(j);
+    for j=1:length(mobility_arrays)
+        built_in_potential=par.Phi_right-mobility_arrays(j);
           n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
             n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
@@ -351,7 +337,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 
-x=workfunction_LHS;
+x=mobility_arrays;
 y=Ncat_array;
 z=n_Modulatability_factor_contour;
 z_log=log10(z);
@@ -373,8 +359,8 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
-        built_in_potential=par.Phi_right-workfunction_LHS(j);
+    for j=1:length(mobility_arrays)
+        built_in_potential=par.Phi_right-mobility_arrays(j);
           p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
             p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
@@ -385,7 +371,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 figure(2)
-x2=workfunction_LHS;
+x2=mobility_arrays;
 y2=Ncat_array;
 z2=p_Modulatability_factor_contour;
 z2_log=log10(z2);
