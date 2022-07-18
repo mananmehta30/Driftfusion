@@ -13,7 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
 workfunction_LHS = -5.5:0.1:-4.2;
 
-Ncat_array=logspace(16,19,10);
+Ncat_array=logspace(12,19,15);
 % ff_half=-5.5:0.1:-5.1;
 % ss_half=-4.7:0.1:-4.1;
 % first_half=(logspace(log10(4.9),log10(4.7),3));
@@ -364,7 +364,8 @@ xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability f
 set(gca,'YScale','log')
 box on
 figure(444)
-contour(x,y,z)
+contourf(x,y,z)
+colorbar
 set(gca,'ZScale','linear')
 xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
