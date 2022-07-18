@@ -109,8 +109,7 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-
-insulator_thickness_index = 2;
+insulator_thickness_index = 1;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, insulator_thickness_index,i);
@@ -124,10 +123,12 @@ for i = 1:length(Ncat_array)
     hold on
     xlabel('Applied Voltage [V]')
     ylabel('Electron conductivity [S cm-1]')
-    legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
+    shorten(i)=round(Ncat_array(i),3,'significant');
+    legstr_n{i} = ['Ncat =', num2str(shorten(i)),' cm-3'];
 end  
 figure(1000)
 legend(legstr_n)
+title(legend,'Cation Concentration (cm-3)')
 hold off
 
 %% Plot average conductivity
@@ -161,14 +162,14 @@ hold off
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
 
-insultor_thickness_index = 3;
+insulator_thickness_index = 3;
 
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
 
-    n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
+    n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
 
     figure(203)
     semilogy(Vappt, n_int)
@@ -178,7 +179,7 @@ end
 
 for i = 1:length(Ncat_array)
 
-    p_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 3);
+    p_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 3);
 
     figure(204)
     semilogy(Vappt, p_int)
@@ -203,7 +204,7 @@ hold off
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
 
-    dfplot.npx(sol_CV(i, insultor_thickness_index), Vmax/k_scan);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);% Vmax/k_scan)
 
     dfplot.npx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);% Vmax/k_scan)
 
@@ -276,7 +277,7 @@ legend(legstr_Vx)
 
 %Plot similar for ions (instead of n_int put cat_int)
 
-insultor_thickness_index = 4;
+insulator_thickness_index = 4;
 
 
 legstr_n3 =[];
@@ -284,7 +285,7 @@ legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
 
-    cat_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3)+1,4);
+    cat_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3)+1,4);
     logcat_int=log10(cat_int);
     figure(703)
     semilogy(Vappt,cat_int)
@@ -326,11 +327,11 @@ ylabel('Cation Modulability Factor (m_V_g)')
 box on
 
 %% Electon concentration Modulability vs Cation Concentration
-insultor_thickness_index=2;
+insulator_thickness_index=2;
 for i = 1:length(Ncat_array)
     
         built_in_potential=0;
-          n_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 2);
+          n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
            n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
             target=built_in_potential; 
@@ -379,7 +380,7 @@ scatter(thickness_array, nnn_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','linear')
 
 xlim([0 3.5e-5])
-ylim([3 11.5])
+ylim([3 12])
 
 xlabel('Insulator Thickess [cm]')
 ylabel('Electron Modulability Factor [m_V_g] ')
@@ -393,10 +394,8 @@ box on
 
 
 
-
-
 %% Electon conductivity Modulability vs Cation Concentration
-insultor_thickness_index=1;
+insulator_thickness_index=1;
 for i = 1:length(Ncat_array)
     
         
@@ -418,10 +417,10 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulability Factor (m_V_g)')
 box on
 %% Hole concentration Modulability vs Cation Concentration
-insultor_thickness_index=1;
+insulator_thickness_index=1;
 for i = 1:length(Ncat_array)
 
-          p_int = sol_CV(i, insultor_thickness_index).u(:, par.pcum0(3), 3);
+          p_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
             p_modulability_factor(i)= p_modulability(I);
