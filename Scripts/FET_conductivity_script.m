@@ -288,7 +288,8 @@ for i = 1:length(Ncat_array)
     logcat_int=log10(cat_int);
     figure(703)
     semilogy(Vappt,cat_int)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    Z(i)=round(Ncat_array(i),2);
+    legstr_n3{i} = ['Ncat =', num2str(Z(i))];
     hold on
 end
 figure(703)
@@ -348,6 +349,7 @@ xlim([1e15 1e20])
 
 xlabel('Cation concentration')
 ylabel('Electron Modulability Factor (m_V_g)')
+legend('Modulatability Factor')
 box on
 
 
@@ -357,7 +359,7 @@ box on
 
 
 %% Electon concentration Modulability vs Insulator Thickness
-Ncat_index=2;
+Ncat_index=1;
 for i = 1:length(thickness_array)
     
         built_in_potential=0;
@@ -367,7 +369,7 @@ for i = 1:length(thickness_array)
             target=built_in_potential; 
              temp=abs(target-Vappt);
              [M,I] = min(temp);
-            nnn_modulability_factor(i)= nnn_modulability(5);
+            nnn_modulability_factor(i)= nnn_modulability(1);
     
 end
 
@@ -378,8 +380,10 @@ set(gca,'xscale','linear')
 xlim([0 3.5e-5])
 %ylim([4.6 8.5])
 
-xlabel('Insulator Thickess')
-ylabel('Electron Modulability Factor (m_V_g)')
+xlabel('Insulator Thickess [cm]')
+ylabel('Electron Modulability Factor [m_V_g] ')
+legend('Modulatability Factor for Ionic concentration', sprintf("%. 2f",num2str(Ncat_array(i))))
+box on
 box on
 
 
