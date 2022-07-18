@@ -209,7 +209,7 @@ legend(legstr_n3)
 hold off
 %% Call capacitance function 
 
-[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
+%[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
 figure(7445)
 plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
 legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
