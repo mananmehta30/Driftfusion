@@ -172,7 +172,7 @@ for i = 1:length(Ncat_array)
 
     figure(203)
     semilogy(Vappt, n_int)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_n3{i} = ['Ncat =', num2str(Z(i)),' cm-3'];
     hold on
 end
 
@@ -182,7 +182,7 @@ for i = 1:length(Ncat_array)
 
     figure(204)
     semilogy(Vappt, p_int)
-    legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_p3{i} = ['Ncat =', num2str(Z(i)),' cm-3'];
     hold on
 end
 
@@ -194,7 +194,7 @@ hold off
 
 figure(204)
 xlabel('Voltage [V]')
-ylabel('hole density interface (cm-3)')
+ylabel('Hole density interface (cm-3)')
 legend(legstr_p3)
 hold off
 
@@ -207,8 +207,8 @@ for i = 1:length(Ncat_array)
 
     dfplot.npx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);% Vmax/k_scan)
 
-    legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
-    legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
+    legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Z(i)),' cm-3'];
+    legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Z(i)),' cm-3'];
     hold on
 end
 legend(legstr_npx)
@@ -226,8 +226,8 @@ insulator_thickness_index = 1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);%Vmax/k_scan)
-
-    legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
+     Z(i)=round(Ncat_array(i),3,'significant');
+    legstr_Vx{i + 3} = ['Ncat =', num2str(Z(i)),' cm-3'];
     hold on
 end
 legend(legstr_Vx)
@@ -288,7 +288,7 @@ for i = 1:length(Ncat_array)
     logcat_int=log10(cat_int);
     figure(703)
     semilogy(Vappt,cat_int)
-    Z(i)=round(Ncat_array(i),2);
+    Z(i)=round(Ncat_array(i),3,'significant');
     legstr_n3{i} = ['Ncat =', num2str(Z(i))];
     hold on
 end
@@ -359,7 +359,7 @@ box on
 
 
 %% Electon concentration Modulability vs Insulator Thickness
-Ncat_index=1;
+Ncat_index=10;
 for i = 1:length(thickness_array)
     
         built_in_potential=0;
@@ -378,12 +378,12 @@ scatter(thickness_array, nnn_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','linear')
 
 xlim([0 3.5e-5])
-%ylim([4.6 8.5])
+ylim([0 0.55])
 
 xlabel('Insulator Thickess [cm]')
 ylabel('Electron Modulability Factor [m_V_g] ')
-legend('Modulatability Factor for Ionic concentration', sprintf("%. 2f",num2str(Ncat_array(i))))
-box on
+legend('Modulatability Factor for Cation Density = 1e19')
+
 box on
 
 
