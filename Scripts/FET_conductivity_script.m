@@ -121,7 +121,7 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-workfunction_index = 1;
+workfunction_index = 7;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
@@ -134,6 +134,7 @@ for i = 1:length(Ncat_array)
     hold on
     xlabel('Applied Voltage [V]')
     ylabel('Electron conductivity [S cm-1]')
+    title(legend,'Cation defect density (cm-3)')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
 figure(1000)
