@@ -359,7 +359,8 @@ box on
 
 
 %% Electon concentration Modulability vs Insulator Thickness
-Ncat_index=10;
+Ncat_index=1;
+shorten=round(Ncat_array(Ncat_index),3,'significant');
 for i = 1:length(thickness_array)
     
         built_in_potential=0;
@@ -378,12 +379,12 @@ scatter(thickness_array, nnn_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','linear')
 
 xlim([0 3.5e-5])
-ylim([0 0.55])
+ylim([3 11.5])
 
 xlabel('Insulator Thickess [cm]')
 ylabel('Electron Modulability Factor [m_V_g] ')
-legend('Modulatability Factor for Cation Density = 1e19')
-
+legend('Ionic density=',num2str(shorten),'cm-3')
+title(legend,'Modulatability Factor')
 box on
 
 
