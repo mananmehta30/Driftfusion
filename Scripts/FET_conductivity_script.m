@@ -50,7 +50,7 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion)
         
         %% Current-voltage scan
-        k_scan = 0.1;
+        k_scan = 0.001;
         Vmax = 1.2;
         Vmin = -1.2;
         
@@ -219,13 +219,14 @@ ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
 workfunction_index = 7;
-legstr_Vx = {'dielectric', 'interface', 'perovskite'};
+legstr_Vx = {'Dielectric', 'Interface', 'Perovskite'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
 legend(legstr_Vx)
+title(legend,'Cation defect density (cm-3)')
 %ylim([1e-1, 1e12])
 
 
