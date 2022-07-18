@@ -7,18 +7,18 @@ function [DeltaV, Q, C] = capacitance_ana_PC(sol, pervsk_layer_no)
 % the charge integration step
 e = par.e;
 V_T = par.kB*par.T;                     % Thermal votlage
-epp_pvsk = e*par.epp0*par.epp(3);       % Perovskite absolute dielectric constant
-N0 = par.Ncat(3);
+epp_pvsk = e*par.epp0*par.epp(pervsk_layer_no);       % Perovskite absolute dielectric constant
+N0 = par.Ncat(pervsk_layer_no);
 L_D = sqrt((epp_pvsk*V_T)/(e*N0));      % Debye length
 
 %% Get point indices for various locations
 pcum0 = par.pcum0;
 dcum0 = par.dcum0;
 
-pl_SCR1 = pcum0(pervsk_layer_no + 1);
-pr_SCR1 = round((pcum0(pervsk_layer_no + 1) + pcum0(pervsk_layer_no + 2))/2);   % use mid point of pvsk as first approx - would be better to use point at which sign of charge changes
-pl_SCR2 = round((pcum0(pervsk_layer_no + 1) + pcum0(pervsk_layer_no + 2))/2);
-pr_SCR2 = pcum0(pervsk_layer_no + 2);
+pl_SCR1 = pcum0(pervsk_layer_no);
+pr_SCR1 = round((pcum0(pervsk_layer_no) + pcum0(pervsk_layer_no + 1))/2);   % use mid point of pvsk as first approx - would be better to use point at which sign of charge changes
+pl_SCR2 = round((pcum0(pervsk_layer_no) + pcum0(pervsk_layer_no + 1))/2);
+pr_SCR2 = pcum0(pervsk_layer_no + 1);
 
 %% Calculate volumetric charge components (cm-3)
 NA = repmat(dev.NA, length(t), 1);

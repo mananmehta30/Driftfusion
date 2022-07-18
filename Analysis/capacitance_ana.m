@@ -32,11 +32,11 @@ pl = Debye_left_V_index;
 pr = Debye_right_V_index;
 
 rho = dfana.calcrho(sol_CV_with_ions,"whole");
-Q = e*trapz(x(pl:pr), rho(:, pl:pr), 2);
+Q = e*trapz(x(pl:pr), rho(:, pl:pr), 2);                    % Would make a lot more sense to call this Q.TOT
 electronic_rho = -n + p - NA0 + ND0;
-EQ = e*trapz(x(pl:pr), electronic_rho(:, pl:pr), 2);
+EQ = e*trapz(x(pl:pr), electronic_rho(:, pl:pr), 2);        % Would make a lot more sense to call this Q.E
 ionic_rho= par.z_a*a + par.z_c*c - par.z_c*Nani0 - par.z_c*Ncat0;
-IQ= e*trapz(x(pl:pr), ionic_rho(:, pl:pr), 2);
+IQ= e*trapz(x(pl:pr), ionic_rho(:, pl:pr), 2);              % Would make a lot more sense to call this Q.I
 
 
 %% Get capacitance as total charge (per cm2) divided by Vapplied
