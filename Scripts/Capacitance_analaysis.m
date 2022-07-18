@@ -25,7 +25,7 @@ Capacitance_rough=(A*epsilon)/d;
 %% Set up parameters
 
 Ncat_array = logspace(16, 19, 4);
-kscan_array = [0.001;0.01;0.1];
+kscan_array = [0.001; 0.01; 0.1];
 
 
 %% Loop
@@ -46,12 +46,12 @@ for i = 1:length(Ncat_array)
         disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
 
         
-       % par_freeze_ions.mu_c(:) = 0; %Freezing ions
+        % par_freeze_ions.mu_c(:) = 0; %Freezing ions
         %par_for_ions.mu_a(:) = 0;
         %par_freeze_ions.Phi_left = -4.9;
-%   disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
-%        par_freeze_ions.Phi_right = -4.9;
-%        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
+        %   disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
+        %        par_freeze_ions.Phi_right = -4.9;
+        %        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
        
         par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild various arrays used DF
         %% Find equilibrium
@@ -115,7 +115,7 @@ Vappt = dfana.calcVapp(sol_CV_with_ions(1,1));
 % end
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(kscan_array)    
+    for j = 1:length(kscan_array)
         [DeltaV, Q, C] = capacitance_ana_PC(sol_CV_with_ions(i,j), 3);
         DeltaV_M(i,j) = DeltaV;
         Q_M(i,j) = Q;
@@ -124,17 +124,18 @@ for i = 1:length(Ncat_array)
 end
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
+kscan_index = 1;
+
 scanrate_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
     figure(203)
-    plot(Vappt, C(i,j).tot)
+    plot(Vappt, C_M(i, kscan_index).tot)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
-
 
 figure(203)
 xlabel('Voltage [V]')
@@ -144,7 +145,7 @@ hold off
 
 for i = 1:length(Ncat_array)
     figure(204)
-    plot(Vappt, C(i,j).ion)
+    plot(Vappt, C_M(i, kscan_index).ion)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
@@ -157,7 +158,7 @@ hold off
 
 for i = 1:length(Ncat_array)
     figure(205)
-    plot(Vappt, C(i,j).el)
+    plot(Vappt, C_M(i, kscan_index).el)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
@@ -168,50 +169,47 @@ ylabel('Electronic Capacitance (cm-3)')
 legend(legstr_n3)
 hold off
 
-%% Plot carrier concentration at interface as function Vapp for different scan rates
+%% Plots as a function of scan rate
+ion_concentration_index = 1;
+legstr_n3 =[];
+legstr_p3 =[];
 
-%% PC- I don't know what you are plotting below but it does not appear to be carrier densities as stated in the comment above?
-% 
-% ion_concentration_index = 1;
-% legstr_n3 =[];
-% legstr_p3 =[];
-% 
-% for i = 1:length(kscan_array)
-%     figure(203)
-%     plot(Vappt, C_total(ion_concentration_index).N_cat(i).k_scan)
-%     legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
-%     hold on
-% end
-% 
-% 
-% figure(203)
-% xlabel('Voltage [V]')
-% ylabel('Total Capacitance (cm-3)')
-% legend(legstr_n3)
-% hold off
-% 
-% for i = 1:length(kscan_array)
-%     figure(204)
-%     plot(Vappt, C_ionic(ion_concentration_index).N_cat(i).k_scan)
-%     legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
-%     hold on
-% end
-% 
-% figure(204)
-% xlabel('Voltage [V]')
-% ylabel('Ionic Capacitance (cm-3)')
-% legend(legstr_n3)
-% hold off
-% 
-% for i = 1:length(kscan_array)
-%     figure(205)
-%     plot(Vappt, C_electronic(ion_concentration_index).N_cat(i).k_scan)
-%     legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
-%     hold on
-% end
-% 
-% figure(205)
-% xlabel('Voltage [V]')
-% ylabel('Electronic Capacitance (cm-3)')
-% legend(legstr_n3)
-% hold off
+for j = 1:length(kscan_array)
+    figure(203)
+    plot(Vappt, C_M(ion_concentration_index, j).tot)
+    legstr_n3{j} = ['kscan=', num2str(kscan_array(j))];
+    hold on
+end
+
+
+figure(203)
+xlabel('Voltage [V]')
+ylabel('Total Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+for j = 1:length(kscan_array)
+    figure(204)
+    plot(Vappt, C_M(ion_concentration_index, j).ion)
+    legstr_n3{j} = ['kscan=', num2str(kscan_array(j))];
+    hold on
+end
+
+figure(204)
+xlabel('Voltage [V]')
+ylabel('Ionic Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
+
+for j = 1:length(kscan_array)
+    figure(205)
+    plot(Vappt, C_M(ion_concentration_index, j).el)
+    legstr_n3{j} = ['kscan=', num2str(kscan_array(j))];
+    hold on
+end
+
+figure(205)
+xlabel('Voltage [V]')
+ylabel('Electronic Capacitance (cm-3)')
+legend(legstr_n3)
+hold off
