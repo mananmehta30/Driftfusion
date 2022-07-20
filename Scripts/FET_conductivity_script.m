@@ -364,8 +364,11 @@ xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability f
 set(gca,'YScale','log')
 box on
 figure(444)
+%% Contour
 contourf(x,y,z)
 colorbar
+c = colorbar;
+c.Label.String = 'Modulatability factor (m_Vg)';
 set(gca,'ZScale','linear')
 xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
