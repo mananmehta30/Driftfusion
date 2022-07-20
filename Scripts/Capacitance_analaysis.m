@@ -30,7 +30,7 @@ Capacitance_total=1./((1/Capacitance_rough_MAPI)+(1/Capacitance_rough_insulator)
 %% Set up parameters
 
 Ncat_array = logspace(16, 19, 4);
-kscan_array = [0.001;0.01;0.1];
+kscan_array = [0.01;0.1];
 
 
 %% Loop
