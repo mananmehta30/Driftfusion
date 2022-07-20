@@ -17,11 +17,16 @@ initialise_df
 par_alox = pc('./Input_files/alox.csv');
 par_for_ions = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 par_freeze_ions = par_alox;
-%% Rough value of capacitance
+%% Rough value of capacitance for MAPI, insulator and total
 A=1;
-epsilon=par_for_ions.epp0*par_for_ions.epp(3)*par_for_ions.e;
-d=par_for_ions.d(3);
-Capacitance_rough=(A*epsilon)/d;
+epsilon_MAPI=par_for_ions.epp0*par_for_ions.epp(3)*par_for_ions.e;
+d_MAPI=par_for_ions.d(3);
+Capacitance_rough_MAPI=(A*epsilon_MAPI)/d_MAPI;
+A=1;
+epsilon_insulator=par_for_ions.epp0*par_for_ions.epp(2)*par_for_ions.e;
+d_insulator=par_for_ions.d(1);
+Capacitance_rough_insulator=(A*epsilon_insulator)/d_insulator;
+Capacitance_total=1./((1/Capacitance_rough_MAPI)+(1/Capacitance_rough_insulator));
 %% Set up parameters
 
 Ncat_array = logspace(16, 19, 4);
