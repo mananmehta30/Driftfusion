@@ -97,22 +97,22 @@ for i=1:length(Ncat_array)
 %% Capacitance_Manan Analysis
 Vappt = dfana.calcVapp(sol_CV_with_ions(1,1)); 
 
-% for i = 1:length(Ncat_array)
-%     for j = 1:length(kscan_array)
-%         
-%         Why not use the function I wrote?
-%         [Ctotal,Celectronic,Cionic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
-%         
-%         This looks distinctly weird and doesn't make any sense to me
-%         Here you appear to be trying to
-%         assign a variable call k_scan within a data structure C_ionic(i).N_cat(j) with a
-%         capacitance value? Maybe I'm missing something?
-%         C_ionic(i).N_cat(j).k_scan=Cionic;
-%         C_electronic(i).N_cat(j).k_scan=Celectronic;
-%         C_total(i).N_cat(j).k_scan=Ctotal;
-%         
-%     end
-% end
+for i = 1:length(Ncat_array)
+    for j = 1:length(kscan_array)
+        
+        Why not use the function I wrote?
+        [Ctotal,Celectronic,Cionic] = capacitance_ana(sol_CV_with_ions(i,j),Vappt);%call this function
+        
+        This looks distinctly weird and doesn't make any sense to me
+        Here you appear to be trying to
+        assign a variable call k_scan within a data structure C_ionic(i).N_cat(j) with a
+        capacitance value? Maybe I'm missing something?
+        C_ionic(i).N_cat(j).k_scan=Cionic;
+        C_electronic(i).N_cat(j).k_scan=Celectronic;
+        C_total(i).N_cat(j).k_scan=Ctotal;
+        
+    end
+end
 
 for i = 1:length(Ncat_array)
     for j = 1:length(kscan_array)
