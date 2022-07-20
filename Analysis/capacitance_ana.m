@@ -21,7 +21,7 @@ closest = x(find(temp == min(abs(target - x))));
 Debye_right_V_index=find(x==(closest));
 %Get difference between the perovskite
 deltaV = dfana.deltaVt(sol_CV_with_ions, Debye_left_V_index, Debye_right_V_index);
-%% Replicate charges for all time perdids
+%% Replicate charges for all time periods
 NA0 = repmat(dev.NA, length(t), 1);
 ND0 = repmat(dev.ND, length(t), 1);
 Nani0 = repmat(dev.Nani, length(t), 1);
