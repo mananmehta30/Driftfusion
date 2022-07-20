@@ -129,7 +129,7 @@ end
 
 figure(203)
 xlabel('Voltage [V]')
-ylabel('Total Capacitance (cm-3)')
+ylabel('Total Capacitance [cm-3]')
 legend(legstr_n3)
 hold off
 
@@ -143,7 +143,7 @@ end
 
 figure(204)
 xlabel('Voltage [V]')
-ylabel('Ionic Capacitance (cm-3)')
+ylabel('Ionic Capacitance [cm-3]')
 legend(legstr_n3)
 hold off
 
@@ -157,7 +157,7 @@ end
 
 figure(205)
 xlabel('Voltage [V]')
-ylabel('Electronic Capacitance (cm-3)')
+ylabel('Electronic Capacitance [cm-3]')
 legend(legstr_n3)
 hold off
 
@@ -169,42 +169,42 @@ legstr_p3 =[];
 for i = 1:length(kscan_array)
     figure(203)
     plot(Vappt, C_total(ion_concentration_index).N_cat(i).k_scan)
-    legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i)), 'V/s'];
     hold on
 end
 
 
 figure(203)
 xlabel('Voltage [V]')
-ylabel('Total Capacitance (cm-3)')
+ylabel('Total Capacitance [cm-3]')
 legend(legstr_n3)
 hold off
 
 for i = 1:length(kscan_array)
     figure(204)
     plot(Vappt, C_ionic(ion_concentration_index).N_cat(i).k_scan)
-    legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i)),'V/s'];
     hold on
 end
 
 
 figure(204)
 xlabel('Voltage [V]')
-ylabel('Ionic Capacitance (cm-3)')
+ylabel('Ionic Capacitance [cm-3]')
 legend(legstr_n3)
 hold off
 
 for i = 1:length(kscan_array)
     figure(205)
     plot(Vappt, C_electronic(ion_concentration_index).N_cat(i).k_scan)
-    legstr_n3{i} = ['kscan=', num2str(kscan_array(i))];
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i)), 'V/s'];
     hold on
 end
 
 
 figure(205)
 xlabel('Voltage [V]')
-ylabel('Electronic Capacitance (cm-3)')
+ylabel('Electronic Capacitance [cm-3]')
 legend(legstr_n3)
 hold off
 %% Call capacitance function 
