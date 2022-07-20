@@ -30,7 +30,7 @@ Capacitance_total=1./((1/Capacitance_rough_MAPI)+(1/Capacitance_rough_insulator)
 %% Set up parameters
 
 Ncat_array = logspace(16, 19, 4);
-kscan_array = [0.01;0.1];
+kscan_array = [0.001;0.01;0.1];
 
 
 %% Loop
@@ -127,7 +127,7 @@ legstr_p3 =[];
 for i = 1:length(Ncat_array)
     figure(203)
     plot(Vappt, C_total(i).N_cat(scanrate_index).k_scan)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i)), 'cm-3'];
     hold on
 end
 
@@ -141,7 +141,7 @@ hold off
 for i = 1:length(Ncat_array)
     figure(204)
     plot(Vappt, C_ionic(i).N_cat(scanrate_index).k_scan)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i)), 'cm-3'];
     hold on
 end
 
@@ -155,7 +155,7 @@ hold off
 for i = 1:length(Ncat_array)
     figure(205)
     plot(Vappt, C_electronic(i).N_cat(scanrate_index).k_scan)
-    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
+    legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i)), 'cm-3'];
     hold on
 end
 
@@ -188,7 +188,7 @@ hold off
 for i = 1:length(kscan_array)
     figure(204)
     plot(Vappt, C_ionic(ion_concentration_index).N_cat(i).k_scan)
-    legstr_n3{i} = ['kscan=', num2str(kscan_array(i)),'V/s'];
+    legstr_n3{i} = ['kscan=', num2str(kscan_array(i)), 'V/s'];
     hold on
 end
 
@@ -215,11 +215,11 @@ hold off
 %% Call capacitance function 
 
 %[V, Q, C] = capacitance_ana_PC(sol_CV_with_ions, 2);   
-figure(7445)
-plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
-legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
-xlabel('Voltage applied')
-ylabel('Capacitances (F/cm^2)')
+% figure(7445)
+% plot(Vappt, abs(C_debye_layers), Vappt, abs(C_debye_electronic), '-.', Vappt, abs(C_debye_ionic), '--')
+% legend('Total Capacitance','Electronic Capacitance','Ionic Capacitance')
+% xlabel('Voltage applied')
+% ylabel('Capacitances (F/cm^2)')
 
 
 
