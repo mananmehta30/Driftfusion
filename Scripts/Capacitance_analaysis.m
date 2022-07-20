@@ -52,14 +52,15 @@ for i = 1:length(Ncat_array)
         disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
 
         
-       par_freeze_ions.mu_c(:) = 0; %Freezing ions
+        par_freeze_ions.mu_c(:) = 0; %Freezing ions
         par_for_ions.mu_a(:) = 0;
         par_freeze_ions.Phi_left = -4.9;
-  disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
-       par_freeze_ions.Phi_right = -4.9;
-       disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
+        disp(['LHS electrode workfunction = ', num2str(par_for_ions.Phi_left), ' eV']);
+        par_freeze_ions.Phi_right = -4.9;
+        disp(['RHS electrode workfunction = ', num2str(par_for_ions.Phi_right), ' eV']);
        
-par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild various arrays used DF
+        par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild various arrays used DF
+        par_freeze_ions = refresh_device(par_freeze_ions); % This line is required to rebuild various arrays used DF
         %% Find equilibrium
         soleq(i, j)= equilibrate(par_for_ions);
         soleq2(i, j)= equilibrate(par_freeze_ions);
@@ -72,7 +73,7 @@ par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild 
         Vmax = 5;
         Vmin = -5;
         tpoints=400; 
-        sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+%         sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         
         sol_CV_with_ions(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
        sol_CV_without_ions(i, j) = doCV(soleq2(i, j).el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
@@ -81,14 +82,14 @@ par_for_ions = refresh_device(par_for_ions); % This line is required to rebuild 
 end
 
 
-%% Preallocate structures
+%% Preallocate structures for case with ions
 for i=1:length(Ncat_array)
        C_ionic(i).N_cat=struct;
        C_electronic(i).N_cat=struct;
        C_total(i).N_cat=struct;
      
 end
-%% Preallocate structures to store k_scan values
+%% Preallocate structures to store k_scan values for case with ions
 
 for i=1:length(Ncat_array)
     
@@ -118,39 +119,6 @@ for i = 1:length(Ncat_array)
 end
 
 
-%% Preallocate structures for without ions
-for i=1:length(Ncat_array)
-       C_ionicwo(i).N_cat=struct;
-       C_electronicwo(i).N_cat=struct;
-       C_totalwo(i).N_cat=struct;
-     
-end
-%% Preallocate structures to store k_scan values without ions
-
-for i=1:length(Ncat_array)
-    
- for j=1:length(kscan_array)
-       C_ionicwo(i).N_catwo(j).k_scan=struct;
-       C_electronicwo(i).N_cat(j).k_scan=struct;
-       C_totalwo(i).N_cat(j).k_scan=struct;
- end
- end
-%% Capacitance_Manan Analysis without ions
-
-Vappt = dfana.calcVapp(sol_CV_without_ions(1,1)); 
-
-
-for i = 1:length(Ncat_array)
-    for j = 1:length(kscan_array)
-       
-        [Ctotalwo,Celectronicwo,Cionicwo] = capacitance_ana(sol_CV_without_ions(i,j),Vappt);%call this function
-       
-        C_ionic(i).N_cat(j).k_scan=Cionicwo;
-        C_electronic(i).N_cat(j).k_scan=Celectronicwo;
-        C_total(i).N_cat(j).k_scan=Ctotalwo;
-        
-    end
-end
 
  
 
@@ -258,7 +226,44 @@ hold off
 % ylabel('Capacitances (F/cm^2)')
 
 
-%% Without ions calculations
+%% Without ions calculations stuff
+
+%%From here
+
+%% Preallocate structures for without ions
+for i=1:length(Ncat_array)
+       C_ionicwo(i).N_cat=struct;
+       C_electronicwo(i).N_cat=struct;
+       C_totalwo(i).N_cat=struct;
+     
+end
+%% Preallocate structures to store k_scan values without ions
+
+for i=1:length(Ncat_array)
+    
+ for j=1:length(kscan_array)
+       C_ionicwo(i).N_catwo(j).k_scan=struct;
+       C_electronicwo(i).N_cat(j).k_scan=struct;
+       C_totalwo(i).N_cat(j).k_scan=struct;
+ end
+ end
+%% Capacitance_Manan Analysis without ions
+
+Vappt = dfana.calcVapp(sol_CV_without_ions(1,1)); 
+
+
+for i = 1:length(Ncat_array)
+    for j = 1:length(kscan_array)
+       
+        [Ctotalwo,Celectronicwo,Cionicwo] = capacitance_ana(sol_CV_without_ions(i,j),Vappt);%call this function
+       
+        C_ionicwo(i).N_cat(j).k_scan=Cionicwo;
+        C_electronicwo(i).N_cat(j).k_scan=Celectronicwo;
+        C_totalwo(i).N_cat(j).k_scan=Ctotalwo;
+        
+    end
+end
+
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
@@ -309,7 +314,7 @@ legend(legstr_n3)
 hold off
 
 %% Plot carrier concentration at interface as function Vapp for different scan rates
-ion_concentration_index = 3;
+ion_concentration_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 
