@@ -5,8 +5,9 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('./Input_files/alox.csv');
-par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
+%par_alox = pc('./Input_files/alox.csv');
+par_sio2 = pc('./Input_files/sio2.csv');
+par = par_sio2;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
@@ -252,7 +253,7 @@ figure(1112)
 scatter(Ncat_array, n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
-xlim([1e15 1e20])
+xlim([1e11 1e20])
 %ylim([4.6 8.5])
 legend('Modulatability factor (m_V_g)')
 xlabel('Ionic concentration (cm-3)')
@@ -280,7 +281,7 @@ figure(1112)
 scatter(Ncat_array, nn_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
-xlim([1e15 1e20])
+xlim([1e11 1e20])
 %ylim([4.6 8.5])
 
 xlabel('Cation concentration (cm-3)')
@@ -305,7 +306,7 @@ figure(2222)
 scatter(Ncat_array, sigma_n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
-xlim([1e15 1e20])
+xlim([1e11 1e20])
 %ylim([4.6 8.5])
 
 xlabel('Cation concentration')
@@ -330,7 +331,7 @@ figure(1113)
 scatter(Ncat_array, p_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
-xlim([1e15 1e20])
+xlim([1e12 1e20])
 %ylim([4.6 8.5])
 
 xlabel('Cation concentration')
