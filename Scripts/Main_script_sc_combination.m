@@ -37,13 +37,13 @@ end
 %% Plot distribution
 k_scan_index=2;
 for i = 1:length(sc_array)
-   dfplot.acx(sol_CV(i,k_scan_index));
+   dfplot.acx(sol_CV(i,k_scan_index),Vmax/k_scan);
      legstr_acx{i} = ['SC rate =', num2str(sc_array(i)),'velocity units'];
      hold on
 end
 hold off
 legend(legstr_acx)
-title('Scan rate =',num2str(k_scan_array(k_scan_index)),'V/s');
+%title('Scan rate =',num2str(k_scan_array(k_scan_index)),'V/s');
 %% Plot distribution
 sc_index=2;
 for i = 1:length(k_scan_array)
