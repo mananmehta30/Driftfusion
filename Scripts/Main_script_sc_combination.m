@@ -38,7 +38,7 @@ end
 k_scan_index=2;
 for i = 1:length(sc_array)
    dfplot.acx(sol_CV(i,k_scan_index),Vmax/k_scan);
-     legstr_acx{i} = ['SC rate =', num2str(sc_array(i)),'velocity units'];
+     legstr_acx{i} = ['SC rate =', num2str(sc_array(i))];
      hold on
 end
 hold off
