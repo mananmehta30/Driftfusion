@@ -201,7 +201,7 @@ end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 %% Electon concentration Modulatability vs Cation Concentration
-workfunction_index=7;
+workfunction_index=14;
 for i = 1:length(Ncat_array)
     
 
