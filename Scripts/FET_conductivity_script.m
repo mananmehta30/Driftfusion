@@ -221,7 +221,7 @@ ylim([1e-1, 1e12])
 
 %% Plot potential as a function position
 workfunction_index = 7;
-legstr_Vx = {'Dielectric', 'Interface', 'Perovskite'};
+legstr_Vx = {'Dielectric (SiO2)', 'Interface', 'Perovskite (MAPbI3)'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
@@ -256,8 +256,8 @@ set(gca,'xscale','log')
 xlim([1e11 1e20])
 %ylim([4.6 8.5])
 legend('Modulatability factor (m_V_g)')
-xlabel('Ionic concentration (cm-3)')
-ylabel('Electron Modulatability Factor (m_V_g)')
+xlabel('Ionic concentration [cm-3]')
+ylabel('Electron Modulatability Factor [m_V_g]')
 box on
 
 %% Calculate manually
@@ -369,9 +369,9 @@ figure(444)
 contourf(x,y,z)
 colorbar
 c = colorbar;
-c.Label.String = 'Modulatability factor (m_Vg)';
+c.Label.String = 'Modulatability factor [m_Vg]';
 set(gca,'ZScale','linear')
-xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
+xlabel('Workfunction [eV]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
 box on
 
