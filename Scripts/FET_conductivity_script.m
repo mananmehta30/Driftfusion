@@ -137,7 +137,7 @@ hold off
 
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
-workfunction_index = 3;
+workfunction_index = 7;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -201,7 +201,7 @@ end
 legend(legstr_Vx)
 %ylim([1e-1, 1e12])
 %% Electon concentration Modulatability vs Cation Concentration
-workfunction_index=1;
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
 
@@ -246,7 +246,7 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Electon conductivity Modulatability vs Cation Concentration
-workfunction_index=1;
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
        
@@ -267,7 +267,7 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Hole concentration Modulatability vs Cation Concentration
-workfunction_index=1;
+workfunction_index=7;
 for i = 1:length(Ncat_array)
     
 
