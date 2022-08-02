@@ -2,7 +2,8 @@
 %%Initialize
 initialise_df
 %%
-par = pc('1_layer_MAPI_ITO_Ag.csv');
+par=pc('memristor_gold_both_sides');
+%par = pc('1_layer_MAPI_ITO_Ag.csv');
 
 sc_array = [1e-12, 1e-4, 1e+4, 1e+12];
 k_scan_array=[0.001;0.1];
@@ -35,9 +36,9 @@ for i = 1:length(sc_array)
 end
 
 %% Plot distribution
-k_scan_index=2;
+k_scan_index=1;
 for i = 1:length(sc_array)
-   dfplot.acx(sol_CV(i,k_scan_index),Vmax/k_scan);
+   dfplot.Jx(sol_CV(i,k_scan_index),Vmax/k_scan);
      legstr_acx{i} = ['SC rate =', num2str(sc_array(i))];
      hold on
 end
