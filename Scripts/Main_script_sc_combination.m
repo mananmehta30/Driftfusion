@@ -2,8 +2,8 @@
 %%Initialize
 initialise_df
 %%
-par=pc('memristor_gold_both_sides');
-%par = pc('1_layer_MAPI_ITO_Ag.csv');
+%par=pc('memristor_gold_both_sides');
+par = pc('1_layer_MAPI_ITO_Ag.csv');
 
 sc_array = [1e-12, 1e-4, 1e+4, 1e+12];
 k_scan_array=[0.001;0.1];
@@ -12,7 +12,7 @@ k_scan_array=[0.001;0.1];
 for i = 1:length(sc_array)
     
     par.sc_r = sc_array(i);
-    par.sc_l = par.sc_r;
+   % par.sc_l = par.sc_r;
     
 
     for j = 1:length(k_scan_array) %loop to run for different electrode workfunction
@@ -30,7 +30,7 @@ for i = 1:length(sc_array)
         Vmin = -1.2;
         
         % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
-        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 1, 241);
+        sol_CV(i, j) = doCV(soleq(i, j).ion, 0, 0, Vmax, Vmin, k_scan, 5, 241);
  
     end   
 end
@@ -55,3 +55,12 @@ end
 hold off
 legend(legstr_ac2x)
 title('SCrate =',num2str(sc_array(sc_index)),'velocity units');
+
+%% Manual Solutions
+
+ dfplot.Jx(sol_CV(4,1),Vmax/k_scan);
+
+ %%
+  dfplot.Jt(sol_CV(1,2),81);
+
+  
