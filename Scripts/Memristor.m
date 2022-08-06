@@ -3,7 +3,7 @@ initialise_df
 
 %% Define memristor
 par_memristor = pc('Input_files/memristor.csv');
-
+par_memristor.N_ionic_species=1;
 %% Get Equilbrium solutions
 soleq_memristor = equilibrate(par_memristor);
 
