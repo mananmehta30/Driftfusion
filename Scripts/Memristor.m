@@ -6,14 +6,16 @@ initialise_df
 
 par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
 
-par_memristor.N_ionic_species=2;
+%par_memristor = pc('Input_files/memristor_silver_left_gold_right.csv');% Ag left Au right side
+
+par_memristor.N_ionic_species=1;
 %% Get Equilbrium solutions
 soleq_memristor = equilibrate(par_memristor);
 
 
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
- k_scan = 1;
+ k_scan = 0.1;
  tpoints=200;
  
 Vmax = 5;
