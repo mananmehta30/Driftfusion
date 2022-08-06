@@ -1,17 +1,30 @@
+% Simple memristortttt
 initialise_df
 
-%% Par file
-par_memristor = pc('Input_files/memristor');
-%% Equailibirum Solution
-soleq_memristor = equilibrate(par_memristor);
-%% Scan parameters
- Vmax=1.2;
- Vmin=-1.2;
-k_scan=0.1;
-%% Sol_CV
- % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+%% Define memristor
+par_memristor = pc('Input_files/memristor.csv');
 
-% sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, 100);
- sol_CV = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, 241);
+%% Get Equilbrium solutions
+soleq_memristor = equilibrate(par_memristor);
+
+
+%% Cyclic Voltammogram scan
+% sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
+ k_scan = 1;
+ tpoints=200;
+ 
+Vmax = 5;
+ Vmin = -5;
 %%
-dfplot.JtotVapp(sol_CV,1);
+sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+%%
+sol_CV_el = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+
+
+%% Plot for ions
+dfplot.JtotVapp(sol_CV, 0);
+%set(gca,'YScale','log');
+
+%% Plot for electrons
+dfplot.JtotVapp(sol_CV_el, 0);
+%set(gca,'YScale','log');
