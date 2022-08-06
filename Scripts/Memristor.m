@@ -1,19 +1,19 @@
 % Simple memristor
 initialise_df
 
-%% Define memristor Ag
+%% Define memristor Ag/Au
 %par_memristor = pc('Input_files/memristor_silver_both_sides_400nm.csv');%Ag both sides
 
 par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
 
-par_memristor.N_ionic_species=1;
+par_memristor.N_ionic_species=2;
 %% Get Equilbrium solutions
 soleq_memristor = equilibrate(par_memristor);
 
 
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
- k_scan = 0.1;
+ k_scan = 1;
  tpoints=200;
  
 Vmax = 5;
