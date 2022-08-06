@@ -2,9 +2,9 @@
 initialise_df
 
 %% Define memristor Ag/Au
-%par_memristor = pc('Input_files/memristor_silver_both_sides_400nm.csv');%Ag both sides
+par_memristor = pc('Input_files/memristor_silver_both_sides_400nm.csv');%Ag both sides
 
-par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
+%par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
 
 %par_memristor = pc('Input_files/memristor_silver_left_gold_right.csv');% Ag left Au right side
 
@@ -15,7 +15,7 @@ soleq_memristor = equilibrate(par_memristor);
 
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
- k_scan = 0.1;
+ k_scan = 0.01;
  tpoints=200;
  
 Vmax = 5;
@@ -29,7 +29,7 @@ sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
 %% Get values
  J = dfana.calcJ(sol_CV, "sub");
-
+ Vapp = dfana.calcVapp(sol_CV);
 %% Plot for ions
 dfplot.JtotVapp(sol_CV, 0);
 %set(gca,'YScale','log');
