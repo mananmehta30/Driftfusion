@@ -4,11 +4,11 @@ initialise_df
 %% Define memristor Ag/Au
 %par_memristor = pc('Input_files/memristor_silver_both_sides_400nm.csv');%Ag both sides
 
-%par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
+par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
 
-par_memristor = pc('Input_files/memristor_silver_left_gold_right.csv');% Ag left Au right side
+%par_memristor = pc('Input_files/memristor_silver_left_gold_right.csv');% Ag left Au right side
 
-par_memristor.N_ionic_species=2;
+par_memristor.N_ionic_species=1;
 %% Get Equilbrium solutions
 soleq_memristor = equilibrate(par_memristor);
 
@@ -25,12 +25,15 @@ sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
 
 %%
-sol_CV_el = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+%sol_CV_el = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
+
+%% Get values
+ J = dfana.calcJ(sol_CV, "sub");
 
 %% Plot for ions
 dfplot.JtotVapp(sol_CV, 0);
 %set(gca,'YScale','log');
 
 %% Plot for electrons
-dfplot.JtotVapp(sol_CV_el, 0);
+%dfplot.JtotVapp(sol_CV_el, 0);
 %set(gca,'YScale','log');
