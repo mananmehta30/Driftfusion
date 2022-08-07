@@ -17,7 +17,7 @@ soleq_memristor = equilibrate(par_memristor);
 dfplot.acx(soleq_memristor.ion);
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
- k_scan = 1;
+ k_scan = 0.1;
  tpoints=200;
 
 Vmax = 5;
