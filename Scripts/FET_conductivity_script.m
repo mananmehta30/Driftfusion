@@ -29,9 +29,6 @@ for i = 1:length(Ncat_array)
         par.d(1) = thickness_array(j);
 
         disp(['Insulator Thickness = ', num2str(thickness_array(j)), 'cm']);
-
- 
-
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -301,7 +298,7 @@ hold off
 %% Modulability Ions
 
 
-Ncat_index = 4;
+Ncat_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 for i = 1:length(thickness_array)
@@ -315,6 +312,7 @@ for i = 1:length(thickness_array)
    
 end
 
+
 figure(1112)
 scatter(thickness_array, cation_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','linear')
@@ -327,7 +325,7 @@ ylabel('Cation Modulability Factor (m_V_g)')
 box on
 
 %% Electon concentration Modulability vs Cation Concentration
-insulator_thickness_index=2;
+insulator_thickness_index=6;
 for i = 1:length(Ncat_array)
     
         built_in_potential=0;
@@ -341,8 +339,10 @@ for i = 1:length(Ncat_array)
     
 end
 
+it6= n_modulability_factor;
+%%
 figure(1112)
-scatter(Ncat_array, n_modulability_factor,'o', 'MarkerFaceColor', 'b');
+scatter(Ncat_array, it1,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
@@ -356,11 +356,8 @@ box on
 
 
 
-
-
-
 %% Electon concentration Modulability vs Insulator Thickness
-Ncat_index=1;
+Ncat_index=10;
 shorten=round(Ncat_array(Ncat_index),3,'significant');
 for i = 1:length(thickness_array)
     
@@ -374,13 +371,15 @@ for i = 1:length(thickness_array)
             nnn_modulability_factor(i)= nnn_modulability(1);
     
 end
-
+%%
+ncat10=nnn_modulability_factor;
+%%
 figure(1155)
-scatter(thickness_array, nnn_modulability_factor,'o', 'MarkerFaceColor', 'b');
+scatter(thickness_array, ncat10,'o', 'MarkerFaceColor', 'red');
 set(gca,'xscale','linear')
 
 xlim([0 3.5e-5])
-ylim([3 12])
+ylim([0 12])
 
 xlabel('Insulator Thickess [cm]')
 ylabel('Electron Modulability Factor [m_V_g] ')
@@ -389,9 +388,7 @@ title(legend,'Modulatability Factor')
 box on
 
 
-
-
-
+hold on
 
 
 %% Electon conductivity Modulability vs Cation Concentration
@@ -413,8 +410,8 @@ set(gca,'xscale','log')
 xlim([1e15 1e20])
 %ylim([4.6 8.5])
 
-xlabel('Cation concentration')
-ylabel('Electron Conductivity Modulability Factor (m_V_g)')
+xlabel('Cation concentration [cm-3]')
+ylabel('Electron Conductivity Modulability Factor [m_V_g]')
 box on
 %% Hole concentration Modulability vs Cation Concentration
 insulator_thickness_index=1;
@@ -434,8 +431,8 @@ set(gca,'xscale','log')
 xlim([1e15 1e20])
 %ylim([4.6 8.5])
 
-xlabel('Cation concentration')
-ylabel('Hole Modulability Factor (m_V_g)')
+xlabel('Cation concentration [cm-3]')
+ylabel('Hole Modulability Factor [m_V_g]')
 box on
 %% Electron Modulability Contour
 
@@ -461,7 +458,7 @@ z_log=log10(z);
 figure(1)
 surf(x,y,z);
 set(gca,'ZScale','linear')
-xlabel('Insulator thickness'), ylabel('Cation Concentration'), zlabel('Modulability factor')
+xlabel('Insulator thickness [cm]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulability factor (m_V_g)')
 set(gca,'YScale','log')
 box on
 %% Hole Modulability Contour
