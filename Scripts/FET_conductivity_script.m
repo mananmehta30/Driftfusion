@@ -489,6 +489,9 @@ xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulability fac
 set(gca,'YScale','log')
 box on
 
+
+
+
 %% Conductivity profiles
 % So systematically you could look at the following.
 
