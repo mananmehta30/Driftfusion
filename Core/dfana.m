@@ -156,7 +156,7 @@ classdef dfana
                 % n-type left boundary, p-type right boundary
                 j.n = jn_r + (deltajn-deltajn(:,end));
                 j.p = jp_l + deltajp;
-            else par.p0_l >= par.n0_l && par.p0_r >= par.n0_r...
+            elseif par.p0_l >= par.n0_l && par.p0_r >= par.n0_r...
                     || par.n0_l >= par.p0_l && par.n0_r >= par.p0_r
                 % p-type both boundaries or n-type both boundaries
                 j.n = jn_l + deltajn;
@@ -446,22 +446,7 @@ classdef dfana
             % charge density
             rho = -n + p - NA + ND + par.z_a*a + par.z_c*c - par.z_c*Nani - par.z_c*Ncat;
         end
-        
-        function [sigma_n, sigma_p] = calc_conductivity(sol)
-            [u, t, x, par, dev, n, p, a, c, V] = dfana.splitsol(sol);
-            
-            mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an row array of 
-            %the mobility values across the length which is given in par.xx of the device)
-            mu_p_M = repmat(dev.mu_p, length(t), 1);
-            % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates matrix mu_n_M consisting of an length(t)-by-1 tiling 
-            %of copies of dev.mu_n( the mobility values at each different x)
-            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created
-            %The n in the formula come from splitsol and changes row wise with each time period
-            sigma_p = par.e.*mu_p_M.*p;
-            %Therefore sigma_n and sigma_p store values of the conductivity across the device (column wise) and
-            % the different time periods (row wise)
-        end
-        
+
         function Vapp = calcVapp(sol)
             [~,t,~,par,~,~,~,~,~,~] = dfana.splitsol(sol);
             switch par.V_fun_type
