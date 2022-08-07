@@ -25,8 +25,7 @@ Vmax = 5;
  Vmin = -5;
 %% Sol_CV
 sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
-%% CV Plots
-dfplot.npx(sol_CV,1);
+
 
 %%
 %sol_CV_el = doCV(soleq_memristor.el, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
