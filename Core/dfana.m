@@ -156,7 +156,7 @@ classdef dfana
                 % n-type left boundary, p-type right boundary
                 j.n = jn_r + (deltajn-deltajn(:,end));
                 j.p = jp_l + deltajp;
-            elseif par.p0_l >= par.n0_l && par.p0_r >= par.n0_r...
+            else par.p0_l >= par.n0_l && par.p0_r >= par.n0_r...
                     || par.n0_l >= par.p0_l && par.n0_r >= par.p0_r
                 % p-type both boundaries or n-type both boundaries
                 j.n = jn_l + deltajn;
@@ -446,7 +446,20 @@ classdef dfana
             % charge density
             rho = -n + p - NA + ND + par.z_a*a + par.z_c*c - par.z_c*Nani - par.z_c*Ncat;
         end
-
+        
+        function [sigma_n, sigma_p] = calc_conductivity(sol)
+            [u, t, x, par, dev, n, p, a, c, V] = dfana.splitsol(sol);
+            
+            mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an array of the mobility values
+            % across the length which is given in x of the device)
+            mu_p_M = repmat(dev.mu_p, length(t), 1);
+            % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates matrix mu_n_M consisting of an length(t)-by-1 tiling 
+            %of copies of dev.mu_n( the mobility values at each different x)
+            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created? Is this correct? 
+            %Does the n in the formula come from splitsol? How to access it? How does the n value change 
+            sigma_p = par.e.*mu_p_M.*p;     
+        end
+        
         function Vapp = calcVapp(sol)
             [~,t,~,par,~,~,~,~,~,~] = dfana.splitsol(sol);
             switch par.V_fun_type
@@ -575,11 +588,11 @@ classdef dfana
             deltaV = V(:,p1) - V(:,p2);
         end
 
-        function sigma = calcsigma(sol)
+        function sigma = calcsigma(sol, x1, x2)
             % calculates the integrated space charge density
             [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol);
             rho = dfana.calcrho(sol, "whole");
-            sigma = trapz(x, rho, 2);
+            sigma = trapz(x(x >x1 & x< x2), rho(:, (x >x1 & x< x2)), 2);
         end
 
         function sigma_ion = calcsigma_ion(sol)
