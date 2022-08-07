@@ -15,7 +15,7 @@ par_memristor.N_ionic_species=2;
 soleq_memristor = equilibrate(par_memristor);
 
 %% Equlibrium Plots
-dfplot.npx(soleq_memristor.ion);
+dfplot.acx(soleq_memristor.ion);
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
  k_scan = 0.1;
