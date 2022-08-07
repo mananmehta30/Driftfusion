@@ -1,15 +1,15 @@
 % Simple memristor
 initialise_df
 %% Define memristor Ag/Au
-%par_memristor = pc('Input_files/memristor_silver_both_sides_400nm.csv');%Ag both sides
+par_memristor = pc('Input_files/memristor_silver_both_sides_400nm.csv');%Ag both sides
 
 %par_memristor = pc('Input_files/memristor_gold_both_sides_400nm.csv');% Au both sides
 
 %par_memristor = pc('Input_files/memristor_silver_left_gold_right.csv');% Ag left Au right side
 
-par_memristor = pc('Input_files/memristor_gold_left_silver_right.csv');% Au left Ag right side
+%par_memristor = pc('Input_files/memristor_gold_left_silver_right.csv');% Au left Ag right side
 
-par_memristor.N_ionic_species=2;
+par_memristor.N_ionic_species=1;
 %% Get Equilbrium solutions
 soleq_memristor = equilibrate(par_memristor);
 
@@ -17,11 +17,13 @@ soleq_memristor = equilibrate(par_memristor);
 dfplot.acx(soleq_memristor.ion);
 %% Cyclic Voltammogram scan
 % sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
- k_scan = 0.1;
+ k_scan = 1;
  tpoints=200;
- 
+
 Vmax = 5;
- Vmin = -5;
+Vmin = -5;
+Vmaxtarray=Vmax/k_scan;
+Vmintarray=3.*Vmaxtarray;
 %% Sol_CV
 sol_CV = doCV(soleq_memristor.ion, 0, 0, Vmax, Vmin, k_scan, 1, tpoints);
 
@@ -43,3 +45,19 @@ dfplot.JtotVapp(sol_CV, 0);
 %% Plot for electrons
 %dfplot.JtotVapp(sol_CV_el, 0);
 %set(gca,'YScale','log');
+
+%% Electrostatic Plots for at starting, Vmax and Vmin
+dfplot.Vx(sol_CV,0);
+hold on
+dfplot.Vx(sol_CV,Vmaxtarray);
+hold on 
+dfplot.Vx(sol_CV,Vmintarray);
+%% Anion Cation Plots for at Vmax 
+%dfplot.acx(sol_CV,0);
+
+%%
+dfplot.acx(sol_CV,Vmaxtarray);
+%%
+dfplot.acx(sol_CV,Vmintarray);
+
+
