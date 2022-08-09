@@ -12,7 +12,7 @@
 % Load parameters
 par = pc('Input_files/1_layer_test.csv');
 
-%% Equilibrium oslutions
+%% Equilibrium solutions
 soleq = equilibrate(par);
 % Find equilibrium solution with 100 Ohms series resistance in external
 % circuit
