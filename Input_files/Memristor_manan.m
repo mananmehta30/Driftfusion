@@ -66,7 +66,7 @@ dfplot.JtotVapp(sol_CV, 0);
 
 %% To copy paste
 
-% Scan rate = 0.01 V/s
+% Scan rate = 0.0001 V/s
 % Ionic species = 1
 % 
 % Scan rate = 100 V/s
