@@ -14,7 +14,7 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-par_alox = pc('./Input_files/alox.csv');
+par_alox = pc('/Input_files/alox.csv');
 par_for_ions = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 par_freeze_ions = par_alox;
 %% Rough value of capacitance for MAPI, insulator and total
@@ -27,11 +27,12 @@ epsilon_insulator=par_for_ions.epp0*par_for_ions.epp(2)*par_for_ions.e;
 d_insulator=par_for_ions.d(1);
 Capacitance_rough_insulator=(A*epsilon_insulator)/d_insulator;
 Capacitance_total=1./((1/Capacitance_rough_MAPI)+(1/Capacitance_rough_insulator));
+tot_cap=(Capacitance_rough_insulator.*Capacitance_rough_MAPI)/(Capacitance_rough_insulator+Capacitance_rough_MAPI);
 %% Set up parameters
 
 Ncat_array = logspace(16, 19, 4);
 
-kscan_array = [0.001;0.01;0.1];
+kscan_array = [0.001;0.1;1;100];
 
 
 %% Loop
@@ -70,8 +71,8 @@ for i = 1:length(Ncat_array)
         %% Current-voltage scan
         k_scan = kscan_array(j);
         disp(['Scan rate = ', num2str(kscan_array(j)), ' V/s']);
-        Vmax = 5;
-        Vmin = -5;
+        Vmax = 1;
+        Vmin = -1;
         tpoints=400; 
 %         sol_CV = doCV(sol_ini, light_intensity, V0, Vmax, Vmin, scan_rate, cycles, tpoints)
         
@@ -171,7 +172,7 @@ legend(legstr_n3)
 hold off
 
 %% Plot carrier concentration at interface as function Vapp for different scan rates
-ion_concentration_index = 3;
+ion_concentration_index = 4;
 legstr_n3 =[];
 legstr_p3 =[];
 
