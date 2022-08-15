@@ -450,16 +450,14 @@ classdef dfana
         function [sigma_n, sigma_p] = calc_conductivity(sol)
             [u, t, x, par, dev, n, p, a, c, V] = dfana.splitsol(sol);
             
-            mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an row array of 
-            %the mobility values across the length which is given in par.xx of the device)
+            mu_n_M = repmat(dev.mu_n, length(t), 1); %dev.mu_n (found in par.dev.mu_n) is an array of the mobility values
+            % across the length which is given in x of the device)
             mu_p_M = repmat(dev.mu_p, length(t), 1);
             % mu_n_M=repmat(dev.mu_n, length(t), 1)) creates matrix mu_n_M consisting of an length(t)-by-1 tiling 
             %of copies of dev.mu_n( the mobility values at each different x)
-            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created
-            %The n in the formula come from splitsol and changes row wise with each time period
-            sigma_p = par.e.*mu_p_M.*p;
-            %Therefore sigma_n and sigma_p store values of the conductivity across the device (column wise) and
-            % the different time periods (row wise)
+            sigma_n = par.e.*mu_n_M.*n; %A conductivity matrix for different time periods is created? Is this correct? 
+            %Does the n in the formula come from splitsol? How to access it? How does the n value change 
+            sigma_p = par.e.*mu_p_M.*p;     
         end
         
         function Vapp = calcVapp(sol)
@@ -590,11 +588,11 @@ classdef dfana
             deltaV = V(:,p1) - V(:,p2);
         end
 
-        function sigma = calcsigma(sol)
+        function sigma = calcsigma(sol, x1, x2)
             % calculates the integrated space charge density
             [u,t,x,par,dev,n,p,a,c,V] = dfana.splitsol(sol);
             rho = dfana.calcrho(sol, "whole");
-            sigma = trapz(x, rho, 2);
+            sigma = trapz(x(x >x1 & x< x2), rho(:, (x >x1 & x< x2)), 2);
         end
 
         function sigma_ion = calcsigma_ion(sol)

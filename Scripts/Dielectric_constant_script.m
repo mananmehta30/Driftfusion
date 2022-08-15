@@ -13,7 +13,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 Ncat_array = logspace(16, 19, 10);
 
-%thickness_array = 0.000005:0.000005:0.00003;
+%dielectric_constant_array = 0.000005:0.000005:0.00003;
 dielectric_constant_array =[3.9,2.1,9.34,25];
 %values taken from https://www.researchgate.net/figure/Static-dielectric-constant-k-and-experimental-bandgap-for-gate-dielectrics-common-in_tbl2_263029953
 %% while
@@ -23,12 +23,12 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(thickness_array) %loop to run for insulator thickness
+    for j = 1:length(dielectric_constant_array) %loop to run for insulator thickness
         
 
-        par.d(1) = thickness_array(j);
+        par.epp(1) = dielectric_constant_array(j);
 
-        disp(['Insulator Thickness = ', num2str(thickness_array(j)), 'cm']);
+        disp(['Dielectric Constant = ', num2str(dielectric_constant_array(j)), 'cm']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -61,13 +61,13 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1));
 % Preallocation
-sigma_n_barM = zeros(length(Ncat_array), length(thickness_array), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(thickness_array), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(thickness_array)); 
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(thickness_array)); 
+sigma_n_barM = zeros(length(Ncat_array), length(dielectric_constant_array), length(sol_CV(1,1).t)); 
+sigma_p_barM = zeros(length(Ncat_array), length(dielectric_constant_array), length(sol_CV(1,1).t)); 
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(dielectric_constant_array)); 
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(dielectric_constant_array)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(thickness_array)
+    for j = 1:length(dielectric_constant_array)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
@@ -81,7 +81,7 @@ end
 %% Conductivity vs Insulator Thickness
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(thickness_array, sigma_n_bar_VpeakM(i, :))
+    semilogy(dielectric_constant_array, sigma_n_bar_VpeakM(i, :))
     hold on
     xlabel('Insulator Thickness [cm]')
     ylabel('Peak electron conductivity [S cm-1]')
@@ -90,7 +90,7 @@ end
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(thickness_array, sigma_p_bar_VpeakM(i, :))
+    semilogy(dielectric_constant_array, sigma_p_bar_VpeakM(i, :))
     hold on
     xlabel('Insulator Thickness [cm]]')
     ylabel('Peak hole conductivity [S cm-1]')
@@ -106,10 +106,10 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-insulator_thickness_index = 1;
+dc_index = 1;
 for i=1:241
     for j=1:length(Ncat_array)
-    conductivity(j,i)=sigma_n_barM(j, insulator_thickness_index,i);
+    conductivity(j,i)=sigma_n_barM(j, dc_index,i);
 
     end
 end
@@ -129,17 +129,17 @@ title(legend,'Cation Concentration (cm-3)')
 hold off
 
 %% Plot average conductivity
-for j = 1:length(thickness_array)
+for j = 1:length(dielectric_constant_array)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['Thickness = ', num2str(thickness_array(j)),' ','cm'];
+    legstr_n2{j} = ['Thickness = ', num2str(dielectric_constant_array(j)),' ','cm'];
     hold on
 end
 
-for j = 1:length(thickness_array)
+for j = 1:length(dielectric_constant_array)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['Thickness =', num2str(thickness_array(j)),' ','cm'];
+    legstr_p2{j} = ['Thickness =', num2str(dielectric_constant_array(j)),' ','cm'];
     hold on
 end
 %%check how to write siemens properly
@@ -159,14 +159,14 @@ hold off
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
 
-insulator_thickness_index = 3;
+dc_index = 3;
 
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
 
-    n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
+    n_int = sol_CV(i, dc_index).u(:, par.pcum0(3), 2);
 
     figure(203)
     semilogy(Vappt, n_int)
@@ -176,7 +176,7 @@ end
 
 for i = 1:length(Ncat_array)
 
-    p_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 3);
+    p_int = sol_CV(i, dc_index).u(:, par.pcum0(3), 3);
 
     figure(204)
     semilogy(Vappt, p_int)
@@ -201,9 +201,9 @@ hold off
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
 
-    dfplot.npx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, dc_index), Vmax/k_scan);% Vmax/k_scan)
 
-    dfplot.npx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, dc_index), Vmax/k_scan);% Vmax/k_scan)
 
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Z(i)),' cm-3'];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Z(i)),' cm-3'];
@@ -220,10 +220,10 @@ ylim([1e-1, 1e12])
 %dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
 %% Plot potential as a function position
 
-insulator_thickness_index = 1;
+dc_index = 1;
 legstr_Vx = {'dielectric', 'interface', 'perovskite'};
 for i = 1:length(Ncat_array)
-    dfplot.Vx(sol_CV(i, insulator_thickness_index), Vmax/k_scan);%Vmax/k_scan)
+    dfplot.Vx(sol_CV(i, dc_index), Vmax/k_scan);%Vmax/k_scan)
      Z(i)=round(Ncat_array(i),3,'significant');
     legstr_Vx{i + 3} = ['Ncat =', num2str(Z(i)),' cm-3'];
     hold on
@@ -274,7 +274,7 @@ legend(legstr_Vx)
 
 %Plot similar for ions (instead of n_int put cat_int)
 
-insulator_thickness_index = 4;
+dc_index = 4;
 
 
 legstr_n3 =[];
@@ -282,7 +282,7 @@ legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
 
-    cat_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3)+1,4);
+    cat_int = sol_CV(i, dc_index).u(:, par.pcum0(3)+1,4);
     logcat_int=log10(cat_int);
     figure(703)
     semilogy(Vappt,cat_int)
@@ -301,7 +301,7 @@ hold off
 Ncat_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
-for i = 1:length(thickness_array)
+for i = 1:length(dielectric_constant_array)
     cat_int = sol_CV(Ncat_index, i).u(:, par.pcum0(3)+1,4);
 
     cat_int_log=log10(cat_int);%log(c)
@@ -314,7 +314,7 @@ end
 
 
 figure(1112)
-scatter(thickness_array, cation_modulability_factor,'o', 'MarkerFaceColor', 'b');
+scatter(dielectric_constant_array, cation_modulability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','linear')
 
 %xlim([1e15 1e20])
@@ -324,12 +324,12 @@ xlabel('Insulator Thickness')
 ylabel('Cation Modulability Factor (m_V_g)')
 box on
 
-%% Electon concentration Modulability vs Cation Concentration
-insulator_thickness_index=6;
+%% WORK ON THIS  Electon concentration Modulability vs Cation Concentration
+dc_index=4; %% 
 for i = 1:length(Ncat_array)
     
         built_in_potential=0;
-          n_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 2);
+          n_int = sol_CV(i, dc_index).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
            n_modulability=gradient(log_n,Vappt);%dlog(n)/dV
             target=built_in_potential; 
@@ -339,10 +339,10 @@ for i = 1:length(Ncat_array)
     
 end
 
-it6= n_modulability_factor;
-%%
+it4= n_modulability_factor;
+
 figure(1112)
-scatter(Ncat_array, it1,'o', 'MarkerFaceColor', 'b');
+scatter(Ncat_array, it4,'o', 'MarkerFaceColor', 'red');
 set(gca,'xscale','log')
 
 xlim([1e15 1e20])
@@ -353,13 +353,13 @@ ylabel('Electron Modulability Factor (m_V_g)')
 legend('Modulatability Factor')
 box on
 
+hold on
 
 
-
-%% Electon concentration Modulability vs Insulator Thickness
+%% Electon concentration Modulability vs Dielectric constant
 Ncat_index=10;
 shorten=round(Ncat_array(Ncat_index),3,'significant');
-for i = 1:length(thickness_array)
+for i = 1:length(dielectric_constant_array)
     
         built_in_potential=0;
           nnn_int = sol_CV(Ncat_index, i).u(:, par.pcum0(3), 2);
@@ -375,7 +375,7 @@ end
 ncat10=nnn_modulability_factor;
 %%
 figure(1155)
-scatter(thickness_array, ncat10,'o', 'MarkerFaceColor', 'red');
+scatter(dielectric_constant_array, ncat10,'o', 'MarkerFaceColor', 'red');
 set(gca,'xscale','linear')
 
 xlim([0 3.5e-5])
@@ -392,7 +392,7 @@ hold on
 
 
 %% Electon conductivity Modulability vs Cation Concentration
-insulator_thickness_index=1;
+dc_index=1;
 for i = 1:length(Ncat_array)
     
         
@@ -414,10 +414,10 @@ xlabel('Cation concentration [cm-3]')
 ylabel('Electron Conductivity Modulability Factor [m_V_g]')
 box on
 %% Hole concentration Modulability vs Cation Concentration
-insulator_thickness_index=1;
+dc_index=1;
 for i = 1:length(Ncat_array)
 
-          p_int = sol_CV(i, insulator_thickness_index).u(:, par.pcum0(3), 3);
+          p_int = sol_CV(i, dc_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_modulability=gradient(log_p,Vappt);%dlog(p)/dV
             p_modulability_factor(i)= p_modulability(I);
@@ -439,7 +439,7 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(thickness_array)
+    for j=1:length(dielectric_constant_array)
         built_in_potential=0;
           n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
@@ -451,14 +451,14 @@ for i = 1:length(Ncat_array)
     end 
 end
 
-x=thickness_array;
+x=dielectric_constant_array;
 y=Ncat_array;
 z=n_modulability_factor_contour;
 z_log=log10(z);
 figure(1)
 surf(x,y,z);
 set(gca,'ZScale','linear')
-xlabel('Insulator thickness [cm]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulability factor (m_V_g)')
+xlabel('Relative Dielectric Constant'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulability factor (m_V_g)')
 set(gca,'YScale','log')
 box on
 %% Hole Modulability Contour
@@ -466,7 +466,7 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(thickness_array)
+    for j=1:length(dielectric_constant_array)
         built_in_potential=0;
           p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
@@ -478,7 +478,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 figure(2)
-x2=thickness_array;
+x2=dielectric_constant_array;
 y2=Ncat_array;
 z2=p_modulability_factor_contour;
 z2_log=log10(z2);

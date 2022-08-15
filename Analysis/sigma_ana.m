@@ -17,14 +17,10 @@ x_perov_right = sol_CV.par.dcum0(4);
 x = sol_CV.x;
 t = sol_CV.t;
 Vappt = dfana.calcVapp(sol_CV); 
-%% Find mean conductivity using Debye Length
- sigma_n_bar = mean(sigma_n(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D), 2);
- sigma_p_bar = mean(sigma_p(:, x > x_perov_left & x < x_perov_left + N_Debye*L_D), 2);
-
-%% Find conductivity at the interface
-  sigma_n_bar = sigma_n(:, sol_CV.par.pcum0(3) +1); % slicing out a particular column that begin with the left side of the perovskite
-  sigma_p_bar = sigma_p(:, sol_CV.par.pcum0(3) +1); % pcum0 is the set of indexes from which the different layers begins
-
+%% Find mean conductivity
+sigma_n_bar = sigma_n(:, sol_CV.par.pcum0(3) +1); % for all values that begin with the left side of the perovskite
+sigma_p_bar = sigma_p(:, sol_CV.par.pcum0(3) +1); %pcum0 is the set of indexes from which the different layers begins
+%How is the mean conductivity solved here using sigma_n(:, sol_CV.par.pcum0(3) +1)
 %% Find peak conductivity for applied bias
 pp_Vmax = find(Vappt == max(Vappt));      %% find will give the index of the highest Vappt
 pp_Vmin = find(Vappt == min(Vappt));      %% pp = point position
