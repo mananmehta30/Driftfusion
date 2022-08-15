@@ -20,7 +20,7 @@ AM15_data = AM15_data';
 
 if figson == 1
 % Plot AM15 spectrum
-    figure(900)
+    figure(600)
     plot(AM15_data(1, :), AM15_data(2, :));
     xlabel('Wavelength [nm]');
     ylabel('Power density [mWcm-2nm-1]');
@@ -46,19 +46,21 @@ for i=1:length(EgArr)
 end
 
 if figson ==1
-    figure(901)
+    
+    figure(601)
     plot(E_ph,  AM15)
     xlabel('Energy [eV]');
     ylabel('Photon  flux density [cm-2s-1nm-1]');
     
-    figure(902)
+    figure(602)
     plot(EgArr, Jsc_vs_Eg)
     xlabel('Energy [eV]');
     ylabel('J_{SC,max} [mAcm-2]')
     
-    figure(903)
+    figure(603)
     plotyy(E_ph, AM15, EgArr, Jsc_vs_Eg)
-    xlabel('Energy [eV]'); 
+    xlabel('Energy [eV]');
+    
 end
 
 end
