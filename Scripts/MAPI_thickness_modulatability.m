@@ -102,7 +102,7 @@ for i = 1:length(Ncat_array)
     figure(100)
     semilogy(mapi_thickness, sigma_n_bar_VpeakM(i, :))
     hold on
-    xlabel('LHS workfunction [eV]')
+    xlabel('LHS MAPI thickness[eV]')
     ylabel('Peak electron conductivity [S cm-1]')
     legstr_n{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
@@ -111,7 +111,7 @@ for i = 1:length(Ncat_array)
     figure(101)
     semilogy(mapi_thickness, sigma_p_bar_VpeakM(i, :))
     hold on
-    xlabel('LHS workfunction [eV]')
+    xlabel('LHS MAPI thickness[eV]')
     ylabel('Peak hole conductivity [S cm-1]')
     legstr_p{i} = ['Ncat =', num2str(Ncat_array(i))];
 end  
@@ -364,7 +364,7 @@ z_log=log10(z);
 figure(1)
 surf(x,y,z);
 set(gca,'ZScale','linear')
-xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
+xlabel('MAPI thickness'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
 box on
 figure(444)
@@ -374,7 +374,7 @@ colorbar
 c = colorbar;
 c.Label.String = 'Modulatability factor [m_Vg]';
 set(gca,'ZScale','linear')
-xlabel('Workfunction [eV]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulatability factor')
+xlabel('MAPI thickness [cm]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
 box on
 
