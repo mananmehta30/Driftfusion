@@ -5,15 +5,18 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-%par_alox = pc('./Input_files/alox.csv');
-par_sio2 = pc('./Input_files/sio2.csv');
-par = par_sio2;     % Create temporary parameters object for overwriting parameters in loop
+par_alox = pc('./Input_files/alox.csv');
+%par_sio2 = pc('./Input_files/sio2.csv');
+par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
-workfunction_LHS = -5.5:0.1:-4.2;
-
+%mapi_thickness = -5.5:0.1:-4.2;
+workfunction_LHS = -4.9;
+par.Phi_left = workfunction_LHS;
+par.Phi_right = workfunction_LHS;
+mapi_thickness=1e-05:1e-05:5e-05;
 Ncat_array=logspace(12,19,15);
 % ff_half=-5.5:0.1:-5.1;
 % ss_half=-4.7:0.1:-4.1;
@@ -24,12 +27,12 @@ Ncat_array=logspace(12,19,15);
 % concatenate= cat(2,ss_half,first_half_arrange,second_half,ff_half);
 % remove_extra_values= unique(concatenate);
 % arrange_in_order = flip(remove_extra_values , 2 );
-% workfunction_LHS = -1.*arrange_in_order;
-% difference=diff(workfunction_LHS);
-% % B=gradient(workfunction_LHS,1);
-%  plot(workfunction_LHS) ;
+% mapi_thickness = -1.*arrange_in_order;
+% difference=diff(mapi_thickness);
+% % B=gradient(mapi_thickness,1);
+%  plot(mapi_thickness) ;
 % plot(B);
-%workfunction_LHS = -4.95:0.01:-4.85;
+%mapi_thickness = -4.95:0.01:-4.85;
 %% No of ionic species
 par.N_ionic_species=1;
 %% while
@@ -39,10 +42,10 @@ for i = 1:length(Ncat_array)
     par.Nani(:) = Ncat_array(i);
     
     disp(['Cation density = ', num2str(Ncat_array(i)), ' cm^-3']);
-    for j = 1:length(workfunction_LHS) %loop to run for different electrode workfunction
+    for j = 1:length(mapi_thickness) %loop to run for different electrode workfunction
         
-        par.Phi_left = workfunction_LHS(j);
-        disp(['LHS electrode workfunction = ', num2str(workfunction_LHS(j)), ' eV']);
+        par.d(3) = mapi_thickness(j);
+        disp(['MAPI thickness = ', num2str(mapi_thickness(j)), ' eV']);
         
         par = refresh_device(par);      % This line is required to rebuild various arrays used DF
         
@@ -75,13 +78,13 @@ end
 %% Analysis
 Vappt = dfana.calcVapp(sol_CV(1,1));
 % Preallocation
-sigma_n_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_p_barM = zeros(length(Ncat_array), length(workfunction_LHS), length(sol_CV(1,1).t)); 
-sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
-sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(workfunction_LHS)); 
+sigma_n_barM = zeros(length(Ncat_array), length(mapi_thickness), length(sol_CV(1,1).t)); 
+sigma_p_barM = zeros(length(Ncat_array), length(mapi_thickness), length(sol_CV(1,1).t)); 
+sigma_n_bar_VpeakM = zeros(length(Ncat_array), length(mapi_thickness)); 
+sigma_p_bar_VpeakM = zeros(length(Ncat_array), length(mapi_thickness)); 
 
 for i = 1:length(Ncat_array)
-    for j = 1:length(workfunction_LHS)
+    for j = 1:length(mapi_thickness)
         [sigma_n_bar, sigma_p_bar, sigma_n_bar_Vpeak, sigma_p_bar_Vpeak] = sigma_ana(sol_CV(i,j));
         sigma_n_barM(i,j,:) = sigma_n_bar;
         sigma_p_barM(i,j,:) = sigma_p_bar;
@@ -97,7 +100,7 @@ end
 %% Conductivity vs Work Function
 for i = 1:length(Ncat_array)
     figure(100)
-    semilogy(workfunction_LHS, sigma_n_bar_VpeakM(i, :))
+    semilogy(mapi_thickness, sigma_n_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak electron conductivity [S cm-1]')
@@ -106,7 +109,7 @@ end
 
 for i = 1:length(Ncat_array)
     figure(101)
-    semilogy(workfunction_LHS, sigma_p_bar_VpeakM(i, :))
+    semilogy(mapi_thickness, sigma_p_bar_VpeakM(i, :))
     hold on
     xlabel('LHS workfunction [eV]')
     ylabel('Peak hole conductivity [S cm-1]')
@@ -122,10 +125,10 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-workfunction_index = 7;
+mapi_thickness_index = 1;
 for i=1:241
     for j=1:length(Ncat_array)
-    conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
+    conductivity(j,i)=sigma_n_barM(j, mapi_thickness_index,i);
     end
 end
 
@@ -143,17 +146,17 @@ legend(legstr_n)
 hold off
 
 %% Plot average conductivity
-for j = 1:length(workfunction_LHS)
+for j = 1:length(mapi_thickness)
     figure(201)
     semilogy(Vappt, squeeze(sigma_n_barM(3, j, :)))
-    legstr_n2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_n2{j} = ['\Phi_l =', num2str(mapi_thickness(j))];
     hold on
 end
 
-for j = 1:length(workfunction_LHS)
+for j = 1:length(mapi_thickness)
     figure(202)
     semilogy(Vappt, squeeze(sigma_p_barM(3, j, :)))
-    legstr_p2{j} = ['\Phi_l =', num2str(workfunction_LHS(j))];
+    legstr_p2{j} = ['\Phi_l =', num2str(mapi_thickness(j))];
     hold on
 end
 %%check how to write siemens properly
@@ -172,12 +175,12 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 7;
+mapi_thickness_index = 7;
 legstr_n3 =[];
 legstr_p3 =[];
 
 for i = 1:length(Ncat_array)
-    n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+    n_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 2);
     figure(203)
     semilogy(Vappt, n_int)
     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -185,7 +188,7 @@ for i = 1:length(Ncat_array)
 end
 
 for i = 1:length(Ncat_array)
-    p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+    p_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 3);
     figure(204)
     semilogy(Vappt, p_int)
     legstr_p3{i} = ['Ncat =', num2str(Ncat_array(i))];
@@ -207,10 +210,10 @@ title(legend,'Cation defect density (cm-3)')
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-workfunction_index=7;
+mapi_thickness_index=7;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
-    dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
+    dfplot.npx(sol_CV(i, mapi_thickness_index), Vmax/k_scan);% Vmax/k_scan)
     legstr_npx{2*i-1 + 3} = ['n, Ncat =', num2str(Ncat_array(i))];
     legstr_npx{2*i + 3} = ['p, Ncat =', num2str(Ncat_array(i))];
     hold on
@@ -220,10 +223,10 @@ ylim([1e-1, 1e12])
 
 
 %% Plot potential as a function position
-workfunction_index = 7;
+mapi_thickness_index = 7;
 legstr_Vx = {'Dielectric (SiO2)', 'Interface', 'Perovskite (MAPbI3)'};
 for i = 1:length(Ncat_array)
-    dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
+    dfplot.Vx(sol_CV(i, mapi_thickness_index), Vmax/k_scan);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
     hold on
 end
@@ -235,11 +238,11 @@ title(legend,'Cation defect density (cm-3)')
 
 
 %% Electon concentration Modulatability vs Cation Concentration
-workfunction_index=7;
+mapi_thickness_index=1;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+        built_in_potential=0;
+          n_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
            n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
             target=built_in_potential; 
@@ -261,11 +264,11 @@ ylabel('Electron Modulatability Factor [m_V_g]')
 box on
 
 %% Calculate manually
-workfunction_index=7;
+mapi_thickness_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-          n_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 2);
+        built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
+          n_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 2);
           sigma_nn_int= par.e.*par.mu_n(3).*n_int;
 
          
@@ -288,10 +291,10 @@ xlabel('Cation concentration (cm-3)')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Electon conductivity Modulatability vs Cation Concentration
-workfunction_index=7;
+mapi_thickness_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
+        built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
           sigma_n_int = sigma_n_bar;
           log_sigma_n=log10(sigma_n_int);%log(n)
            sigma_n_Modulatability=gradient(log_sigma_n,Vappt);%dlog(sigma)/dV
@@ -313,11 +316,11 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Hole concentration Modulatability vs Cation Concentration
-workfunction_index=7;
+mapi_thickness_index=7;
 for i = 1:length(Ncat_array)
     
-        built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
-          p_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3), 3);
+        built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
+          p_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
            p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
             target=built_in_potential; 
@@ -342,8 +345,8 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
-        built_in_potential=par.Phi_right-workfunction_LHS(j);
+    for j=1:length(mapi_thickness)
+        built_in_potential=par.Phi_right-mapi_thickness(j);
           n_int = sol_CV(i, j).u(:, par.pcum0(3), 2);
           log_n=log10(n_int);%log(n)
             n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
@@ -354,7 +357,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 
-x=workfunction_LHS;
+x=mapi_thickness;
 y=Ncat_array;
 z=n_Modulatability_factor_contour;
 z_log=log10(z);
@@ -380,8 +383,8 @@ box on
 
 
 for i = 1:length(Ncat_array)
-    for j=1:length(workfunction_LHS)
-        built_in_potential=par.Phi_right-workfunction_LHS(j);
+    for j=1:length(mapi_thickness)
+        built_in_potential=par.Phi_right-mapi_thickness(j);
           p_int = sol_CV(i, j).u(:, par.pcum0(3), 3);
           log_p=log10(p_int);%log(n)
             p_Modulatability=gradient(log_p,Vappt);%dlog(p)/dV
@@ -392,7 +395,7 @@ for i = 1:length(Ncat_array)
     end 
 end
 figure(2)
-x2=workfunction_LHS;
+x2=mapi_thickness;
 y2=Ncat_array;
 z2=p_Modulatability_factor_contour;
 z2_log=log10(z2);
@@ -417,11 +420,11 @@ box on
 %% Modulatability Ions
 
 % v_built_in=par.Phi_left-par.Phi_right;
-% workfunction_index = 3;
+% mapi_thickness_index = 3;
 % legstr_n3 =[];
 % legstr_p3 =[];
 % for i = 1:length(Ncat_array)
-%     cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
+%     cat_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1,4);
 %     cat_int_log=log10(cat_int);
 %     figure(112)
 %     plot(Vappt, cat_int_log)
@@ -483,12 +486,12 @@ box on
 
 
 %Plot similar for ions (instead of n_int put cat_int)
-% workfunction_index = 3;
+% mapi_thickness_index = 3;
 % legstr_n3 =[];
 % legstr_p3 =[];
 % 
 % for i = 1:length(Ncat_array)
-%     cat_int = sol_CV(i, workfunction_index).u(:, par.pcum0(3)+1,4);
+%     cat_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1,4);
 %     logcat_int=log10(cat_int);
 %     figure(703)
 %     semilogy(Vappt,cat_int)

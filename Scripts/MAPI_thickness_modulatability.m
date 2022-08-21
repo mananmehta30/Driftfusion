@@ -219,11 +219,22 @@ for i = 1:length(Ncat_array)
     hold on
 end
 legend(legstr_npx)
+%ylim([1e-1, 1e12])
+
+%% Plot electron and hole profiles at Vmax as a function of position
+mapi_thickness_index=4;
+legstr_acx = {'', '', ''};
+for i = 1:length(Ncat_array)
+    dfplot.acx(sol_CV(i, mapi_thickness_index), Vmax/k_scan);% Vmax/k_scan)
+    legstr_acx{2*i-1 + 3} = ['a, Ncat =', num2str(Ncat_array(i))];
+    legstr_acx{2*i + 3} = ['c, Ncat =', num2str(Ncat_array(i))];
+    hold on
+end
+legend(legstr_acx)
 ylim([1e-1, 1e12])
 
-
 %% Plot potential as a function position
-mapi_thickness_index = 1;
+mapi_thickness_index = 4;
 legstr_Vx = {'Dielectric (Al203)', 'Interface', 'Perovskite (MAPbI3)'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, mapi_thickness_index), Vmax/k_scan);%Vmax/k_scan)
@@ -238,7 +249,7 @@ title(legend,'Cation defect density (cm-3)')
 
 
 %% Electon concentration Modulatability vs Cation Concentration
-mapi_thickness_index=1;
+mapi_thickness_index=6;
 for i = 1:length(Ncat_array)
     
         built_in_potential=0;
