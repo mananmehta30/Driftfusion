@@ -5,15 +5,15 @@ initialise_df
 
 %% Add parameter file to path 
 % Filepath Mac
-%par_alox = pc('./Input_files/alox.csv');
-par_sio2 = pc('./Input_files/sio2.csv');
-par = par_sio2;     % Create temporary parameters object for overwriting parameters in loop
+par_alox = pc('./Input_files/alox.csv');
+%par_sio2 = pc('./Input_files/sio2.csv');
+par = par_alox;     % Create temporary parameters object for overwriting parameters in loop
 
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
-workfunction_LHS = -5.5:0.1:-4.2;
-
+%workfunction_LHS = -5.5:0.1:-4.2;
+workfunction_LHS = -4.9;
 Ncat_array=logspace(12,19,15);
 % ff_half=-5.5:0.1:-5.1;
 % ss_half=-4.7:0.1:-4.1;
@@ -122,7 +122,7 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-workfunction_index = 7;
+workfunction_index = 1;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
@@ -172,7 +172,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 7;
+workfunction_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -220,8 +220,8 @@ ylim([1e-1, 1e12])
 
 
 %% Plot potential as a function position
-workfunction_index = 7;
-legstr_Vx = {'Dielectric (SiO2)', 'Interface', 'Perovskite (MAPbI3)'};
+workfunction_index = 1;
+legstr_Vx = {'Dielectric (Al2O3)', 'Interface', 'Perovskite (MAPbI3)'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
     legstr_Vx{i + 3} = ['Ncat =', num2str(Ncat_array(i))];
