@@ -12,8 +12,8 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 %% Initialise the parameter arrays
 %Ncat_array = logspace(16, 19, 4);
 %Ncat_array=[1e16,5e16,1e17,5e17,1e18,5e18,1e19];
-%workfunction_LHS = -5.5:0.1:-4.2;
-workfunction_LHS = -4.9;
+workfunction_LHS = -5.5:0.1:-4.2;
+%workfunction_LHS = -4.9;
 Ncat_array=logspace(12,19,15);
 % ff_half=-5.5:0.1:-5.1;
 % ss_half=-4.7:0.1:-4.1;
@@ -122,7 +122,7 @@ hold off
 
 %% Conductivity vs Applied Voltage for different ionic densities
 
-workfunction_index = 1;
+workfunction_index = 7;
 for i=1:241
     for j=1:length(Ncat_array)
     conductivity(j,i)=sigma_n_barM(j, workfunction_index,i);
@@ -172,7 +172,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-workfunction_index = 1;
+workfunction_index = 7;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -207,7 +207,7 @@ title(legend,'Cation defect density (cm-3)')
 hold off
 
 %% Plot electron and hole profiles at Vmax as a function of position
-workfunction_index=7;
+workfunction_index=1;
 legstr_npx = {'', '', ''};
 for i = 1:length(Ncat_array)
     dfplot.npx(sol_CV(i, workfunction_index), Vmax/k_scan);% Vmax/k_scan)
@@ -220,7 +220,7 @@ ylim([1e-1, 1e12])
 
 
 %% Plot potential as a function position
-workfunction_index = 1;
+workfunction_index = 7;
 legstr_Vx = {'Dielectric (Al2O3)', 'Interface', 'Perovskite (MAPbI3)'};
 for i = 1:length(Ncat_array)
     dfplot.Vx(sol_CV(i, workfunction_index), Vmax/k_scan);%Vmax/k_scan)
@@ -235,7 +235,7 @@ title(legend,'Cation defect density (cm-3)')
 
 
 %% Electon concentration Modulatability vs Cation Concentration
-workfunction_index=7;
+workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -261,7 +261,7 @@ ylabel('Electron Modulatability Factor [m_V_g]')
 box on
 
 %% Calculate manually
-workfunction_index=7;
+workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -288,7 +288,7 @@ xlabel('Cation concentration (cm-3)')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Electon conductivity Modulatability vs Cation Concentration
-workfunction_index=7;
+workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -313,7 +313,7 @@ xlabel('Cation concentration')
 ylabel('Electron Conductivity Modulatability Factor (m_V_g)')
 box on
 %% Hole concentration Modulatability vs Cation Concentration
-workfunction_index=7;
+workfunction_index=1;
 for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-workfunction_LHS(workfunction_index);
@@ -361,7 +361,7 @@ z_log=log10(z);
 figure(1)
 surf(x,y,z);
 set(gca,'ZScale','linear')
-xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
+xlabel(' Gate Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
 box on
 figure(444)
@@ -371,7 +371,7 @@ colorbar
 c = colorbar;
 c.Label.String = 'Modulatability factor [m_Vg]';
 set(gca,'ZScale','linear')
-xlabel('Workfunction [eV]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulatability factor')
+xlabel('Gate Workfunction [eV]'), ylabel('Cation Concentration [cm-3]'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
 box on
 
