@@ -459,128 +459,21 @@ legend('Modulatability factor (m_V_g)')
 xlabel('Ionic concentration [cm-3]')
 ylabel('Electron Modulatability Factor [m_V_g]')
 box on
-%% Conductivity profiles
-% So systematically you could look at the following.
 
-% 1)Electrode workfunctions
-% 2)Ion density 
-% 3)1 ion, opposite charge (i.e. mobile anions)
-% 4)2 ions
-% 5)Different ion densities
-
-% Ideally you would set some of these parameter explorations up as loops and extract peak conductivity then plot 
-% on a contour plot with x = Ion density, y = Electrode workfunctions, z = peak conductivity for example.
-
-%% Modulatability Ions
-
-% v_built_in=par.Phi_left-par.Phi_right;
-% mapi_thickness_index = 3;
-% legstr_n3 =[];
-% legstr_p3 =[];
-% for i = 1:length(Ncat_array)
-%     cat_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1,4);
-%     cat_int_log=log10(cat_int);
-%     figure(112)
-%     plot(Vappt, cat_int_log)
-%     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-%     hold on
-% end
-% figure(112)
-% xlabel('Voltage [V]')
-% ylabel('Cation Concentration (cm-3)')
-% 
-% hold off
-
-%% Plot average conductivity
-% figure(200)
-% semilogy(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-% xlabel('Voltage [V]')
-% ylabel('Average channel conductivity [Semilog]')
-% legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(201)
-% % plot(Vappt, sigma_n_bar, Vappt, sigma_p_bar)
-% xlabel('Voltage [V]')
-% % ylabel('Average channel conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% figure(202)
-% semilogy(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-% xlabel('Voltage [V]')
-% ylabel('Average bulk conductivity [Semilog]')
-% legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(203)
-% % plot(Vappt, sigma_n_bar_bulk, Vappt, sigma_p_bar_bulk)
-% % xlabel('Voltage [V]')
-% % ylabel('Average bulk conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% figure(204)
-% semilogy(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-% xlabel('Voltage [V]')
-% ylabel('Average entire conductivity [Semilog]')
-% legend('Electron', 'Hole')
-% 
-% %% Plot average conductivity
-% % figure(205)
-% % plot(Vappt, sigma_n_bar_entire, Vappt, sigma_p_bar_entire)
-% % xlabel('Voltage [V]')
-% % ylabel('Average entire conductivity [Linear]')
-% % legend('Electron', 'Hole')
-% 
-% 
-
-
-%% Plot ionic concentration at interface as function Vapp for different ion densities
-
-
-%Plot similar for ions (instead of n_int put cat_int)
-% mapi_thickness_index = 3;
-% legstr_n3 =[];
-% legstr_p3 =[];
-% 
-% for i = 1:length(Ncat_array)
-%     cat_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1,4);
-%     logcat_int=log10(cat_int);
-%     figure(703)
-%     semilogy(Vappt,cat_int)
-%     legstr_n3{i} = ['Ncat =', num2str(Ncat_array(i))];
-%     hold on
-% end
-% figure(703)
-% xlabel('Voltage [V]')
-% ylabel('Cation Concentration (cm-3)')
-% legend(legstr_n3)
-% hold off
 
 %% Ecb-Efn
 
-Ecf=Ecb-Efn;
-Ecf=Ecf(:,par.pcum0(3));
-
-   Ecf_int=Ecf;
-         Ecf_int_gradient=gradient(Ecf,1);
-
-%%
 
 for i = 1:length(Ncat_array)
-    
-        %built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
-          %V_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 1);
-         %ecf_int= (V_int)/(par.kB*par.T);
-            Ecf_int=Ecf;
-         Ecf_int_gradient=gradient(Ecf,1);
-%%
-          %log_vv=log10(VV_int);%log(n)
+         [Ecb, Evb, Efn, Efp] = dfana.calcEnergies(sol_CV(i,1));
+         Ecf=Ecb-Efn;
+          Ecf=Ecf(:,par.pcum0(3));
+          Ecf_int=-Ecf/(par.kB*par.T);
+            
+
+          
            Ecf_Modulatability=gradient(Ecf_int,Vappt);%dlog(Ec-Ef)/dV
-            %target=built_in_potential; 
-             %temp=abs(target-Vappt);
-             %[M,I] = min(temp);
+         
             Ecf_Modulatability_factor(i)= Ecf_Modulatability(I);
     
 end
