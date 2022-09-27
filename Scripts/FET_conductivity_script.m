@@ -16,7 +16,7 @@ par = par_alox;     % Create temporary parameters object for overwriting paramet
 workfunction_LHS = -4.9;
 par.Phi_left = workfunction_LHS;
 par.Phi_right = workfunction_LHS;
-mapi_thickness=1e-05:1e-05:5e-05;
+%mapi_thickness=1e-05:1e-05:5e-05;
 Ncat_array=logspace(12,19,15);
 % ff_half=-5.5:0.1:-5.1;
 % ss_half=-4.7:0.1:-4.1;
@@ -175,7 +175,7 @@ hold off
 
 %% Plot carrier concentration at interface as function Vapp for different ion densities
 
-mapi_thickness_index = 7;
+mapi_thickness_index = 1;
 legstr_n3 =[];
 legstr_p3 =[];
 
@@ -255,7 +255,7 @@ end
 figure(1112)
 scatter(Ncat_array, n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
-
+set(gca,'yscale','log')
 xlim([1e11 1e20])
 %ylim([4.6 8.5])
 legend('Modulatability factor (m_V_g)')
@@ -269,22 +269,23 @@ for i = 1:length(Ncat_array)
     
         built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
           n_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 2);
-          sigma_nn_int= par.e.*par.mu_n(3).*n_int;
+          VV_int= par.e.*par.mu_n(3).*n_int;
 
          
-          log_nn=log10(sigma_nn_int);%log(n)
-           nn_Modulatability=gradient(log_nn,Vappt);%dlog(n)/dV
+          log_nn=log10(VV_int);%log(n)
+           vv_Modulatability=gradient(log_nn,Vappt);%dlog(n)/dV
             target=built_in_potential; 
              temp=abs(target-Vappt);
              [M,I] = min(temp);
-            nn_Modulatability_factor(i)= nn_Modulatability(I);
+            nn_Modulatability_factor(i)= vv_Modulatability(I);
     
 end
+%%
 figure(1112)
 scatter(Ncat_array, nn_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
-
-xlim([1e11 1e20])
+set(gca,'yscale','log')
+%xlim([1e11 1e20])
 %ylim([4.6 8.5])
 
 xlabel('Cation concentration (cm-3)')
@@ -405,6 +406,59 @@ set(gca,'ZScale','linear')
 xlabel('Workfunction'), ylabel('Cation Concentration'), zlabel('Modulatability factor')
 set(gca,'YScale','log')
 box on
+%% Ec-Ef
+
+mapi_thickness_index=1;
+for i = 1:length(Ncat_array)
+    
+        %built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
+          V_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 1);
+         % VV_int= (V_int)/(par.kB*par.T);
+VV_int= (V_int);
+         
+          %log_vv=log10(VV_int);%log(n)
+           vv_Modulatability=gradient(VV_int,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            vv_Modulatability_factor(i)= vv_Modulatability(I);
+    
+end
+figure(1117)
+scatter(Ncat_array, vv_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+set(gca,'yscale','log')
+%xlim([1e11 1e20])
+%ylim([4.6 8.5])
+xlabel('Cation concentration (cm-3)')
+ylabel('Vinternal')
+box on
+
+%% Electon concentration Modulatability vs Cation Concentration
+mapi_thickness_index=1;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=0;
+          n_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 2);
+          log_n=log(n_int);%log(n)
+           n_Modulatability=gradient(log_n,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            n_Modulatability_factor(i)= n_Modulatability(I);
+    
+end
+
+figure(1112)
+scatter(Ncat_array, n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+set(gca,'yscale','log')
+%xlim([1e11 1e20])
+%ylim([4.6 8.5])
+legend('Modulatability factor (m_V_g)')
+xlabel('Ionic concentration [cm-3]')
+ylabel('Electron Modulatability Factor [m_V_g]')
+box on
 %% Conductivity profiles
 % So systematically you could look at the following.
 
@@ -504,9 +558,38 @@ box on
 % legend(legstr_n3)
 % hold off
 
-%% Plot cation and anion densities at Vmax as a function of position
+%% Ecb-Efn
 
+Ecf=Ecb-Efn;
+Ecf=Ecf(:,par.pcum0(3));
 
+   Ecf_int=Ecf;
+         Ecf_int_gradient=gradient(Ecf,1);
 
+%%
 
-%dfplot.acx(sol_CV(3, 9), 3*(Vmax/k_scan)
+for i = 1:length(Ncat_array)
+    
+        %built_in_potential=par.Phi_right-mapi_thickness(mapi_thickness_index);
+          %V_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3), 1);
+         %ecf_int= (V_int)/(par.kB*par.T);
+            Ecf_int=Ecf;
+         Ecf_int_gradient=gradient(Ecf,1);
+%%
+          %log_vv=log10(VV_int);%log(n)
+           Ecf_Modulatability=gradient(Ecf_int,Vappt);%dlog(Ec-Ef)/dV
+            %target=built_in_potential; 
+             %temp=abs(target-Vappt);
+             %[M,I] = min(temp);
+            Ecf_Modulatability_factor(i)= Ecf_Modulatability(I);
+    
+end
+figure(11777)
+scatter(Ncat_array, Ecf_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+set(gca,'yscale','log')
+%xlim([1e11 1e20])
+%ylim([4.6 8.5])
+xlabel('Cation concentration (cm-3)')
+ylabel('Vinternal')
+box on
