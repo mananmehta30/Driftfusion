@@ -54,7 +54,7 @@ for i = 1:length(Ncat_array)
         dfplot.acx(soleq(i, j).ion)
         
         %% Current-voltage scan
-        k_scan = 0.001;
+        k_scan = 0.001;%0.0000001
         Vmax = 1.2;
         Vmin = -1.2;
         
@@ -452,7 +452,7 @@ end
 figure(1112)
 scatter(Ncat_array, n_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
-set(gca,'yscale','log')
+%set(gca,'yscale','log')
 %xlim([1e11 1e20])
 %ylim([4.6 8.5])
 legend('Modulatability factor (m_V_g)')
@@ -467,7 +467,7 @@ box on
 for i = 1:length(Ncat_array)
          [Ecb, Evb, Efn, Efp] = dfana.calcEnergies(sol_CV(i,1));
          Ecf=Ecb-Efn;
-          Ecf=Ecf(:,par.pcum0(3));
+          Ecf=Ecf(:,par.pcum0(3)+1);
           Ecf_int=-Ecf/(par.kB*par.T);
             
 
@@ -480,9 +480,69 @@ end
 figure(11777)
 scatter(Ncat_array, Ecf_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
 set(gca,'xscale','log')
-set(gca,'yscale','log')
+%set(gca,'yscale','log')
 %xlim([1e11 1e20])
 %ylim([4.6 8.5])
 xlabel('Cation concentration (cm-3)')
 ylabel('Vinternal')
+box on
+%% Electron:Ion
+
+
+mapi_thickness_index=1;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=0;
+          n_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1, 2);
+          cat_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1, 4);
+             log_nc=log(n_int./cat_int);%log(n)
+             nc_Modulatability=gradient(log_nc,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            nc_Modulatability_factor(i)= nc_Modulatability(I);
+    
+end
+
+figure(11777)
+scatter(Ncat_array, nc_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+set(gca,'yscale','log')
+%xlim([1e11 1e20])
+%ylim([4.6 8.5])
+legend('Modulatability factor (m_V_g)')
+xlabel('Ionic concentration [cm-3]')
+ylabel('Electron Modulatability Factor [m_V_g]')
+box on
+
+
+%% Ions
+cat_int_12 = sol_CV(1, 1).u(:, par.pcum0(3)+1, 4);
+plot(Vappt,cat_int_12);
+%% (nbulk/(nbulk+catbulk))times modulatability at 0 ionic concentration
+mapi_thickness_index=1;
+for i = 1:length(Ncat_array)
+    
+        built_in_potential=0;
+          
+          cat_int = sol_CV(i, mapi_thickness_index).u(:, par.pcum0(3)+1, 4);
+
+             log_cat=log(cat_int);%log(n)
+             cat_Modulatability=gradient(log_cat,Vappt);%dlog(n)/dV
+            target=built_in_potential; 
+             temp=abs(target-Vappt);
+             [M,I] = min(temp);
+            cat_Modulatability_factor(i)= cat_Modulatability(I);
+    
+end
+
+figure(11777)
+scatter(Ncat_array, cat_Modulatability_factor,'o', 'MarkerFaceColor', 'b');
+set(gca,'xscale','log')
+%set(gca,'yscale','log')
+%xlim([1e11 1e20])
+%ylim([4.6 8.5])
+legend('Modulatability factor (m_V_g)')
+xlabel('Ionic concentration [cm-3]')
+ylabel('Electron Modulatability Factor [m_V_g]')
 box on
